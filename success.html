@@ -383,11 +383,11 @@ function getCourseName(slug) {
     isValidPayment = true;
   }
 
-  // Fallback: if user came through the buy flow (pending course set) and referrer is Razorpay
-  var ref = document.referrer || '';
+  // Accept if user came through the buy flow — etm_pending_course is only set
+  // when a user clicks "Buy" and gets redirected to Razorpay
   var hasPending = false;
   try { hasPending = !!localStorage.getItem('etm_pending_course'); } catch(e) {}
-  if (hasPending && (ref.includes('razorpay.com') || ref.includes('rzp.io'))) {
+  if (hasPending) {
     isValidPayment = true;
   }
 
