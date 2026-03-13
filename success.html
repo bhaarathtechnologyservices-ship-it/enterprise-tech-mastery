@@ -251,12 +251,12 @@ body::before{
     </div>
 
     <div class="countdown-wrap">
-      <div class="countdown-text">Redirecting to your simulator in <span id="countdownNum">5</span> seconds…</div>
+      <div class="countdown-text">Taking you to course selection in <span id="countdownNum">5</span> seconds…</div>
       <div class="countdown-bar-bg"><div class="countdown-bar-fill" id="countdownBar"></div></div>
     </div>
 
-    <a href="simulator.html" id="ctaBtn" class="cta-btn">
-      🚀 Start Practicing Now
+    <a href="courses.html" id="ctaBtn" class="cta-btn">
+      📚 Choose Your Course &amp; Start
     </a>
     <div class="secondary-links">
       <a href="courses.html">Browse Courses</a>
@@ -348,7 +348,7 @@ function startCountdown(seconds) {
 
     if (ticks >= total) {
       clearInterval(interval);
-      location.href = 'simulator.html';
+      location.href = 'courses.html';
     }
   }, 100);
 }
