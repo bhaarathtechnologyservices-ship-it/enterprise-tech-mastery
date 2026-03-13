@@ -220,7 +220,7 @@ body::before{
     <div class="success-icon-wrap">✓</div>
     <div class="success-badge">Payment Confirmed</div>
     <h1 id="successTitle">Welcome to <span>Enterprise Tech Mastery!</span></h1>
-    <p id="successMsg">Your payment was successful. You now have <strong style="color:var(--nvidia-green)">lifetime access</strong> to 225+ questions, all 9 domains, and the full exam simulator.</p>
+    <p id="successMsg">Your payment was successful. You now have access to your purchased course. Choose from your available courses below to start learning.</p>
 
     <div class="perks">
       <div class="perk"><span class="perk-check">✓</span>225+ Practice Questions</div>
@@ -251,12 +251,12 @@ body::before{
     </div>
 
     <div class="countdown-wrap">
-      <div class="countdown-text" id="countdownText">Taking you to course selection in <span id="countdownNum">5</span> seconds…</div>
+      <div class="countdown-text" id="countdownText">Taking you to your course in <span id="countdownNum">5</span> seconds…</div>
       <div class="countdown-bar-bg"><div class="countdown-bar-fill" id="countdownBar"></div></div>
     </div>
 
     <a href="courses.html" id="ctaBtn" class="cta-btn">
-      📚 Choose Your Course &amp; Start
+      📚 Start Learning Now
     </a>
     <div class="secondary-links">
       <a href="courses.html">Browse Courses</a>
@@ -355,6 +355,21 @@ function startCountdown(seconds, dest) {
 }
 
 // ======================= MAIN INIT =======================
+function getCourseName(slug) {
+  var courseNames = {
+    'linux-fundamentals': 'Linux Fundamentals',
+    'rhel': 'Red Hat Enterprise Linux',
+    'suse': 'SUSE Linux Enterprise',
+    'ai-infra': 'AI Infrastructure',
+    'ai-knowledge': 'AI Knowledge',
+    'ai-ops': 'AI Operations',
+    'docker': 'Docker',
+    'kubernetes': 'Kubernetes',
+    'container-ops': 'Container Operations'
+  };
+  return courseNames[slug] || 'Your Course';
+}
+
 (function() {
   var params = new URLSearchParams(window.location.search);
   var type = params.get('type'); // 'course' or 'combo'
@@ -362,6 +377,19 @@ function startCountdown(seconds, dest) {
   var rzpPaymentId = params.get('razorpay_payment_id');
 
   var isValidPayment = rzpStatus === 'paid';
+
+  // Accept if Razorpay sent a payment_id (even without status param)
+  if (rzpPaymentId && rzpPaymentId.length > 4) {
+    isValidPayment = true;
+  }
+
+  // Fallback: if user came through the buy flow (pending course set) and referrer is Razorpay
+  var ref = document.referrer || '';
+  var hasPending = false;
+  try { hasPending = !!localStorage.getItem('etm_pending_course'); } catch(e) {}
+  if (hasPending && (ref.includes('razorpay.com') || ref.includes('rzp.io'))) {
+    isValidPayment = true;
+  }
 
   // Also accept manual tokens for testing
   var manualToken = params.get('key') || params.get('status') || params.get('paid');
@@ -396,9 +424,19 @@ function startCountdown(seconds, dest) {
         try {
           localStorage.setItem('etm_course_' + slug, 'granted');
           localStorage.removeItem('etm_pending_course');
+          
+          // Update UI to show purchased course
+          var courseName = getCourseName(slug);
+          document.getElementById('successTitle').innerHTML = 'Welcome to <span>Enterprise Tech Mastery!</span>';
+          document.getElementById('successMsg').textContent = 'Your payment was successful! You now have access to ' + courseName + '. You will be redirected to the quiz automatically.';
+          document.getElementById('productName').textContent = courseName;
+          
+          // Update CTA button to go directly to the quiz
+          document.getElementById('ctaBtn').href = 'simulator.html?domain=' + slug + '&status=paid';
+          document.getElementById('ctaBtn').textContent = '🎯 Start Practice Quiz';
         } catch(e) {}
       }
-      dest = slug ? 'course-detail.html?course=' + slug : 'courses.html';
+      dest = slug ? 'simulator.html?domain=' + slug + '&status=paid' : 'courses.html';
     }
 
     // Show payment ID if available
