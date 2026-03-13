@@ -298,9 +298,21 @@ var ETMAuth = {
   }
 };
 
+var COURSE_PAYMENT_LINKS = {
+  'linux-fundamentals': 'https://rzp.io/rzp/prI4nWE',
+  'rhel':               'https://rzp.io/rzp/lmRLezXj',
+  'suse':               'https://rzp.io/rzp/PmzAKqJ',
+  'ai-infra':           'https://rzp.io/rzp/SU1bk8RY',
+  'ai-knowledge':       'https://rzp.io/rzp/5f4KKdPs',
+  'ai-ops':             'https://rzp.io/rzp/zHonM67w',
+  'docker':             'https://rzp.io/rzp/PgA275pV',
+  'kubernetes':         'https://rzp.io/rzp/Kt1vZLw',
+  'container-ops':      'https://rzp.io/rzp/aKPAlCcb'
+};
+
 function enrollCourse(slug) {
   try { localStorage.setItem('etm_pending_course', slug); } catch(e) {}
-  window.location.href = 'https://rzp.io/rzp/prI4nWE';
+  window.location.href = COURSE_PAYMENT_LINKS[slug] || 'https://rzp.io/rzp/prI4nWE';
 }
 
 var currentCourseSlug = null;
