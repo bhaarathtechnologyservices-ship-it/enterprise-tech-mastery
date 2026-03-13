@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Successful — Enterprise Tech Mastery</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nvidia-green: #76B900;
+  --nvidia-green-dark: #4A7C00;
+  --nvidia-green-glow: rgba(118,185,0,0.35);
+  --nvidia-dark: #0a0a0f;
+  --nvidia-darker: #050507;
+  --nvidia-card: #1a1a26;
+  --nvidia-border: #2a2a3a;
+  --nvidia-text: #f0f0f5;
+  --nvidia-text2: #8888a0;
+  --nvidia-text3: #555570;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--nvidia-dark);color:var(--nvidia-text);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;overflow-x:hidden;padding:24px}
+
+/* ANIMATED BACKGROUND GLOW */
+body::before{
+  content:'';
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:800px;height:800px;
+  background:radial-gradient(circle,var(--nvidia-green-glow),transparent 65%);
+  pointer-events:none;
+  animation:pulse 3s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+
+/* CONFETTI CANVAS */
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+/* CARD */
+.success-card{
+  position:relative;
+  z-index:1;
+  background:var(--nvidia-card);
+  border:1px solid rgba(118,185,0,0.4);
+  border-radius:28px;
+  padding:56px 48px;
+  max-width:580px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 0 60px rgba(118,185,0,0.15),0 24px 80px rgba(0,0,0,0.5);
+  animation:slideUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+
+/* CHECKMARK */
+.success-icon-wrap{
+  width:96px;height:96px;
+  background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;
+  font-size:2.8rem;
+  animation:pop 0.6s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+  box-shadow:0 0 40px var(--nvidia-green-glow);
+}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+.success-badge{
+  display:inline-block;
+  padding:5px 16px;
+  background:rgba(118,185,0,0.12);
+  border:1px solid rgba(118,185,0,0.35);
+  border-radius:20px;
+  font-size:0.75rem;
+  font-weight:700;
+  color:var(--nvidia-green);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+.success-card h1{
+  font-size:2rem;
+  font-weight:900;
+  letter-spacing:-0.03em;
+  margin-bottom:12px;
+  line-height:1.15;
+}
+.success-card h1 span{color:var(--nvidia-green)}
+.success-card p{
+  font-size:0.97rem;
+  color:var(--nvidia-text2);
+  line-height:1.7;
+  max-width:440px;
+  margin:0 auto 32px;
+}
+
+/* ORDER BOX */
+.order-box{
+  background:var(--nvidia-darker);
+  border:1px solid var(--nvidia-border);
+  border-radius:16px;
+  padding:20px 24px;
+  margin-bottom:28px;
+  text-align:left;
+}
+.order-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  font-size:0.88rem;
+}
+.order-row:not(:last-child){border-bottom:1px solid var(--nvidia-border)}
+.order-row .label{color:var(--nvidia-text2)}
+.order-row .value{font-weight:700;color:var(--nvidia-text);font-family:'JetBrains Mono',monospace;font-size:0.85rem}
+.order-row .value.green{color:var(--nvidia-green)}
+
+/* COUNTDOWN */
+.countdown-wrap{margin-bottom:28px}
+.countdown-text{font-size:0.88rem;color:var(--nvidia-text2);margin-bottom:10px}
+.countdown-bar-bg{height:6px;background:var(--nvidia-border);border-radius:3px;overflow:hidden}
+.countdown-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--nvidia-green),var(--nvidia-green-dark));
+  border-radius:3px;
+  width:100%;
+  transition:width 0.1s linear;
+}
+.countdown-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--nvidia-green);
+  margin-top:8px;
+}
+
+/* CTA */
+.cta-btn{
+  width:100%;
+  padding:18px;
+  background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));
+  color:#000;
+  border:none;
+  border-radius:14px;
+  font-family:'Outfit',sans-serif;
+  font-size:1.1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.3s;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+.cta-btn:hover{box-shadow:0 8px 40px var(--nvidia-green-glow);transform:translateY(-2px)}
+
+.secondary-links{
+  display:flex;
+  gap:16px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+.secondary-links a{
+  font-size:0.83rem;
+  color:var(--nvidia-text2);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+.secondary-links a:hover{color:var(--nvidia-green)}
+
+/* WHAT YOU GET */
+.perks{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:28px;
+  text-align:left;
+}
+.perk{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  font-size:0.83rem;
+  color:var(--nvidia-text2);
+  line-height:1.4;
+  padding:10px;
+  background:rgba(118,185,0,0.04);
+  border-radius:10px;
+  border:1px solid rgba(118,185,0,0.1);
+}
+.perk-check{color:var(--nvidia-green);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* INVALID STATE */
+.invalid-state{display:none;text-align:center}
+.invalid-state h2{font-size:1.4rem;font-weight:800;margin-bottom:12px}
+.invalid-state p{color:var(--nvidia-text2);line-height:1.7;margin-bottom:24px}
+
+@media(max-width:500px){
+  .success-card{padding:36px 24px}
+  .success-card h1{font-size:1.6rem}
+  .perks{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="success-card" id="successCard">
+
+  <!-- Valid Payment State -->
+  <div id="validState">
+    <div class="success-icon-wrap">✓</div>
+    <div class="success-badge">Payment Confirmed</div>
+    <h1>Welcome to <span>Enterprise Tech Mastery!</span></h1>
+    <p>Your payment was successful. You now have <strong style="color:var(--nvidia-green)">lifetime access</strong> to 225+ questions, all 9 domains, and the full exam simulator.</p>
+
+    <div class="perks">
+      <div class="perk"><span class="perk-check">✓</span>225+ Practice Questions</div>
+      <div class="perk"><span class="perk-check">✓</span>9 Technology Domains</div>
+      <div class="perk"><span class="perk-check">✓</span>Full Exam Simulator</div>
+      <div class="perk"><span class="perk-check">✓</span>XP, Levels & Badges</div>
+      <div class="perk"><span class="perk-check">✓</span>Detailed Explanations</div>
+      <div class="perk"><span class="perk-check">✓</span>Lifetime Access</div>
+    </div>
+
+    <div class="order-box" id="orderBox">
+      <div class="order-row">
+        <span class="label">Product</span>
+        <span class="value">Enterprise Tech Mastery</span>
+      </div>
+      <div class="order-row">
+        <span class="label">Amount Paid</span>
+        <span class="value green">₹199</span>
+      </div>
+      <div class="order-row">
+        <span class="label">Access</span>
+        <span class="value green">Lifetime ✓</span>
+      </div>
+      <div class="order-row" id="paymentIdRow" style="display:none">
+        <span class="label">Payment ID</span>
+        <span class="value" id="paymentIdVal">—</span>
+      </div>
+    </div>
+
+    <div class="countdown-wrap">
+      <div class="countdown-text">Redirecting to your simulator in <span id="countdownNum">5</span> seconds…</div>
+      <div class="countdown-bar-bg"><div class="countdown-bar-fill" id="countdownBar"></div></div>
+    </div>
+
+    <a href="simulator.html" id="ctaBtn" class="cta-btn">
+      🚀 Start Practicing Now
+    </a>
+    <div class="secondary-links">
+      <a href="courses.html">Browse Courses</a>
+      <a href="index.html">Back to Home</a>
+    </div>
+  </div>
+
+  <!-- Invalid / Direct Access State -->
+  <div class="invalid-state" id="invalidState">
+    <div style="font-size:2.5rem;margin-bottom:16px">🔒</div>
+    <h2>Access Required</h2>
+    <p>This page is for customers who have completed a payment. To get access, please purchase Enterprise Tech Mastery.</p>
+    <a href="index.html#pricing" class="cta-btn" style="text-decoration:none">View Pricing →</a>
+    <div class="secondary-links">
+      <a href="courses.html">Browse Free Courses</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ======================= CONFETTI =======================
+function launchConfetti() {
+  var canvas = document.getElementById('confettiCanvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  var particles = [];
+  var colors = ['#76B900','#4A7C00','#f0f0f5','#ffa502','#2496ed','#326ce5'];
+
+  for (var i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -10 - Math.random() * 200,
+      w: Math.random() * 10 + 4,
+      h: Math.random() * 5 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 3 + 2,
+      vrot: (Math.random() - 0.5) * 0.15,
+      opacity: 1
+    });
+  }
+
+  var animId;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var alive = false;
+    particles.forEach(function(p) {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vrot;
+      if (p.y > canvas.height * 0.6) p.opacity -= 0.02;
+      if (p.opacity > 0) {
+        alive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+    });
+    if (alive) animId = requestAnimationFrame(draw);
+    else { ctx.clearRect(0, 0, canvas.width, canvas.height); cancelAnimationFrame(animId); }
+  }
+  draw();
+}
+
+// ======================= COUNTDOWN REDIRECT =======================
+function startCountdown(seconds) {
+  var bar = document.getElementById('countdownBar');
+  var numEl = document.getElementById('countdownNum');
+  var remaining = seconds;
+  var total = seconds * 10; // 100ms ticks
+  var ticks = 0;
+
+  var interval = setInterval(function() {
+    ticks++;
+    var pct = Math.max(0, 100 - (ticks / total) * 100);
+    bar.style.width = pct + '%';
+
+    var secs = Math.ceil((total - ticks) / 10);
+    if (secs !== remaining) {
+      remaining = secs;
+      numEl.textContent = remaining;
+    }
+
+    if (ticks >= total) {
+      clearInterval(interval);
+      location.href = 'simulator.html';
+    }
+  }, 100);
+}
+
+// ======================= GRANT ACCESS =======================
+function grantAccess() {
+  try { localStorage.setItem('aiio_access', 'granted'); } catch(e) {}
+}
+
+// ======================= MAIN INIT =======================
+(function() {
+  var params = new URLSearchParams(window.location.search);
+
+  // Razorpay sends these params on successful payment redirect:
+  // razorpay_payment_id, razorpay_payment_link_id, razorpay_payment_link_status, razorpay_signature
+  var rzpStatus = params.get('razorpay_payment_link_status');
+  var rzpPaymentId = params.get('razorpay_payment_id');
+
+  // Also accept manual tokens (for access keys / testing)
+  var manualToken = params.get('key') || params.get('status') || params.get('paid');
+  var validManualTokens = ['paid', 'access', 'rzp_success', 'AIIO2026', 'NVMASTER', 'GPUREADY', 'AIINFRA26'];
+
+  var isValidPayment =
+    rzpStatus === 'paid' ||
+    (manualToken && validManualTokens.includes(manualToken.toUpperCase())) ||
+    (manualToken && validManualTokens.includes(manualToken));
+
+  // Also consider valid if already has access (returning customer)
+  var hasExistingAccess = false;
+  try { hasExistingAccess = localStorage.getItem('aiio_access') === 'granted'; } catch(e) {}
+
+  if (isValidPayment || hasExistingAccess) {
+    // Grant access immediately
+    grantAccess();
+
+    // Show payment ID if available
+    if (rzpPaymentId) {
+      var row = document.getElementById('paymentIdRow');
+      document.getElementById('paymentIdVal').textContent = rzpPaymentId;
+      row.style.display = 'flex';
+    }
+
+    // Show the valid state
+    document.getElementById('validState').style.display = 'block';
+    document.getElementById('invalidState').style.display = 'none';
+
+    // Launch confetti and countdown
+    launchConfetti();
+    startCountdown(5);
+
+  } else {
+    // Not a valid payment redirect — show locked state
+    document.getElementById('validState').style.display = 'none';
+    document.getElementById('invalidState').style.display = 'block';
+  }
+})();
+
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confettiCanvas');
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

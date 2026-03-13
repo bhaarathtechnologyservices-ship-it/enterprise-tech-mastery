@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Tech Mastery — Master Linux, AI, and Containers</title>
+<meta name="description" content="9 enterprise technology courses across Linux, NVIDIA AI Infrastructure, and Containers & Orchestration. 225+ practice questions, gamified learning, and real certification prep.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nvidia-green: #76B900;
+  --nvidia-green-dark: #4A7C00;
+  --nvidia-green-glow: rgba(118,185,0,0.25);
+  --nvidia-dark: #0a0a0f;
+  --nvidia-darker: #050507;
+  --nvidia-card: #1a1a26;
+  --nvidia-border: #2a2a3a;
+  --nvidia-text: #f0f0f5;
+  --nvidia-text2: #8888a0;
+  --nvidia-text3: #555570;
+  --nvidia-accent: #0066CC;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--nvidia-dark);color:var(--nvidia-text);overflow-x:hidden}
+a{color:var(--nvidia-green);text-decoration:none}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--nvidia-border);padding:16px 0}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;color:var(--nvidia-text)}
+.nav-logo-box{width:34px;height:34px;background:var(--nvidia-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.75rem;color:#000;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:24px;font-size:0.9rem;font-weight:500}
+.nav-links a{color:var(--nvidia-text2);transition:color 0.2s}
+.nav-links a:hover{color:var(--nvidia-green)}
+.nav-cta{padding:10px 24px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.nav-cta:hover{box-shadow:0 4px 20px var(--nvidia-green-glow);transform:translateY(-1px)}
+
+/* HERO */
+.hero{max-width:1100px;margin:0 auto;padding:80px 24px 60px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,var(--nvidia-green-glow),transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;padding:6px 16px;background:rgba(118,185,0,0.1);border:1px solid rgba(118,185,0,0.3);border-radius:20px;font-size:0.8rem;font-weight:600;color:var(--nvidia-green);margin-bottom:24px;letter-spacing:0.05em}
+.hero h1{font-size:3.5rem;font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:20px}
+.hero h1 span{color:var(--nvidia-green)}
+.hero p{font-size:1.15rem;color:var(--nvidia-text2);max-width:650px;margin:0 auto 32px;line-height:1.7}
+.hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none}
+.hero-cta:hover{box-shadow:0 8px 30px var(--nvidia-green-glow);transform:translateY(-2px)}
+.hero-cta-outline{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:transparent;border:2px solid var(--nvidia-border);color:var(--nvidia-text);border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none}
+.hero-cta-outline:hover{border-color:var(--nvidia-green);color:var(--nvidia-green);box-shadow:0 8px 30px var(--nvidia-green-glow)}
+.hero-price{margin-top:8px;font-size:0.9rem;color:var(--nvidia-text3)}
+.hero-price strong{color:var(--nvidia-text);font-size:1.1rem}
+.hero-price s{color:var(--nvidia-text3)}
+
+/* STATS BAR */
+.stats-bar{max-width:1100px;margin:0 auto 60px;padding:0 24px}
+.stats-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--nvidia-border);border-radius:16px;overflow:hidden}
+.stat-item{background:var(--nvidia-card);padding:28px;text-align:center}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:800;color:var(--nvidia-green)}
+.stat-label{font-size:0.8rem;color:var(--nvidia-text2);margin-top:4px;text-transform:uppercase;letter-spacing:0.08em}
+
+/* SECTIONS */
+.section{max-width:1100px;margin:0 auto;padding:60px 24px}
+.section-label{font-size:0.8rem;font-weight:700;color:var(--nvidia-green);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px}
+.section h2{font-size:2.2rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:16px}
+.section p.sub{font-size:1rem;color:var(--nvidia-text2);max-width:600px;line-height:1.7;margin-bottom:40px}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:16px;padding:32px;transition:all 0.3s}
+.feature-card:hover{border-color:var(--nvidia-green);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.feature-icon{font-size:2rem;margin-bottom:16px}
+.feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.feature-card p{font-size:0.88rem;color:var(--nvidia-text2);line-height:1.6}
+
+/* DOMAINS */
+.domains-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.domain-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:16px;padding:28px;position:relative;overflow:hidden}
+.domain-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+.domain-card:nth-child(1)::before{background:var(--nvidia-green)}
+.domain-card:nth-child(2)::before{background:var(--nvidia-green)}
+.domain-card:nth-child(3)::before{background:var(--nvidia-green)}
+.domain-card:nth-child(4)::before{background:#76B900}
+.domain-card:nth-child(5)::before{background:#76B900}
+.domain-card:nth-child(6)::before{background:#76B900}
+.domain-card:nth-child(7)::before{background:var(--nvidia-accent)}
+.domain-card:nth-child(8)::before{background:var(--nvidia-accent)}
+.domain-card:nth-child(9)::before{background:var(--nvidia-accent)}
+.domain-weight{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:800;margin-bottom:8px}
+.domain-card:nth-child(1) .domain-weight{color:var(--nvidia-green)}
+.domain-card:nth-child(2) .domain-weight{color:var(--nvidia-green)}
+.domain-card:nth-child(3) .domain-weight{color:var(--nvidia-green)}
+.domain-card:nth-child(4) .domain-weight{color:#76B900}
+.domain-card:nth-child(5) .domain-weight{color:#76B900}
+.domain-card:nth-child(6) .domain-weight{color:#76B900}
+.domain-card:nth-child(7) .domain-weight{color:var(--nvidia-accent)}
+.domain-card:nth-child(8) .domain-weight{color:var(--nvidia-accent)}
+.domain-card:nth-child(9) .domain-weight{color:var(--nvidia-accent)}
+.domain-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+.domain-card p{font-size:0.82rem;color:var(--nvidia-text2);line-height:1.6}
+
+/* COURSE CATALOG PREVIEW */
+.course-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.course-preview-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:16px;padding:28px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.course-preview-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--c-color,var(--nvidia-green))}
+.course-preview-card:hover{border-color:var(--c-color,var(--nvidia-green));transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.course-preview-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.course-preview-icon{font-size:1.8rem}
+.course-preview-tag{font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid var(--nvidia-border);color:var(--nvidia-text2)}
+.course-preview-card h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.course-preview-card p{font-size:0.82rem;color:var(--nvidia-text2);line-height:1.6;margin-bottom:14px}
+.course-preview-link{display:inline-flex;align-items:center;gap:6px;font-size:0.83rem;font-weight:700;color:var(--c-color,var(--nvidia-green));transition:gap 0.2s}
+.course-preview-card:hover .course-preview-link{gap:10px}
+.courses-more{text-align:center;margin-top:28px}
+.courses-more a{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:1px solid var(--nvidia-border);border-radius:12px;color:var(--nvidia-text2);font-weight:600;font-size:0.9rem;transition:all 0.2s}
+.courses-more a:hover{border-color:var(--nvidia-green);color:var(--nvidia-green)}
+
+/* INSTRUCTOR */
+.instructor{display:flex;gap:40px;align-items:center;background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:20px;padding:40px}
+.instructor-badge{min-width:200px;text-align:center}
+.cert-icon{width:120px;height:120px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2.5rem;font-weight:900;color:#000}
+.instructor-info h3{font-size:1.4rem;font-weight:800;margin-bottom:8px}
+.instructor-info p{font-size:0.92rem;color:var(--nvidia-text2);line-height:1.7}
+.instructor-creds{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.cred-tag{padding:4px 12px;background:rgba(118,185,0,0.1);border:1px solid rgba(118,185,0,0.2);border-radius:8px;font-size:0.75rem;font-weight:600;color:var(--nvidia-green)}
+
+/* TESTIMONIALS */
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proof-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:16px;padding:28px;transition:border-color 0.2s}
+.proof-card.dynamic-testimonial{border-color:rgba(118,185,0,0.2)}
+.proof-stars{color:var(--nvidia-green);font-size:1rem;margin-bottom:12px}
+.proof-text{font-size:0.88rem;color:var(--nvidia-text2);line-height:1.6;margin-bottom:16px;font-style:italic}
+.proof-author{font-size:0.8rem;font-weight:600}
+
+/* FEEDBACK INVITE */
+.feedback-invite{margin-top:36px;background:linear-gradient(135deg,rgba(118,185,0,0.06),rgba(118,185,0,0.02));border:1px solid rgba(118,185,0,0.18);border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.feedback-invite-text h3{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.feedback-invite-text p{font-size:0.88rem;color:var(--nvidia-text2);line-height:1.6}
+.feedback-invite-action .btn-green{padding:12px 28px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.feedback-invite-action .btn-green:hover{box-shadow:0 4px 20px var(--nvidia-green-glow);transform:translateY(-1px)}
+
+/* PRICING */
+.pricing-card{max-width:500px;margin:0 auto;background:var(--nvidia-card);border:2px solid var(--nvidia-green);border-radius:24px;padding:48px;text-align:center;position:relative}
+.pricing-tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--nvidia-green);color:#000;font-weight:700;font-size:0.8rem;padding:6px 20px;border-radius:10px}
+.pricing-price{font-family:'JetBrains Mono',monospace;font-size:3.5rem;font-weight:900;color:var(--nvidia-green);margin:24px 0 8px}
+.pricing-original{font-size:1.1rem;color:var(--nvidia-text3);margin-bottom:24px}
+.pricing-original s{font-size:1.2rem}
+.pricing-features{text-align:left;margin-bottom:32px}
+.pricing-feature{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:0.9rem}
+.pricing-feature::before{content:'✓';color:var(--nvidia-green);font-weight:700}
+.pricing-cta{width:100%;padding:16px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none;display:block;text-align:center}
+.pricing-cta:hover{box-shadow:0 8px 30px var(--nvidia-green-glow);transform:translateY(-2px)}
+.pricing-guarantee{margin-top:16px;font-size:0.82rem;color:var(--nvidia-text3)}
+
+/* FAQ */
+.faq-item{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.faq-q{padding:20px 24px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background 0.2s}
+.faq-q:hover{background:rgba(118,185,0,0.05)}
+.faq-a{padding:0 24px 20px;font-size:0.9rem;color:var(--nvidia-text2);line-height:1.7;display:none}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-arrow{transition:transform 0.3s;color:var(--nvidia-text3)}
+
+/* FOOTER */
+footer{max-width:1100px;margin:0 auto;padding:40px 24px;border-top:1px solid var(--nvidia-border);text-align:center;color:var(--nvidia-text3);font-size:0.82rem}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hero h1{font-size:2.2rem}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .features-grid,.domains-grid,.proof-grid,.course-preview-grid{grid-template-columns:1fr}
+  .instructor{flex-direction:column;text-align:center}
+  .nav-links{display:none}
+  .feedback-invite{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo"><div class="nav-logo-box">ET</div>Enterprise Tech Mastery</div>
+    <div class="nav-links">
+      <a href="courses.html">Courses</a>
+      <a href="simulator.html" onclick="grantAccess()">Practice Quiz</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="feedback.html">Leave Feedback</a>
+    </div>
+    <a href="courses.html" class="nav-cta">Browse Courses</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🎓 ENTERPRISE GUIDE — 9 COURSES &bull; 225+ PRACTICE QUESTIONS &bull; REAL FEEDBACK</div>
+  <h1>Your Complete <span>Enterprise Tech</span> Learning Guide</h1>
+  <p>9 structured courses across Linux Enterprise, NVIDIA AI Infrastructure, and Containers & Orchestration. Learn, practice with 225+ questions, and share your feedback to help fellow professionals.</p>
+  <div class="hero-ctas">
+    <a href="courses.html" class="hero-cta">📚 Browse All Courses</a>
+    <a href="simulator.html" class="hero-cta-outline" onclick="grantAccess()">🎯 Start Practice Quiz</a>
+  </div>
+  <div class="hero-price">Full Exam Simulator: <strong>₹199</strong> <s>₹999</s> — Course content is free</div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">Courses</div></div>
+    <div class="stat-item"><div class="stat-num">225+</div><div class="stat-label">Practice Questions</div></div>
+    <div class="stat-item"><div class="stat-num">50Q</div><div class="stat-label">Full Exam Simulator</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Tech Tracks</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-label">Platform Features</div>
+  <h2>Everything You Need to Pass</h2>
+  <p class="sub">Not just practice questions — a structured learning guide with courses, gamification, and a community feedback loop.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">📚</div><h3>9 Structured Courses</h3><p>Three complete technology tracks: Linux Enterprise, NVIDIA AI Infrastructure, and Containers & Orchestration — each with syllabus, objectives, and quizzes.</p></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><h3>Domain-Wise Tracking</h3><p>Track your accuracy across 9 technology domains. Identify weak areas and focus your study time where it matters most.</p></div>
+    <div class="feature-card"><div class="feature-icon">🏆</div><h3>Gamification & XP</h3><p>Earn XP, level up from Novice to Enterprise Expert, unlock 12 achievement badges, and maintain answer streaks.</p></div>
+    <div class="feature-card"><div class="feature-icon">💬</div><h3>Community Testimonials</h3><p>After completing a course, share your experience. Your feedback appears as a testimonial to guide other professionals on their learning journey.</p></div>
+    <div class="feature-card"><div class="feature-icon">⚡</div><h3>Quick Practice Mode</h3><p>Short on time? Take 10-question quick rounds with instant feedback and learn-as-you-go mode for any domain.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔄</div><h3>Unlimited Retakes</h3><p>Practice unlimited times. Questions are shuffled each attempt so you never memorize answer positions.</p></div>
+  </div>
+</section>
+
+<!-- COURSES CATALOG PREVIEW -->
+<section class="section">
+  <div class="section-label">Course Catalog</div>
+  <h2>Browse All 9 Courses</h2>
+  <p class="sub">Pick a technology track, study the course syllabus and learning objectives, then test yourself with domain-specific practice questions.</p>
+  <div class="course-preview-grid">
+    <a href="course-detail.html?course=linux-fundamentals" class="course-preview-card" style="--c-color:#76B900;display:block">
+      <div class="course-preview-top"><div class="course-preview-icon">🐧</div><div class="course-preview-tag">30 Qs</div></div>
+      <h3>Linux Fundamentals</h3>
+      <p>File system, permissions, processes, networking, and shell scripting.</p>
+      <div class="course-preview-link">View Course →</div>
+    </a>
+    <a href="course-detail.html?course=rhel" class="course-preview-card" style="--c-color:#ff6b35;display:block">
+      <div class="course-preview-top"><div class="course-preview-icon">🎩</div><div class="course-preview-tag">25 Qs</div></div>
+      <h3>Red Hat Enterprise Linux</h3>
+      <p>RHEL admin, yum/dnf, systemd, SELinux, and firewall configuration.</p>
+      <div class="course-preview-link" style="color:#ff6b35">View Course →</div>
+    </a>
+    <a href="course-detail.html?course=suse" class="course-preview-card" style="--c-color:#4a90e2;display:block">
+      <div class="course-preview-top"><div class="course-preview-icon">🦎</div><div class="course-preview-tag">25 Qs</div></div>
+      <h3>SUSE Linux Enterprise</h3>
+      <p>SLES, zypper, YaST, AppArmor, Btrfs, and SUSE enterprise tools.</p>
+      <div class="course-preview-link" style="color:#4a90e2">View Course →</div>
+    </a>
+    <a href="course-detail.html?course=ai-infra" class="course-preview-card" style="--c-color:#76B900;display:block">
+      <div class="course-preview-top"><div class="course-preview-icon">🖥️</div><div class="course-preview-tag">25 Qs</div></div>
+      <h3>AI Infrastructure</h3>
+      <p>GPU architecture, DGX systems, NVLink, InfiniBand, and AI clusters.</p>
+      <div class="course-preview-link">View Course →</div>
+    </a>
+    <a href="course-detail.html?course=docker" class="course-preview-card" style="--c-color:#2496ed;display:block">
+      <div class="course-preview-top"><div class="course-preview-icon">🐳</div><div class="course-preview-tag">25 Qs</div></div>
+      <h3>Docker</h3>
+      <p>Container fundamentals, Dockerfiles, networking, volumes, and Compose.</p>
+      <div class="course-preview-link" style="color:#2496ed">View Course →</div>
+    </a>
+    <a href="course-detail.html?course=kubernetes" class="course-preview-card" style="--c-color:#326ce5;display:block">
+      <div class="course-preview-top"><div class="course-preview-icon">☸️</div><div class="course-preview-tag">25 Qs</div></div>
+      <h3>Kubernetes</h3>
+      <p>K8s architecture, workloads, services, RBAC, and persistent storage.</p>
+      <div class="course-preview-link" style="color:#326ce5">View Course →</div>
+    </a>
+  </div>
+  <div class="courses-more">
+    <a href="courses.html">View All 9 Courses &amp; 3 Practice Exam Modes →</a>
+  </div>
+</section>
+
+<!-- EXAM COVERAGE -->
+<section class="section">
+  <div class="section-label">Exam Coverage</div>
+  <h2>Complete Enterprise Technology Coverage</h2>
+  <p class="sub">Master three major enterprise technology stacks: Linux Enterprise systems, NVIDIA AI Infrastructure, and Container Orchestration platforms.</p>
+  <div class="domains-grid">
+    <div class="domain-card"><div class="domain-weight">30</div><h3>Linux Fundamentals</h3><p>Core Linux concepts: file system navigation, permissions, processes, networking, package management, shell scripting, and system administration basics.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>Red Hat Enterprise Linux</h3><p>RHEL system administration, yum/dnf package management, systemd services, SELinux security, firewall configuration, and Red Hat enterprise tools.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>SUSE Linux Enterprise</h3><p>SLES administration, zypper package manager, YaST configuration tool, AppArmor security, Btrfs file system, and SUSE enterprise features.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>AI Infrastructure</h3><p>GPU hardware architecture, data center networking, high-performance computing, parallel file systems, and AI cluster deployment.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>AI Knowledge</h3><p>Machine learning fundamentals, deep learning frameworks, CUDA programming, model optimization techniques, and AI development tools.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>AI Operations</h3><p>GPU resource monitoring, Kubernetes GPU scheduling, container orchestration for AI, model deployment pipelines, and AI infrastructure management.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>Docker</h3><p>Container fundamentals, Docker images and containers, networking, volumes, Docker Compose, multi-stage builds, and container security.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>Kubernetes</h3><p>K8s architecture, pods and deployments, services and networking, ConfigMaps and secrets, persistent volumes, and cluster management.</p></div>
+    <div class="domain-card"><div class="domain-weight">25</div><h3>Container Operations</h3><p>Container orchestration, CI/CD pipelines, monitoring and logging, security best practices, scaling strategies, and enterprise container management.</p></div>
+  </div>
+</section>
+
+<!-- CREDENTIAL -->
+<section class="section">
+  <div class="section-label">Credibility</div>
+  <h2>Built by Enterprise Technology Experts</h2>
+  <div style="background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:16px;padding:28px;font-size:0.92rem;color:var(--nvidia-text2);line-height:1.7;">
+    This comprehensive learning platform was created by enterprise technology professionals with extensive hands-on experience in Linux system administration, NVIDIA AI infrastructure, and container orchestration. Every question is crafted from real enterprise deployment knowledge and certification requirements across multiple technology domains.
+  </div>
+</section>
+
+<!-- SOCIAL PROOF / TESTIMONIALS -->
+<section class="section" id="testimonials">
+  <div class="section-label">What Learners Say</div>
+  <h2>Trusted by Enterprise Professionals</h2>
+  <p class="sub">Join hundreds of system administrators, DevOps engineers, and cloud architects who mastered enterprise technologies with our platform. Read their feedback below — or add yours.</p>
+  <div class="proof-grid" id="testimonialGrid">
+    <!-- Seed testimonials (always visible) -->
+    <div class="proof-card">
+      <div class="proof-stars">★★★★★</div>
+      <div class="proof-text">"The domain-wise tracking helped me identify my weak areas in AI Operations. Passed on my first attempt with a comfortable margin!"</div>
+      <div class="proof-author">— Infrastructure Engineer, Bengaluru</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-stars">★★★★★</div>
+      <div class="proof-text">"Finally a practice test that covers real exam-level depth, not just surface-level questions. The explanations are gold."</div>
+      <div class="proof-author">— DevOps Lead, Hyderabad</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-stars">★★★★★</div>
+      <div class="proof-text">"The gamification actually made studying fun. I was addicted to maintaining my answer streak and leveling up. Passed with 85%."</div>
+      <div class="proof-author">— Cloud Architect, Chennai</div>
+    </div>
+    <!-- Dynamic testimonials injected by JS below the seed cards -->
+  </div>
+  <!-- FEEDBACK INVITE BANNER -->
+  <div class="feedback-invite">
+    <div class="feedback-invite-text">
+      <h3>Completed a course? Share your experience.</h3>
+      <p>Your feedback helps other enterprise professionals choose the right course. It takes 2 minutes and appears on this page instantly.</p>
+    </div>
+    <div class="feedback-invite-action">
+      <a href="feedback.html" class="btn-green">Leave Feedback →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 style="text-align:center">Invest in Your Enterprise Career</h2>
+  <p class="sub" style="text-align:center;margin:0 auto 40px">Enterprise certifications cost $125–$300 each (₹10,000–₹25,000). Invest ₹199 to master Linux, AI, and containers — pass multiple certifications.</p>
+  <div class="pricing-card">
+    <div class="pricing-tag">LAUNCH OFFER — 80% OFF</div>
+    <div style="font-size:1.2rem;font-weight:700;margin-top:12px">Enterprise Tech Mastery — Full Simulator</div>
+    <div class="pricing-price">₹199</div>
+    <div class="pricing-original"><s>₹999</s> — Launch price ends soon</div>
+    <div class="pricing-features">
+      <div class="pricing-feature">9 courses with full syllabi &amp; objectives (free)</div>
+      <div class="pricing-feature">225+ expert-crafted practice questions</div>
+      <div class="pricing-feature">Full exam simulator (50Q, 60 min, timed)</div>
+      <div class="pricing-feature">All 9 technology domains with weighting</div>
+      <div class="pricing-feature">Detailed explanations for every question</div>
+      <div class="pricing-feature">Gamification: XP, levels, badges, streaks</div>
+      <div class="pricing-feature">Quick practice mode (10Q rounds)</div>
+      <div class="pricing-feature">Unlimited retakes with shuffled questions</div>
+      <div class="pricing-feature">Lifetime access + free updates</div>
+    </div>
+    <a href="https://rzp.io/rzp/prI4nWE" target="_blank" class="pricing-cta">🚀 Get Instant Access — ₹199</a>
+    <div class="pricing-guarantee">💰 7-day money-back guarantee. No questions asked.</div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-label">FAQ</div>
+  <h2>Common Questions</h2>
+  <p class="sub">Everything you need to know before getting started.</p>
+  <div class="faq-item open"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is the course content free? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes! All 9 course pages with syllabi and learning objectives are completely free. The paid ₹199 tier unlocks the full 225+ question practice simulator, full exam mode, gamification (XP, badges, levels), and domain-wise performance tracking.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this official Red Hat/SUSE/NVIDIA material? <span class="faq-arrow">▼</span></div><div class="faq-a">No, this is an independent learning platform created by enterprise technology experts. It is not affiliated with or endorsed by Red Hat, SUSE, NVIDIA, Docker, or Kubernetes. Questions are based on publicly available certification objectives and enterprise technology knowledge.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the feedback / testimonials system work? <span class="faq-arrow">▼</span></div><div class="faq-a">After completing a course or practice quiz, you can leave a star rating and written review via the feedback form. If you allow it to be public, your review immediately appears on the homepage testimonials section and on the relevant course page — helping other learners make informed decisions.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the exam simulator work? <span class="faq-arrow">▼</span></div><div class="faq-a">The full exam simulator provides comprehensive practice: 50 multiple-choice questions, 60-minute countdown timer, and questions weighted across all 9 technology domains. Your score and domain-wise performance are shown at the end, helping you identify areas for improvement.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need any prerequisites? <span class="faq-arrow">▼</span></div><div class="faq-a">Our platform covers multiple certification levels from foundational to advanced. Whether you're new to enterprise technologies or an experienced professional, you'll find questions appropriate to your skill level across Linux, AI infrastructure, and container orchestration.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How long do I have access? <span class="faq-arrow">▼</span></div><div class="faq-a">Lifetime access. Once you purchase, the simulator is yours forever, including any future question bank updates at no extra cost.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I use this on mobile? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes! The platform is fully responsive and works on desktop, tablet, and mobile devices. Practice anytime, anywhere.</div></div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" style="text-align:center;padding-bottom:80px">
+  <h2>Ready to Master Enterprise Technologies?</h2>
+  <p class="sub" style="margin:12px auto 32px;text-align:center">Explore the course catalog for free, practice with 225+ questions, and share your feedback to help fellow professionals.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="courses.html" class="hero-cta">📚 Browse All Courses</a>
+    <a href="feedback.html" style="display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:transparent;border:2px solid var(--nvidia-border);color:var(--nvidia-text);border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;transition:all 0.3s" onmouseover="this.style.borderColor='var(--nvidia-green)';this.style.color='var(--nvidia-green)'" onmouseout="this.style.borderColor='var(--nvidia-border)';this.style.color='var(--nvidia-text)'">💬 Leave Feedback</a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Enterprise Tech Mastery. All rights reserved.</p>
+  <p style="margin-top:8px">Not affiliated with Red Hat, SUSE, NVIDIA, Docker, or Kubernetes. For learning and certification preparation purposes only.</p>
+</footer>
+
+<script src="testimonials.js"></script>
+<script>
+function grantAccess() {
+  try { localStorage.setItem('aiio_access', 'granted'); } catch(e) {}
+}
+
+function loadDynamicTestimonials() {
+  var grid = document.getElementById('testimonialGrid');
+  if (!grid) return;
+  var testimonials = TestimonialsManager.getPublic(6); // up to 6 dynamic cards
+  testimonials.forEach(function(t) {
+    grid.insertAdjacentHTML('beforeend', TestimonialsManager.renderCard(t));
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadDynamicTestimonials);
+</script>
+</body>
+</html>

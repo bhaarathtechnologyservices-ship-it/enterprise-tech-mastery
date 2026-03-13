@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Enterprise Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --linux-orange: #FF6600;
+  --linux-orange-dark: #CC5200;
+  --linux-orange-glow: rgba(255, 102, 0, 0.3);
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a26;
+  --bg-card-hover: #222233;
+  --text-primary: #f0f0f5;
+  --text-secondary: #8888a0;
+  --text-muted: #555570;
+  --border: #2a2a3a;
+  --danger: #ff4757;
+  --warning: #ffa502;
+  --info: #3b82f6;
+  --success: #10b981;
+  --gold: #f59e0b;
+  --silver: #94a3b8;
+  --bronze: #cd7c2f;
+  --xp-bar: linear-gradient(90deg, #FF6600, #ff8533);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--linux-orange); border-radius: 3px; }
+
+/* ANIMATIONS */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 20px var(--linux-orange-glow); } 50% { box-shadow: 0 0 40px var(--linux-orange-glow), 0 0 60px rgba(255,102,0,0.1); } }
+@keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes confetti { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(-100px) rotate(720deg); opacity: 0; } }
+@keyframes badgePop { 0% { transform: scale(0) rotate(-180deg); } 60% { transform: scale(1.2) rotate(10deg); } 100% { transform: scale(1) rotate(0); } }
+
+.fade-in { animation: fadeInUp 0.6s ease forwards; }
+.fade-in-delay-1 { animation: fadeInUp 0.6s ease 0.1s forwards; opacity: 0; }
+.fade-in-delay-2 { animation: fadeInUp 0.6s ease 0.2s forwards; opacity: 0; }
+.fade-in-delay-3 { animation: fadeInUp 0.6s ease 0.3s forwards; opacity: 0; }
+
+/* LAYOUT */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* HEADER / NAV */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.top-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--linux-orange);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.8rem;
+  color: #000;
+}
+.nav-xp {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.xp-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.xp-display .xp-icon { color: var(--linux-orange); font-weight: 700; }
+.level-badge {
+  background: linear-gradient(135deg, var(--linux-orange), var(--linux-orange-dark));
+  color: #000;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--warning);
+  font-weight: 600;
+}
+
+/* PAGE SECTIONS */
+.page { display: none; }
+.page.active { display: block; }
+
+/* HERO / DASHBOARD */
+.hero {
+  padding: 60px 0 40px;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -200px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--linux-orange-glow), transparent 70%);
+  pointer-events: none;
+}
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.hero-title span { color: var(--linux-orange); }
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.hero-instructor {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+.hero-instructor strong { color: var(--linux-orange); }
+
+/* STATS ROW */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  border-color: var(--linux-orange);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--linux-orange);
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* XP PROGRESS BAR */
+.xp-progress-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+}
+.xp-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.xp-progress-title { font-weight: 700; font-size: 1rem; }
+.xp-progress-detail { font-size: 0.85rem; color: var(--text-secondary); }
+.xp-bar-bg {
+  height: 12px;
+  background: var(--bg-primary);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.xp-bar-fill {
+  height: 100%;
+  background: var(--xp-bar);
+  border-radius: 6px;
+  transition: width 1s ease;
+  position: relative;
+}
+.xp-bar-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+  border-radius: 6px;
+}
+
+/* DOMAIN CARDS */
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.domain-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.domain-card:hover {
+  border-color: var(--linux-orange);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.domain-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+.domain-card.domain-linux::after { background: var(--linux-orange); }
+.domain-card.domain-rhel::after { background: var(--rhel-red); }
+.domain-card.domain-suse::after { background: var(--suse-green); }
+.domain-card.domain-ai-infra::after { background: var(--ai-blue); }
+.domain-card.domain-ai-knowledge::after { background: var(--ai-purple); }
+.domain-card.domain-ai-ops::after { background: var(--ai-cyan); }
+.domain-card.domain-docker::after { background: var(--docker-blue); }
+.domain-card.domain-kubernetes::after { background: var(--kubernetes-blue); }
+.domain-card.domain-container-ops::after { background: var(--container-teal); }
+.domain-card.domain-rhel::after { background: #ff6b35; }
+.domain-card.domain-suse::after { background: #4a90e2; }
+.domain-card.domain-ai-infra::after { background: #76b900; }
+.domain-card.domain-ai-knowledge::after { background: #9b59b6; }
+.domain-card.domain-ai-ops::after { background: #e74c3c; }
+.domain-card.domain-docker::after { background: #2496ed; }
+.domain-card.domain-kubernetes::after { background: #326ce5; }
+.domain-card.domain-container-ops::after { background: #f39c12; }
+
+/* TRACK CARDS */
+.tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.track-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+.track-card:hover {
+  border-color: var(--linux-orange);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.track-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.track-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--linux-orange), var(--linux-orange-dark));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.track-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.track-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.track-domains {
+  display: grid;
+  gap: 12px;
+}
+.track-domains .domain-card {
+  padding: 20px;
+  margin: 0;
+}
+.track-domains .domain-card:hover {
+  transform: translateY(-2px);
+}
+.track-domains .domain-name {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+.track-domains .domain-topics {
+  font-size: 0.75rem;
+  margin-bottom: 12px;
+}
+.track-domains .domain-progress-bar {
+  height: 3px;
+  margin-bottom: 8px;
+}
+.track-domains .domain-stats {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.domain-weight {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.domain-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.domain-topics {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.domain-progress-bar {
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.domain-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+.domain-infra .domain-progress-fill { background: var(--linux-orange); }
+.domain-ai .domain-progress-fill { background: var(--info); }
+.domain-ops .domain-progress-fill { background: var(--warning); }
+.domain-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ACTION BUTTONS */
+.actions-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.action-btn {
+  padding: 20px 28px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--linux-orange), var(--linux-orange-dark));
+  color: #000;
+  border: none;
+  font-weight: 700;
+}
+.action-btn.primary:hover {
+  box-shadow: 0 8px 30px var(--linux-orange-glow);
+}
+.action-btn .btn-icon { font-size: 1.4rem; }
+.action-btn .btn-text-sub { font-size: 0.78rem; font-weight: 400; color: var(--text-secondary); }
+.action-btn.primary .btn-text-sub { color: rgba(0,0,0,0.6); }
+
+/* BADGES SECTION */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.badge-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.badge-item.earned {
+  border-color: var(--linux-orange);
+  animation: glow 3s ease infinite;
+}
+.badge-item.locked { opacity: 0.4; }
+.badge-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+.badge-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* EXAM PAGE */
+.exam-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.exam-timer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--linux-orange);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.exam-timer.warning { color: var(--warning); }
+.exam-timer.danger { color: var(--danger); animation: pulse 1s infinite; }
+
+.exam-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+.exam-progress-bar {
+  width: 200px;
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.exam-progress-fill {
+  height: 100%;
+  background: var(--linux-orange);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* QUESTION CARD */
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.4s ease;
+}
+.question-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.question-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tag-infra { background: rgba(255,102,0,0.15); color: var(--linux-orange); }
+.tag-ai { background: rgba(59,130,246,0.15); color: var(--info); }
+.tag-ops { background: rgba(255,165,2,0.15); color: var(--warning); }
+.tag-linux { background: rgba(255,102,0,0.15); color: var(--linux-orange); }
+.tag-rhel { background: rgba(255,107,53,0.15); color: #ff6b35; }
+.tag-suse { background: rgba(74,144,226,0.15); color: #4a90e2; }
+.tag-ai-infra { background: rgba(118,185,0,0.15); color: #76b900; }
+.tag-ai-knowledge { background: rgba(155,89,182,0.15); color: #9b59b6; }
+.tag-ai-ops { background: rgba(231,76,60,0.15); color: #e74c3c; }
+.tag-docker { background: rgba(36,150,237,0.15); color: #2496ed; }
+.tag-kubernetes { background: rgba(50,108,229,0.15); color: #326ce5; }
+.tag-container-ops { background: rgba(243,156,18,0.15); color: #f39c12; }
+.tag-difficulty {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+.diff-easy { background: rgba(16,185,129,0.15); color: var(--success); }
+.diff-medium { background: rgba(255,165,2,0.15); color: var(--warning); }
+.diff-hard { background: rgba(255,71,87,0.15); color: var(--danger); }
+
+.question-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.question-text {
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* OPTIONS */
+.options-list { display: flex; flex-direction: column; gap: 12px; }
+.option {
+  padding: 16px 20px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.option:hover {
+  border-color: var(--nvidia-green);
+  background: rgba(118,185,0,0.05);
+}
+.option.selected {
+  border-color: var(--nvidia-green);
+  background: rgba(118,185,0,0.1);
+}
+.option.correct {
+  border-color: var(--success);
+  background: rgba(16,185,129,0.1);
+}
+.option.incorrect {
+  border-color: var(--danger);
+  background: rgba(255,71,87,0.1);
+  animation: shake 0.3s ease;
+}
+.option-letter {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.option.selected .option-letter { background: var(--linux-orange); color: #000; }
+.option.correct .option-letter { background: var(--success); color: #fff; }
+.option.incorrect .option-letter { background: var(--danger); color: #fff; }
+
+/* EXPLANATION */
+.explanation-box {
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(118,185,0,0.05);
+  border: 1px solid rgba(118,185,0,0.2);
+  border-radius: 14px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  animation: fadeIn 0.4s ease;
+}
+.explanation-box strong { color: var(--linux-orange); }
+
+/* NAV BUTTONS */
+.exam-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+.nav-btn {
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.nav-btn:hover { border-color: var(--linux-orange); }
+.nav-btn.primary-btn {
+  background: var(--linux-orange);
+  color: #000;
+  border: none;
+}
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* QUESTION MAP */
+.question-map {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  margin-bottom: 24px;
+}
+.q-dot {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.q-dot:hover { border-color: var(--linux-orange); }
+.q-dot.current { border-color: var(--linux-orange); background: rgba(255,102,0,0.15); color: var(--linux-orange); }
+.q-dot.answered { background: var(--nvidia-green); color: #000; border-color: var(--nvidia-green); }
+.q-dot.correct-dot { background: var(--success); border-color: var(--success); color: #fff; }
+.q-dot.incorrect-dot { background: var(--danger); border-color: var(--danger); color: #fff; }
+
+/* RESULTS PAGE */
+.results-hero {
+  text-align: center;
+  padding: 60px 0 40px;
+}
+.results-score {
+  font-size: 5rem;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  animation: countUp 0.8s ease;
+}
+.results-score.pass { color: var(--nvidia-green); }
+.results-score.fail { color: var(--danger); }
+.results-verdict {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.results-detail {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.results-domains {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 40px 0;
+}
+.result-domain-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+.result-domain-score {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+}
+.result-domain-name {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.result-domain-bar {
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.result-domain-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+
+/* XP EARNED ANIMATION */
+.xp-earned-popup {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  background: var(--bg-card);
+  border: 2px solid var(--nvidia-green);
+  border-radius: 14px;
+  padding: 16px 24px;
+  z-index: 200;
+  animation: fadeInUp 0.4s ease, fadeIn 0.4s ease;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  display: none;
+}
+.xp-earned-popup.show { display: block; }
+.xp-earned-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--nvidia-green);
+}
+
+/* BADGE POPUP */
+.badge-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+.badge-popup.show { display: flex; }
+.badge-popup-content {
+  background: var(--bg-card);
+  border: 2px solid var(--nvidia-green);
+  border-radius: 24px;
+  padding: 48px;
+  text-align: center;
+  animation: badgePop 0.6s ease;
+  max-width: 400px;
+}
+.badge-popup-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+.badge-popup-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.badge-popup-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* LEADERBOARD */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+.leaderboard-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.leaderboard-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.leaderboard-table tr:hover td { background: var(--bg-card); }
+.leaderboard-rank {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+.rank-1 { color: var(--gold); }
+.rank-2 { color: var(--silver); }
+.rank-3 { color: var(--bronze); }
+
+/* SETTINGS */
+.settings-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 16px;
+}
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+.settings-label { font-weight: 500; }
+.settings-desc { font-size: 0.82rem; color: var(--text-secondary); }
+.settings-select {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+}
+
+/* FOOTER */
+.footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+.footer a { color: var(--nvidia-green); text-decoration: none; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-title { font-size: 1.8rem; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .domains-grid { grid-template-columns: 1fr; }
+  .actions-row { grid-template-columns: 1fr; }
+  .badges-grid { grid-template-columns: repeat(3, 1fr); }
+  .results-domains { grid-template-columns: 1fr; }
+  .question-map { grid-template-columns: repeat(5, 1fr); }
+  .question-card { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">ET</div>
+      <span>Enterprise Tech Mastery</span>
+      <a href="courses.html" style="margin-left:16px;font-size:0.8rem;font-weight:600;color:var(--text-secondary);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:8px;transition:all 0.2s" onmouseover="this.style.color='var(--linux-orange)';this.style.borderColor='var(--linux-orange)'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'">← Courses</a>
+    </div>
+    <div class="nav-xp">
+      <div class="streak-badge" id="streakBadge">🔥 <span id="streakCount">0</span></div>
+      <div class="xp-display">
+        <span class="xp-icon">⚡</span>
+        <span id="navXP">0</span> XP
+      </div>
+      <div class="level-badge" id="navLevel">Level 1</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ACCESS GATE ============ -->
+<div id="accessGate" style="position:fixed;inset:0;background:var(--bg-primary);z-index:600;display:flex;align-items:center;justify-content:center;">
+  <div style="text-align:center;max-width:480px;padding:40px;">
+    <div style="font-size:2.5rem;margin-bottom:16px;">🔒</div>
+    <div style="font-size:1.6rem;font-weight:800;margin-bottom:12px;">Enterprise Tech Mastery</div>
+    <div id="gateMessage" style="font-size:0.95rem;color:var(--text-secondary);line-height:1.7;margin-bottom:28px;">The full practice simulator is a paid product. Purchase access to unlock 225+ questions, full exam mode, gamification, and domain tracking.</div>
+    <a href="index.html#pricing" class="action-btn primary" style="text-decoration:none;display:inline-flex;font-size:1rem;padding:14px 32px;">Get Access — ₹199</a>
+    <div style="margin-top:24px;font-size:0.85rem;color:var(--text-muted);">Already purchased? Enter your access key:</div>
+    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+      <input type="text" id="accessKeyInput" placeholder="Enter access key" style="padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Outfit',sans-serif;font-size:0.9rem;width:200px;outline:none;" onkeypress="if(event.key==='Enter')validateKey()">
+      <button onclick="validateKey()" class="nav-btn primary-btn" style="padding:10px 20px;">Unlock</button>
+    </div>
+    <div id="keyError" style="color:var(--danger);font-size:0.82rem;margin-top:8px;display:none;">Invalid access key. Please check and try again.</div>
+  </div>
+</div>
+
+<!-- ============ WELCOME SCREEN (after payment) ============ -->
+<div id="welcomeScreen" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,0.95);z-index:500;display:flex;align-items:center;justify-content:center;">
+  <div style="text-align:center;max-width:500px;padding:40px;animation:fadeInUp 0.6s ease">
+    <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+    <div style="font-size:1.8rem;font-weight:900;margin-bottom:8px;">Welcome to AIIO Mastery!</div>
+    <div style="font-size:1rem;color:var(--text-secondary);line-height:1.7;margin-bottom:8px;">Thank you for your purchase. You now have <span style="color:var(--nvidia-green);font-weight:700;">lifetime access</span> to 210+ exam questions across all 3 NCA-AIIO domains.</div>
+    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:32px;">Bookmark this page — you can return anytime.</div>
+    <button class="action-btn primary" onclick="dismissWelcome()" style="display:inline-flex;font-size:1.1rem;padding:16px 40px;">🚀 Start Your Exam Prep</button>
+  </div>
+</div>
+
+<!-- XP POPUP -->
+<div class="xp-earned-popup" id="xpPopup">
+  <div class="xp-earned-amount" id="xpPopupText">+50 XP</div>
+</div>
+
+<!-- BADGE POPUP -->
+<div class="badge-popup" id="badgePopup">
+  <div class="badge-popup-content">
+    <div class="badge-popup-icon" id="badgePopupIcon">🏆</div>
+    <div class="badge-popup-title" id="badgePopupTitle">Badge Earned!</div>
+    <div class="badge-popup-desc" id="badgePopupDesc">You've unlocked a new achievement!</div>
+    <button class="nav-btn primary-btn" onclick="closeBadgePopup()">Continue</button>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD PAGE ============ -->
+<div class="page active" id="pageDashboard">
+  <div class="container">
+    <div class="hero">
+      <div class="hero-title fade-in">Master <span>Linux</span><br>Enterprise Skills</div>
+      <div class="hero-sub fade-in-delay-1">Gamified learning platform with 210+ questions across Linux fundamentals and enterprise distributions. Practice commands, administration, and real-world scenarios.</div>
+      <div class="hero-instructor fade-in-delay-2">Created by an <strong>Enterprise Linux Expert</strong> | System Administration & DevOps</div>
+    </div>
+
+    <div class="stats-row fade-in-delay-2">
+      <div class="stat-card">
+        <div class="stat-value" id="totalQuestions">0</div>
+        <div class="stat-label">Questions Answered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="accuracy">0%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="examsCompleted">0</div>
+        <div class="stat-label">Exams Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="bestScore">—</div>
+        <div class="stat-label">Best Score</div>
+      </div>
+    </div>
+
+    <div class="xp-progress-section fade-in-delay-3">
+      <div class="xp-progress-header">
+        <div class="xp-progress-title">Level <span id="currentLevel">1</span> — <span id="levelTitle">Novice</span></div>
+        <div class="xp-progress-detail"><span id="currentXP">0</span> / <span id="nextLevelXP">500</span> XP</div>
+      </div>
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" id="xpBarFill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="section-title">Technology Tracks</div>
+    <div class="tracks-grid">
+      <!-- Linux Track -->
+      <div class="track-card">
+        <div class="track-header">
+          <div class="track-icon">🐧</div>
+          <div class="track-title">Linux Enterprise</div>
+          <div class="track-desc">Master Linux system administration</div>
+        </div>
+        <div class="track-domains">
+          <div class="domain-card domain-linux-fundamentals" onclick="startDomainPractice('linux-fundamentals')">
+            <div class="domain-name">Linux Fundamentals</div>
+            <div class="domain-topics">File system, permissions, processes, networking, shell scripting</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="linux-fundamentalsProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="linux-fundamentalsAnswered">0 answered</span><span id="linux-fundamentalsAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-rhel" onclick="startDomainPractice('rhel')">
+            <div class="domain-name">Red Hat Enterprise Linux</div>
+            <div class="domain-topics">RHEL administration, yum/dnf, systemd, SELinux, firewall</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="rhelProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="rhelAnswered">0 answered</span><span id="rhelAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-suse" onclick="startDomainPractice('suse')">
+            <div class="domain-name">SUSE Linux Enterprise</div>
+            <div class="domain-topics">SLES administration, zypper, YaST, AppArmor, Btrfs</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="suseProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="suseAnswered">0 answered</span><span id="suseAccuracy">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AIIO Track -->
+      <div class="track-card">
+        <div class="track-header">
+          <div class="track-icon">🧠</div>
+          <div class="track-title">NVIDIA AIIO</div>
+          <div class="track-desc">AI Infrastructure & Operations</div>
+        </div>
+        <div class="track-domains">
+          <div class="domain-card domain-ai-infra" onclick="startDomainPractice('ai-infra')">
+            <div class="domain-name">AI Infrastructure</div>
+            <div class="domain-topics">GPU architecture, DGX systems, NVLink, NVSwitch, networking</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="ai-infraProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="ai-infraAnswered">0 answered</span><span id="ai-infraAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-ai-knowledge" onclick="startDomainPractice('ai-knowledge')">
+            <div class="domain-name">AI Knowledge</div>
+            <div class="domain-topics">ML/DL fundamentals, CUDA, TensorRT, model optimization</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="ai-knowledgeProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="ai-knowledgeAnswered">0 answered</span><span id="ai-knowledgeAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-ai-ops" onclick="startDomainPractice('ai-ops')">
+            <div class="domain-name">AI Operations</div>
+            <div class="domain-topics">DCGM monitoring, Kubernetes GPU, containers, MIG, Slurm</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="ai-opsProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="ai-opsAnswered">0 answered</span><span id="ai-opsAccuracy">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Containers & Orchestration Track -->
+      <div class="track-card">
+        <div class="track-header">
+          <div class="track-icon">🐳</div>
+          <div class="track-title">Containers & Orchestration</div>
+          <div class="track-desc">Modern application deployment</div>
+        </div>
+        <div class="track-domains">
+          <div class="domain-card domain-docker" onclick="startDomainPractice('docker')">
+            <div class="domain-name">Docker</div>
+            <div class="domain-topics">Container fundamentals, Dockerfiles, images, volumes, networking</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="dockerProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="dockerAnswered">0 answered</span><span id="dockerAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-kubernetes" onclick="startDomainPractice('kubernetes')">
+            <div class="domain-name">Kubernetes</div>
+            <div class="domain-topics">Pods, services, deployments, networking, storage, security</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="kubernetesProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="kubernetesAnswered">0 answered</span><span id="kubernetesAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-container-ops" onclick="startDomainPractice('container-ops')">
+            <div class="domain-name">Container Operations</div>
+            <div class="domain-topics">CI/CD, monitoring, security, orchestration, service mesh</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="container-opsProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="container-opsAnswered">0 answered</span><span id="container-opsAccuracy">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Quick Actions</div>
+    <div class="actions-row">
+      <button class="action-btn primary" onclick="startFullExam()">
+        <span class="btn-icon">🎯</span>
+        <div>
+          <div>Start Full Assessment</div>
+          <div class="btn-text-sub">50 questions • 60 minutes • Comprehensive Linux test</div>
+        </div>
+      </button>
+      <button class="action-btn" onclick="startQuickPractice()">
+        <span class="btn-icon">⚡</span>
+        <div>
+          <div>Quick Practice — 10 Questions</div>
+          <div class="btn-text-sub">Mixed domains • No timer • Learn mode</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="section-title">Achievements</div>
+    <div class="badges-grid" id="badgesGrid"></div>
+
+    <div class="footer">
+      <p>AIIO Exam Mastery — Not affiliated with NVIDIA Corporation. For exam preparation purposes only.</p>
+      <p style="margin-top:8px;">Not affiliated with NVIDIA Corporation. For exam preparation purposes only.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXAM PAGE ============ -->
+<div class="page" id="pageExam">
+  <div class="container" style="padding-top: 20px;">
+    <div class="exam-header">
+      <div>
+        <div style="font-weight: 700; font-size: 1.1rem;" id="examTitle">Full Exam Simulation</div>
+        <div style="font-size: 0.82rem; color: var(--text-secondary);" id="examSubtitle">Linux Enterprise • 50 Questions</div>
+      </div>
+      <div class="exam-timer" id="examTimer">⏱ 60:00</div>
+      <div class="exam-progress">
+        <span id="examProgressText">1 / 50</span>
+        <div class="exam-progress-bar"><div class="exam-progress-fill" id="examProgressFill" style="width: 2%"></div></div>
+      </div>
+      <button class="nav-btn" onclick="endExam()" style="font-size:0.82rem;">End Exam</button>
+    </div>
+
+    <div class="question-map" id="questionMap"></div>
+
+    <div id="questionContainer"></div>
+
+    <div class="exam-nav">
+      <button class="nav-btn" id="prevBtn" onclick="prevQuestion()" disabled>← Previous</button>
+      <button class="nav-btn" id="flagBtn" onclick="flagQuestion()">🚩 Flag</button>
+      <button class="nav-btn primary-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULTS PAGE ============ -->
+<div class="page" id="pageResults">
+  <div class="container">
+    <div class="results-hero">
+      <div style="font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Exam Complete</div>
+      <div class="results-score" id="resultsScore">0%</div>
+      <div class="results-verdict" id="resultsVerdict">—</div>
+      <div class="results-detail" id="resultsDetail">—</div>
+    </div>
+
+    <div class="results-domains" id="resultsDomains"></div>
+
+    <div style="text-align:center;margin-bottom:40px;">
+      <button class="action-btn primary" onclick="showPage('pageDashboard')" style="display:inline-flex;">
+        <span class="btn-icon">🏠</span> Back to Dashboard
+      </button>
+      <button class="action-btn" onclick="reviewExam()" style="display:inline-flex;margin-left:12px;">
+        <span class="btn-icon">📝</span> Review Answers
+      </button>
+      <a id="feedbackResultsBtn" href="feedback.html" class="action-btn" style="display:inline-flex;margin-left:12px;text-decoration:none;">
+        <span class="btn-icon">💬</span> Leave Feedback
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================= QUESTION BANK =======================
+const questionBank = [
+  // ====== LINUX FUNDAMENTALS — 30 questions ======
+  {id:1,domain:"linux",difficulty:"easy",question:"What is the root directory in Linux file system?",options:["/home","/","/usr","/var"],correct:1,explanation:"The root directory (/) is the top-level directory in the Linux file system hierarchy. All other directories are subdirectories of root."},
+  {id:2,domain:"linux",difficulty:"easy",question:"Which command is used to list files in a directory?",options:["list","ls","dir","show"],correct:1,explanation:"The 'ls' command lists files and directories in the current directory. It's one of the most commonly used Linux commands."},
+  {id:3,domain:"linux",difficulty:"easy",question:"What does the 'cd' command do?",options:["Copy directory","Change directory","Create directory","Delete directory"],correct:1,explanation:"The 'cd' command changes the current working directory. Use 'cd /' to go to root, 'cd ~' to go to home directory."},
+  {id:4,domain:"linux",difficulty:"medium",question:"Which file contains user account information?",options:["/etc/passwd","/etc/users","/var/users","/home/users"],correct:0,explanation:"/etc/passwd contains user account information including usernames, UIDs, GIDs, home directories, and default shells."},
+  {id:5,domain:"linux",difficulty:"medium",question:"What is the purpose of the PATH environment variable?",options:["Shows current directory","Lists all users","Specifies directories to search for executable files","Sets the shell prompt"],correct:2,explanation:"PATH tells the shell which directories to search for executable files when you type a command without specifying the full path."},
+  {id:6,domain:"linux",difficulty:"easy",question:"What does the 'pwd' command show?",options:["Present working directory","Print working directory","Power working directory","Path working directory"],correct:1,explanation:"pwd (print working directory) displays the full path of the current directory."},
+  {id:7,domain:"linux",difficulty:"medium",question:"What does 'chmod' command do?",options:["Change owner","Change permissions","Change name","Change size"],correct:1,explanation:"chmod changes file permissions using numeric (755) or symbolic (u+x) notation."},
+  {id:8,domain:"linux",difficulty:"easy",question:"Which command creates a directory?",options:["newdir","mkdir","createdir","makedir"],correct:1,explanation:"mkdir creates new directories. Use 'mkdir -p' to create parent directories."},
+  {id:9,domain:"linux",difficulty:"medium",question:"Difference between 'cp' and 'mv'?",options:["cp copies, mv moves","cp moves, mv copies","Both copy","Both move"],correct:0,explanation:"cp copies files/directories, mv moves (renames) them."},
+  {id:10,domain:"linux",difficulty:"easy",question:"Which command displays file contents?",options:["show","view","cat","display"],correct:2,explanation:"cat concatenates and displays file contents."},
+  {id:11,domain:"linux",difficulty:"medium",question:"What does 'grep' do?",options:["Find files","Search text patterns","List directories","Show permissions"],correct:1,explanation:"grep searches for patterns in files or input."},
+  {id:12,domain:"linux",difficulty:"easy",question:"Which command shows processes?",options:["ps","top","jobs","procs"],correct:0,explanation:"ps shows process information. 'ps aux' shows all processes."},
+  {id:13,domain:"linux",difficulty:"medium",question:"What does 'sudo' do?",options:["Switch user","Super user do","System update","Show usage"],correct:1,explanation:"sudo allows running commands as another user (typically root)."},
+  {id:14,domain:"linux",difficulty:"easy",question:"Which command terminates processes?",options:["end","stop","kill","terminate"],correct:2,explanation:"kill sends signals to processes. Use 'kill -9' for forceful termination."},
+  {id:15,domain:"linux",difficulty:"medium",question:"What does '|' do in commands?",options:["Creates files","Redirects output","Lists options","Shows help"],correct:1,explanation:"Pipe '|' redirects output from one command to another's input."},
+  {id:16,domain:"linux",difficulty:"easy",question:"Which command shows disk usage?",options:["du","df","disk","usage"],correct:1,explanation:"df shows disk space usage for mounted filesystems."},
+  {id:17,domain:"linux",difficulty:"medium",question:"What does 'tar' do?",options:["Create archives","Compress files","Both A and B","Neither"],correct:2,explanation:"tar creates archives and can compress them with gzip."},
+  {id:18,domain:"linux",difficulty:"easy",question:"Which command shows interfaces?",options:["net","ifconfig","network","interfaces"],correct:1,explanation:"ifconfig displays network interface information."},
+  {id:19,domain:"linux",difficulty:"medium",question:"What is SSH?",options:["Secure Shell","Super Shell","System Shell","Server Shell"],correct:0,explanation:"SSH provides secure encrypted connections to remote systems."},
+  {id:20,domain:"linux",difficulty:"easy",question:"Which command shows system info?",options:["sys","info","uname","system"],correct:2,explanation:"uname displays system information including kernel version."},
+  {id:21,domain:"linux",difficulty:"medium",question:"What is cron?",options:["System logging","Task scheduling","User management","Network config"],correct:1,explanation:"cron is a time-based job scheduler for running commands at specified times."},
+  {id:22,domain:"linux",difficulty:"easy",question:"Which command shows memory?",options:["mem","free","memory","ram"],correct:1,explanation:"free displays memory usage statistics."},
+  {id:23,domain:"linux",difficulty:"medium",question:"What does 'ln' create?",options:["New files","Links","Directories","Archives"],correct:1,explanation:"ln creates hard links ('ln') or symbolic links ('ln -s')."},
+  {id:24,domain:"linux",difficulty:"easy",question:"Which command finds files?",options:["search","find","locate","whereis"],correct:1,explanation:"find searches for files in directory trees based on criteria."},
+  {id:25,domain:"linux",difficulty:"medium",question:"What is rsync?",options:["Remote sync","System backup","File transfer","All of above"],correct:3,explanation:"rsync efficiently synchronizes files and directories, supports remote transfer."},
+  {id:26,domain:"linux",difficulty:"easy",question:"Which command shows history?",options:["hist","history","log","past"],correct:1,explanation:"history displays previously executed commands."},
+  {id:27,domain:"linux",difficulty:"medium",question:"What does wget do?",options:["Download files","Upload files","Transfer files","Compress files"],correct:0,explanation:"wget downloads files from web or FTP servers."},
+  {id:28,domain:"linux",difficulty:"easy",question:"Which command changes ownership?",options:["perm","own","chown","owner"],correct:2,explanation:"chown changes file ownership (user and/or group)."},
+  {id:29,domain:"linux",difficulty:"medium",question:"What is systemctl?",options:["System control","Service management","Process control","All of above"],correct:1,explanation:"systemctl manages systemd services (start, stop, enable, etc.)."},
+  {id:30,domain:"linux",difficulty:"easy",question:"Which command shows logged users?",options:["users","who","w","all"],correct:1,explanation:"who shows who is currently logged in."},
+  // ====== RHEL — 25 questions ======
+  {id:31,domain:"rhel",difficulty:"easy",question:"What does RHEL stand for?",options:["Red Hat Enterprise Linux","Remote Host Enterprise Linux","Red Hat Extended Linux","Rapid Host Enterprise Linux"],correct:0,explanation:"RHEL stands for Red Hat Enterprise Linux, Red Hat's commercial Linux distribution."},
+  {id:32,domain:"rhel",difficulty:"medium",question:"Which package manager does RHEL use?",options:["apt","yum","dnf","pacman"],correct:2,explanation:"RHEL 8+ uses dnf as the package manager, which replaced yum."},
+  {id:33,domain:"rhel",difficulty:"easy",question:"Which command shows RHEL version?",options:["version","cat /etc/redhat-release","rhel --version","system-version"],correct:1,explanation:"cat /etc/redhat-release displays the RHEL version and release information."},
+  {id:34,domain:"rhel",difficulty:"medium",question:"What is SELinux?",options:["A package manager","Security Enhanced Linux","A text editor","A network tool"],correct:1,explanation:"SELinux is a security architecture providing mandatory access control policies."},
+  {id:35,domain:"rhel",difficulty:"easy",question:"Which service manages firewall?",options:["iptables","firewalld","ufw","nftables"],correct:1,explanation:"firewalld is the default firewall management service in RHEL 7+."},
+  {id:36,domain:"rhel",difficulty:"medium",question:"What is Red Hat Satellite?",options:["System monitoring","Content management and patching","Both A and B","User management"],correct:2,explanation:"Red Hat Satellite provides centralized content management, patching, and provisioning."},
+  {id:37,domain:"rhel",difficulty:"easy",question:"Which file contains environment vars?",options:["/etc/profile","/etc/environment","/etc/bashrc","~/.bashrc"],correct:1,explanation:"/etc/environment contains system-wide environment variables."},
+  {id:38,domain:"rhel",difficulty:"medium",question:"What does subscription-manager do?",options:["Manage subscriptions","Manage Red Hat subscriptions","Network subscriptions","Service subscriptions"],correct:1,explanation:"subscription-manager manages Red Hat subscription entitlements and repositories."},
+  {id:39,domain:"rhel",difficulty:"easy",question:"Which directory contains logs?",options:["/var/logs","/var/log","/etc/log","/usr/log"],correct:1,explanation:"/var/log contains system log files."},
+  {id:40,domain:"rhel",difficulty:"medium",question:"What is kdump?",options:["Kernel debugging","System crash dumps","Memory analysis","Process monitoring"],correct:1,explanation:"kdump captures kernel crash dumps for post-mortem analysis."},
+  {id:41,domain:"rhel",difficulty:"easy",question:"Which command shows system status?",options:["status","systemctl status","sys status","service status"],correct:1,explanation:"systemctl status shows systemd service status."},
+  {id:42,domain:"rhel",difficulty:"medium",question:"What is tuned?",options:["System tuning","Performance optimization","Both A and B","Network tuning"],correct:2,explanation:"tuned is a daemon that tunes system settings for optimal performance."},
+  {id:43,domain:"rhel",difficulty:"easy",question:"Which file contains network config?",options:["/etc/network/interfaces","/etc/sysconfig/network-scripts/ifcfg-*","/etc/netplan","/etc/NetworkManager"],correct:1,explanation:"RHEL uses /etc/sysconfig/network-scripts/ifcfg-* for network configuration."},
+  {id:44,domain:"rhel",difficulty:"medium",question:"What is sosreport?",options:["System reporting","Generate diagnostic reports","Performance monitoring","Security auditing"],correct:1,explanation:"sosreport collects comprehensive system diagnostic information."},
+  {id:45,domain:"rhel",difficulty:"easy",question:"Which command manages volumes?",options:["lvm","lvmanage","volmanage","diskmanage"],correct:0,explanation:"lvm commands manage logical volumes, volume groups, and physical volumes."},
+  {id:46,domain:"rhel",difficulty:"medium",question:"What is insights-client?",options:["System insights","Red Hat Insights client","Performance insights","Security insights"],correct:1,explanation:"insights-client collects system data for Red Hat Insights proactive issue detection."},
+  {id:47,domain:"rhel",difficulty:"easy",question:"Which directory contains modules?",options:["/lib/modules","/usr/src/linux","/boot","/etc/modules"],correct:0,explanation:"/lib/modules contains kernel modules organized by kernel version."},
+  {id:48,domain:"rhel",difficulty:"medium",question:"What is alternatives?",options:["Command alternatives","Manage alternative implementations","Both A and B","Package alternatives"],correct:1,explanation:"alternatives manages multiple implementations of commands (like different Java versions)."},
+  {id:49,domain:"rhel",difficulty:"easy",question:"Which command shows repos?",options:["repo list","yum repolist","dnf repolist","subscription-manager repos"],correct:1,explanation:"yum repolist or dnf repolist shows configured repositories."},
+  {id:50,domain:"rhel",difficulty:"medium",question:"What are cgroups?",options:["User control","Resource management","Process control","All of above"],correct:1,explanation:"cgroups limit, account for, and isolate resource usage of process groups."},
+  {id:51,domain:"rhel",difficulty:"easy",question:"Which file contains hostname?",options:["/etc/hostname","/etc/hosts","/etc/network","/etc/sysconfig/network"],correct:0,explanation:"/etc/hostname contains the system's hostname."},
+  {id:52,domain:"rhel",difficulty:"medium",question:"What is ABRT?",options:["Automatic bug reporting","System monitoring","Crash analysis","All of above"],correct:0,explanation:"ABRT detects, analyzes, and reports application crashes."},
+  {id:53,domain:"rhel",difficulty:"easy",question:"Which command manages targets?",options:["systemctl","targetctl","sysctl","runlevel"],correct:0,explanation:"systemctl manages systemd targets (runlevels)."},
+  {id:54,domain:"rhel",difficulty:"medium",question:"What is SSSD?",options:["System security","System Security Services Daemon","Security system","Service security"],correct:1,explanation:"SSSD provides access to identity and authentication providers."},
+  {id:55,domain:"rhel",difficulty:"easy",question:"Which file contains unit files?",options:["/etc/systemd/system","/usr/lib/systemd/system","/run/systemd/system","All of above"],correct:3,explanation:"Systemd unit files are in /etc/systemd/system, /usr/lib/systemd/system, and /run/systemd/system."},
+
+  // ====== SUSE — 25 questions ======
+  {id:56,domain:"suse",difficulty:"easy",question:"What does SUSE stand for?",options:["Software und System-Entwicklung","SUSE Linux Enterprise","System Update Software Environment","Swiss Unix System Enterprise"],correct:1,explanation:"SUSE stands for SUSE Linux Enterprise, a Linux distribution from SUSE."},
+  {id:57,domain:"suse",difficulty:"medium",question:"Which package manager does SUSE use?",options:["apt","yum","zypper","pacman"],correct:2,explanation:"SUSE uses zypper as its package manager."},
+  {id:58,domain:"suse",difficulty:"easy",question:"Which command shows SUSE version?",options:["suse-version","cat /etc/SuSE-release","cat /etc/os-release","version"],correct:1,explanation:"cat /etc/SuSE-release shows SUSE version information."},
+  {id:59,domain:"suse",difficulty:"medium",question:"What is YaST?",options:["Yet Another Setup Tool","YAML Application Setup Tool","SUSE administration tool","All of above"],correct:2,explanation:"YaST is SUSE's primary system administration and configuration tool."},
+  {id:60,domain:"suse",difficulty:"easy",question:"Which service manages firewall?",options:["firewalld","ufw","SuSEfirewall2","iptables"],correct:2,explanation:"SuSEfirewall2 is SUSE's traditional firewall management script."},
+  {id:61,domain:"suse",difficulty:"medium",question:"What is SUSE Manager?",options:["System management","Patch management and monitoring","Both A and B","User management"],correct:2,explanation:"SUSE Manager provides centralized patch management, system monitoring, and configuration."},
+  {id:62,domain:"suse",difficulty:"easy",question:"Which file contains repo config?",options:["/etc/zypp/repos.d/","/etc/yum.repos.d/","/etc/apt/sources.list","/etc/pacman.conf"],correct:0,explanation:"/etc/zypp/repos.d/ contains .repo files defining zypper repositories."},
+  {id:63,domain:"suse",difficulty:"medium",question:"What is AppArmor?",options:["Application armor","Mandatory access control","Security module","All of above"],correct:1,explanation:"AppArmor is a mandatory access control system that confines programs."},
+  {id:64,domain:"suse",difficulty:"easy",question:"Which command shows system status?",options:["systemctl","service","chkconfig","rc"],correct:0,explanation:"systemctl manages systemd services in SUSE."},
+  {id:65,domain:"suse",difficulty:"medium",question:"What is snapper?",options:["System snapshots","Btrfs snapshots","File system snapshots","All of above"],correct:1,explanation:"snapper creates and manages Btrfs snapshots for system rollback."},
+  {id:66,domain:"suse",difficulty:"easy",question:"Which directory contains modules?",options:["/lib/modules","/usr/src/linux","/boot","/etc/modules"],correct:0,explanation:"/lib/modules contains kernel modules."},
+  {id:67,domain:"suse",difficulty:"medium",question:"What is wicked?",options:["Network management","Wicked network configurator","Both A and B","System management"],correct:1,explanation:"wicked is SUSE's network configuration daemon."},
+  {id:68,domain:"suse",difficulty:"easy",question:"Which command manages patterns?",options:["zypper","patterns","zypper install -t pattern","yast"],correct:2,explanation:"zypper install -t pattern installs SUSE patterns."},
+  {id:69,domain:"suse",difficulty:"medium",question:"What is SUSE Enterprise Storage?",options:["File storage","Object storage","Block storage","All of above"],correct:3,explanation:"SUSE Enterprise Storage provides unified file, object, and block storage."},
+  {id:70,domain:"suse",difficulty:"easy",question:"Which file contains network config?",options:["/etc/sysconfig/network","/etc/network/interfaces","/etc/netplan","/etc/NetworkManager"],correct:0,explanation:"/etc/sysconfig/network contains SUSE network configuration."},
+  {id:71,domain:"suse",difficulty:"medium",question:"What is SLE-HA?",options:["System availability","Cluster management","Load balancing","All of above"],correct:3,explanation:"SLE-HA provides high availability clustering, load balancing, and failover."},
+  {id:72,domain:"suse",difficulty:"easy",question:"Which command shows repos?",options:["zypper repos","zypper lr","yum repolist","apt list"],correct:1,explanation:"zypper lr shows configured zypper repositories."},
+  {id:73,domain:"suse",difficulty:"medium",question:"What is SUSE Cloud Application Platform?",options:["Cloud deployment","Application platform","Container orchestration","All of above"],correct:1,explanation:"SUSE Cloud Application Platform provides a Kubernetes-based platform."},
+  {id:74,domain:"suse",difficulty:"easy",question:"Which directory contains logs?",options:["/var/log","/var/adm","/etc/log","/usr/log"],correct:0,explanation:"/var/log contains system log files."},
+  {id:75,domain:"suse",difficulty:"medium",question:"What is SUSE Manager for Retail?",options:["Retail management","Point-of-sale systems","Branch server management","All of above"],correct:2,explanation:"SUSE Manager for Retail manages branch servers and retail infrastructure."},
+  {id:76,domain:"suse",difficulty:"easy",question:"Which command manages services?",options:["systemctl","service","chkconfig","All of above"],correct:3,explanation:"SUSE supports systemctl, service, and chkconfig for service management."},
+  {id:77,domain:"suse",difficulty:"medium",question:"What is SUSE Package Hub?",options:["Package repository","Community packages","Additional software","All of above"],correct:2,explanation:"SUSE Package Hub provides additional open source software packages."},
+  {id:78,domain:"suse",difficulty:"easy",question:"Which file contains boot config?",options:["/boot/grub2/grub.cfg","/etc/default/grub","/boot/grub/menu.lst","/etc/lilo.conf"],correct:0,explanation:"/boot/grub2/grub.cfg contains the GRUB2 boot configuration."},
+  {id:79,domain:"suse",difficulty:"medium",question:"What is SUSE Studio?",options:["System building","Image creation","Appliance building","All of above"],correct:3,explanation:"SUSE Studio allows building custom SUSE images and appliances."},
+  {id:80,domain:"suse",difficulty:"easy",question:"Which command shows kernel info?",options:["uname -a","kernel-version","zypper info kernel","rpm -q kernel"],correct:0,explanation:"uname -a shows kernel information."},
+  {id:31,domain:"infra",difficulty:"medium",question:"What is the role of a NIC in an AI server?",options:["Display graphics","Network connectivity between server and data center network","GPU memory management","Power control"],correct:1,explanation:"High-performance NICs (like ConnectX) with RDMA support provide the critical inter-node communication for distributed GPU training."},
+  {id:32,domain:"infra",difficulty:"hard",question:"What is in-network computing?",options:["Running AI in switches","Performing data reduction operations directly in the network fabric","Computing network stats","Running containers on switches"],correct:1,explanation:"In-network computing (NVIDIA SHARP) performs aggregation operations in switches, reducing network traffic during collective operations like all-reduce."},
+  {id:33,domain:"infra",difficulty:"easy",question:"What is a UPS in a data center?",options:["Universal Processing System","Uninterruptible Power Supply — backup power during outages","Unified Performance Scheduler","Ultra Performance Server"],correct:1,explanation:"UPS provides temporary backup power during outages, protecting running AI training jobs from data loss."},
+  {id:34,domain:"infra",difficulty:"medium",question:"What is a GPU baseboard in a DGX system?",options:["The PCB holding all GPUs with their interconnects","A management dashboard","A cooling plate","A driver type"],correct:0,explanation:"The GPU baseboard is the main circuit board holding all GPUs and interconnects (NVLink, NVSwitch), providing the electrical connections for GPU-to-GPU communication."},
+  {id:35,domain:"infra",difficulty:"hard",question:"What is NVIDIA SHARP technology?",options:["GPU sharpening filter","Scalable Hierarchical Aggregation and Reduction Protocol — offloads collectives to network","Display resolution tech","Data compression"],correct:1,explanation:"SHARP offloads collective operations like all-reduce to InfiniBand switches, performing aggregation in-network to reduce traffic and CPU overhead."},
+  {id:36,domain:"infra",difficulty:"easy",question:"What is a parallel file system?",options:["Files stored in parallel directories","Distributed file system allowing simultaneous high-throughput read/write by multiple clients","A backup system","A compression format"],correct:1,explanation:"Parallel file systems (Lustre, GPFS, WekaFS) distribute data across many servers for high aggregate throughput — essential for feeding GPU clusters."},
+  {id:37,domain:"infra",difficulty:"medium",question:"What is the NVIDIA ConnectX adapter?",options:["Display adapter","High-performance network adapter supporting InfiniBand and Ethernet with RDMA","USB adapter","Power adapter"],correct:1,explanation:"ConnectX adapters provide InfiniBand and Ethernet connectivity with hardware RDMA offload — the standard NICs in AI clusters."},
+  {id:38,domain:"infra",difficulty:"hard",question:"What is pipeline parallelism?",options:["Processing data pipeline on one GPU","Splitting model layers across GPUs and processing different micro-batches simultaneously","Parallelizing data pipeline","Multiple pipelines on one GPU"],correct:1,explanation:"Pipeline parallelism splits model layers across GPUs, processing different micro-batches at different stages like an assembly line."},
+  {id:39,domain:"infra",difficulty:"easy",question:"What does TDP mean for a GPU?",options:["Total Data Processing","Thermal Design Power — maximum heat the cooling must dissipate","Transfer Data Protocol","Tensor Data Precision"],correct:1,explanation:"TDP = maximum heat generated under sustained workload that the cooling system must handle."},
+  {id:40,domain:"infra",difficulty:"medium",question:"What is out-of-band management?",options:["Managing from outside the building","Remote server management through dedicated network independent of main OS","Managing bandwidth","Scheduling maintenance"],correct:1,explanation:"Out-of-band management (BMC/IPMI/Redfish) provides remote management through a dedicated network, working even when the server OS is down."},
+  {id:41,domain:"infra",difficulty:"medium",question:"What is the role of a PDU in a GPU data center?",options:["Processing Data Unit","Distributes electrical power to servers within a rack","GPU parallel processing","Network data processing"],correct:1,explanation:"PDUs distribute power from the data center supply to individual servers. Smart PDUs provide per-outlet power monitoring for high-power GPU systems."},
+  {id:42,domain:"infra",difficulty:"easy",question:"What is Ethernet in data center networking?",options:["A GPU type","The most widely used networking standard in data centers","A storage protocol","A cooling method"],correct:1,explanation:"Ethernet is the dominant networking standard for management, storage, and client traffic. InfiniBand is preferred for GPU interconnect."},
+  {id:43,domain:"infra",difficulty:"hard",question:"What is GPU locality in cluster scheduling?",options:["GPU manufacturer location","Scheduling workloads on topologically close GPUs for better performance","Data center geographic location","GPU local IP address"],correct:1,explanation:"GPU locality = scheduling on close GPUs (same NVLink domain > same node > same rack). Closer GPUs communicate faster."},
+  {id:44,domain:"infra",difficulty:"medium",question:"What is scale-up vs scale-out in AI infrastructure?",options:["They are the same","Scale-up adds resources to one node; scale-out adds more nodes","Scale-up is cheaper","Scale-out uses fewer GPUs"],correct:1,explanation:"Scale-up (vertical): more GPUs/memory per node. Scale-out (horizontal): more nodes in the cluster. Large AI needs both."},
+  {id:45,domain:"infra",difficulty:"easy",question:"What is the role of a switch in data center networking?",options:["Switch between GPU models","Connect multiple devices and forward data between them","Switch power supplies","Switch between AI models"],correct:1,explanation:"Switches connect devices and forward packets based on destination. High-performance switches are critical for inter-node GPU communication."},
+  {id:46,domain:"infra",difficulty:"hard",question:"What is disaggregated computing?",options:["Breaking GPUs into pieces","Separating compute, memory, storage into independently scalable pools connected by high-speed fabric","Distributing across countries","Dismantling servers"],correct:1,explanation:"Disaggregated computing decouples resources into flexible, independently scalable pools connected by fast fabric — enabling dynamic allocation."},
+  {id:47,domain:"infra",difficulty:"medium",question:"What is the NVIDIA DGX Cloud?",options:["A weather prediction system","NVIDIA's cloud service providing instant access to DGX-class AI infrastructure","A cloud storage service","A gaming cloud platform"],correct:1,explanation:"DGX Cloud provides on-demand access to DGX-class AI supercomputing infrastructure through cloud partners like AWS, Azure, and Oracle, eliminating the need to build physical AI clusters."},
+  {id:48,domain:"infra",difficulty:"easy",question:"What is a network fabric in a data center?",options:["Physical fabric used for cable management","The interconnected network infrastructure that connects all compute and storage resources","A type of network cable","A firewall configuration"],correct:1,explanation:"A network fabric is the complete interconnected network infrastructure (switches, links, protocols) connecting all servers, storage, and services in a data center."},
+  {id:49,domain:"infra",difficulty:"hard",question:"What is the purpose of congestion control in AI networking?",options:["Controlling physical traffic near the data center","Managing network traffic to prevent packet loss and maintain throughput during collective operations","Controlling GPU power consumption","Managing container deployment rate"],correct:1,explanation:"Congestion control prevents packet loss and throughput degradation when many GPUs simultaneously send data during collective operations. Without it, performance degrades significantly in large clusters."},
+  {id:50,domain:"infra",difficulty:"medium",question:"What is the NVIDIA Grace CPU?",options:["A GPU model","An ARM-based data center CPU designed for AI and HPC workloads, paired with Hopper GPUs","A network processor","A storage controller"],correct:1,explanation:"Grace is NVIDIA's ARM-based data center CPU designed to pair with Hopper GPUs via NVLink C2C, providing high bandwidth and energy efficiency for AI workloads."},
+  {id:51,domain:"infra",difficulty:"easy",question:"What is bandwidth in the context of GPU interconnects?",options:["The width of network cables","The maximum rate of data transfer across an interconnect, measured in GB/s or Gb/s","The frequency of the GPU","The number of GPU cores"],correct:1,explanation:"Bandwidth measures the maximum data transfer rate of an interconnect. Higher bandwidth (NVLink > PCIe > Ethernet) enables faster GPU-to-GPU communication for distributed training."},
+  {id:52,domain:"infra",difficulty:"hard",question:"What is the difference between SXM and PCIe form factors for data center GPUs?",options:["They are identical","SXM connects via NVLink baseboard for maximum bandwidth; PCIe plugs into standard PCIe slots","SXM is for gaming; PCIe is for data centers","PCIe is faster than SXM"],correct:1,explanation:"SXM GPUs connect through a proprietary baseboard with NVLink for maximum inter-GPU bandwidth. PCIe GPUs use standard slots but have lower inter-GPU bandwidth. SXM is preferred for large-scale training."},
+  {id:53,domain:"infra",difficulty:"medium",question:"What is the purpose of NVIDIA Magnum IO?",options:["A GPU overclocking tool","A suite of IO-accelerating technologies (GPUDirect, NCCL, NVSHMEM) for optimizing data movement in AI","A display calibration tool","An audio processing library"],correct:1,explanation:"Magnum IO is NVIDIA's suite of IO-accelerating technologies that optimize data movement across storage, network, and compute in AI and HPC environments."},
+  {id:54,domain:"infra",difficulty:"easy",question:"What is latency in networking?",options:["The delay before data transfer begins between two points","The amount of data transferred","The number of network connections","The physical cable length"],correct:0,explanation:"Latency is the time delay for data to travel between two points. Low latency is critical in AI clusters where GPUs must synchronize frequently during distributed training."},
+
+  // ====== ESSENTIAL AI KNOWLEDGE — 80 questions (38% weight) ======
+  {id:55,domain:"ai",difficulty:"easy",question:"What is the main difference between AI, Machine Learning, and Deep Learning?",options:["They are all the same","AI is the broadest; ML is a subset of AI; DL is a subset of ML","DL is broader than AI","ML is broader than AI"],correct:1,explanation:"AI encompasses any intelligent system. ML learns from data (subset of AI). DL uses multi-layer neural networks (subset of ML)."},
+  {id:56,domain:"ai",difficulty:"easy",question:"What is the difference between training and inference?",options:["Training is faster","Training creates the model from data; inference uses it to make predictions","They happen simultaneously","Inference needs more compute"],correct:1,explanation:"Training = learning from data (compute-intensive). Inference = making predictions with the trained model (deployment phase)."},
+  {id:57,domain:"ai",difficulty:"medium",question:"What is CUDA?",options:["GPU hardware type","NVIDIA's parallel computing platform and programming model for GPUs","AI model architecture","Network protocol"],correct:1,explanation:"CUDA = Compute Unified Device Architecture. NVIDIA's platform allowing developers to use GPUs for general-purpose computing."},
+  {id:58,domain:"ai",difficulty:"medium",question:"What is the NVIDIA NGC Catalog?",options:["GPU hardware catalog","Hub of GPU-optimized containers, pre-trained models, and SDKs","Online GPU store","Gaming platform"],correct:1,explanation:"NGC provides enterprise-ready, GPU-optimized containers for AI frameworks like PyTorch, TensorFlow, and RAPIDS."},
+  {id:59,domain:"ai",difficulty:"easy",question:"Which is a popular deep learning framework for NVIDIA GPUs?",options:["Microsoft Word","PyTorch","Adobe Photoshop","Salesforce"],correct:1,explanation:"PyTorch is one of the most popular DL frameworks, leveraging NVIDIA GPUs through CUDA for accelerated training and inference."},
+  {id:60,domain:"ai",difficulty:"hard",question:"What is NVIDIA TensorRT?",options:["Training framework","High-performance inference optimization SDK","Cluster manager","Data preprocessor"],correct:1,explanation:"TensorRT optimizes trained models for inference through layer fusion, precision calibration (FP16/INT8), and kernel auto-tuning."},
+  {id:61,domain:"ai",difficulty:"medium",question:"What is transfer learning?",options:["Moving models between clouds","Using a pre-trained model as a starting point for a new task","Transferring data between GPUs","Converting between frameworks"],correct:1,explanation:"Transfer learning fine-tunes a pre-trained model for a specific task, requiring much less data and compute than training from scratch."},
+  {id:62,domain:"ai",difficulty:"easy",question:"What type of AI model is GPT?",options:["Computer vision model","Large language model (LLM)","Speech recognition model","Robotics model"],correct:1,explanation:"GPT (Generative Pre-trained Transformer) is an LLM that generates human-like text using the transformer architecture."},
+  {id:63,domain:"ai",difficulty:"medium",question:"Supervised vs unsupervised learning?",options:["Supervised is faster","Supervised uses labeled data; unsupervised finds patterns in unlabeled data","Unsupervised is more accurate","Different hardware needed"],correct:1,explanation:"Supervised: labeled data (classification, regression). Unsupervised: unlabeled data (clustering, dimensionality reduction)."},
+  {id:64,domain:"ai",difficulty:"hard",question:"What is an activation function?",options:["Activates GPU computation","Introduces non-linearity enabling complex pattern learning","Activates network connection","Starts training"],correct:1,explanation:"Activation functions (ReLU, sigmoid, tanh) introduce non-linearity so networks can learn complex, non-linear relationships."},
+  {id:65,domain:"ai",difficulty:"medium",question:"What is NVIDIA Triton Inference Server?",options:["Gaming server","Open-source inference serving software for deploying AI models at scale","File server","Web server"],correct:1,explanation:"Triton supports multiple frameworks (TensorFlow, PyTorch, ONNX, TensorRT), dynamic batching, and model ensembles for production AI."},
+  {id:66,domain:"ai",difficulty:"easy",question:"What is a neural network?",options:["Computer network of servers","Computing system inspired by the brain's biological neural networks","Internet connection type","GPU interconnect"],correct:1,explanation:"Neural networks are layers of interconnected nodes (neurons) that process information, learning increasingly abstract representations."},
+  {id:67,domain:"ai",difficulty:"hard",question:"What is mixed-precision training?",options:["Using CPUs and GPUs","Using FP16 and FP32 to speed up training while maintaining accuracy","Mixed datasets","Multiple frameworks"],correct:1,explanation:"FP16 reduces memory and increases Tensor Core throughput; FP32 maintains accuracy for critical operations. Typically 2-3x speedup."},
+  {id:68,domain:"ai",difficulty:"medium",question:"What are Tensor Cores?",options:["Tensor rendering cores","Specialized cores for matrix multiply-accumulate in AI","General CPU cores","Memory management units"],correct:1,explanation:"Tensor Cores accelerate matrix multiply-accumulate operations — the core computation in deep learning — with mixed-precision support."},
+  {id:69,domain:"ai",difficulty:"easy",question:"Why are GPUs better than CPUs for AI?",options:["GPUs are cheaper","GPUs have thousands of parallel cores for matrix operations","CPUs are better for AI","GPUs use less power"],correct:1,explanation:"GPUs have thousands of parallel cores optimized for the matrix operations in AI, making them orders of magnitude faster than CPUs."},
+  {id:70,domain:"ai",difficulty:"medium",question:"What is NVIDIA RAPIDS?",options:["Fast internet protocol","GPU-accelerated data science and analytics libraries","Cooling solution","Display technology"],correct:1,explanation:"RAPIDS includes cuDF (DataFrames), cuML (ML), cuGraph (graph analytics) — end-to-end GPU-accelerated data science."},
+  {id:71,domain:"ai",difficulty:"hard",question:"What is the vanishing gradient problem?",options:["GPUs run out of memory","Gradients become extremely small during backpropagation, preventing early layers from learning","Invisible model outputs","Decreasing GPU clock"],correct:1,explanation:"Solved by ReLU activation, residual connections, and batch normalization. Was a major barrier to training deep networks."},
+  {id:72,domain:"ai",difficulty:"easy",question:"What is a dataset?",options:["Database software","Collection of data used to train, validate, or test an AI model","GPU storage format","Network config file"],correct:1,explanation:"Training datasets teach models; validation datasets tune hyperparameters; test datasets evaluate final performance."},
+  {id:73,domain:"ai",difficulty:"easy",question:"What is a hyperparameter?",options:["Parameter learned during training","Configuration set before training controlling the learning process","GPU setting","Network config"],correct:1,explanation:"Hyperparameters (learning rate, batch size, epochs) are set before training and control how the model learns — unlike weights which are learned."},
+  {id:74,domain:"ai",difficulty:"hard",question:"What is the transformer architecture?",options:["Electrical power converter","Neural network using self-attention mechanisms, foundation of LLMs","Data format converter","GPU hardware design"],correct:1,explanation:"Transformers use self-attention to process data in parallel. Foundation of GPT, BERT, LLaMA, revolutionizing NLP and beyond."},
+  {id:75,domain:"ai",difficulty:"medium",question:"What is batch normalization?",options:["Batch processing datasets","Normalizing layer inputs to stabilize and accelerate training","Batch job scheduling","GPU power normalization"],correct:1,explanation:"Batch normalization normalizes layer inputs, stabilizing training, enabling higher learning rates, and reducing initialization sensitivity."},
+  {id:76,domain:"ai",difficulty:"easy",question:"What is reinforcement learning?",options:["Reinforcing GPU connections","AI paradigm where an agent learns by interacting with an environment and receiving rewards","Strengthening layers","Reinforcing security"],correct:1,explanation:"RL trains agents through environment interaction, receiving rewards for good actions. Used in robotics, games, and autonomous systems."},
+  {id:77,domain:"ai",difficulty:"medium",question:"What is the ONNX format?",options:["NVIDIA proprietary format","Open format for ML model interoperability between frameworks","GPU instruction set","Data storage format"],correct:1,explanation:"ONNX (Open Neural Network Exchange) enables moving models between frameworks and is widely supported by inference engines."},
+  {id:78,domain:"ai",difficulty:"hard",question:"What is quantization in AI?",options:["Increasing precision","Reducing numerical precision (e.g., FP32 to INT8) to decrease size and increase speed","Increasing parameters","Adding training data"],correct:1,explanation:"Quantization reduces bit-width of weights/activations, decreasing model size and memory while increasing throughput with minimal accuracy loss."},
+  {id:79,domain:"ai",difficulty:"easy",question:"What is computer vision?",options:["Better monitor resolution","AI field enabling machines to interpret visual information from images and video","GPU display feature","VR technology"],correct:1,explanation:"Computer vision enables object detection, image classification, facial recognition, autonomous driving, and more."},
+  {id:80,domain:"ai",difficulty:"medium",question:"What is the difference between CNN and RNN?",options:["They are the same","CNNs process spatial data (images); RNNs process sequential data (text, time series)","CNNs are newer","RNNs are faster"],correct:1,explanation:"CNNs use convolutional filters for spatial data. RNNs maintain hidden state across time steps for sequential data."},
+  {id:81,domain:"ai",difficulty:"hard",question:"What are attention mechanisms?",options:["User alert system","Enable models to focus on relevant parts of input when producing output","GPU attention metrics","Memory attention pointers"],correct:1,explanation:"Attention lets models dynamically focus on relevant input parts. Self-attention in transformers captures long-range dependencies."},
+  {id:82,domain:"ai",difficulty:"easy",question:"What is NLP?",options:["Programming language","AI field enabling machines to understand and generate human language","Network latency protocol","GPU optimization"],correct:1,explanation:"NLP powers chatbots, translation, sentiment analysis, summarization, and other language-based AI applications."},
+  {id:83,domain:"ai",difficulty:"medium",question:"What is fine-tuning?",options:["Adjusting GPU clocks","Continuing training a pre-trained model on a specific dataset for a particular task","Optimizing cables","Calibrating display"],correct:1,explanation:"Fine-tuning adapts a pre-trained model's general knowledge to a specific domain with much less data than training from scratch."},
+  {id:84,domain:"ai",difficulty:"hard",question:"What is model distillation vs pruning?",options:["Same technique","Distillation trains smaller model to mimic larger one; pruning removes unnecessary weights","Distillation adds params; pruning adds layers","Distillation for training; pruning for data"],correct:1,explanation:"Distillation: smaller 'student' mimics larger 'teacher'. Pruning: removes least-important weights/neurons. Both reduce model size."},
+  {id:85,domain:"ai",difficulty:"easy",question:"What is a loss function?",options:["Causes data loss","Measures how far predictions are from actual values","GPU power loss calc","Network packet loss"],correct:1,explanation:"Loss functions quantify prediction error. The optimizer minimizes loss during training to improve model accuracy."},
+  {id:86,domain:"ai",difficulty:"medium",question:"What is a GAN?",options:["Network security tool","Two competing networks (generator + discriminator) producing realistic data","GPU area network","Global AI network"],correct:1,explanation:"GANs: generator creates synthetic data, discriminator distinguishes real from fake. Through competition, outputs become increasingly realistic."},
+  {id:87,domain:"ai",difficulty:"medium",question:"What is NVIDIA AI Enterprise?",options:["Gaming platform","End-to-end enterprise AI platform with security, stability, and support","Social media tool","GPU overclocking utility"],correct:1,explanation:"AI Enterprise provides production-ready AI software with security patches, stability guarantees, and enterprise support."},
+  {id:88,domain:"ai",difficulty:"hard",question:"What is RAG (Retrieval Augmented Generation)?",options:["GPU memory architecture","Technique enhancing LLM responses by retrieving relevant documents before generating answers","Network protocol","Compression algorithm"],correct:1,explanation:"RAG retrieves relevant documents before generating responses, grounding answers in factual data and reducing hallucination."},
+  {id:89,domain:"ai",difficulty:"easy",question:"What is an epoch?",options:["GPU time measurement","One complete pass through the entire training dataset","GPU architecture generation","Network sync point"],correct:1,explanation:"An epoch = one complete pass through all training data. Models train for multiple epochs to improve performance."},
+  {id:90,domain:"ai",difficulty:"medium",question:"What is the learning rate?",options:["Data loading speed","Hyperparameter controlling weight adjustment step size during optimization","Rate GPUs learn instructions","Network learning speed"],correct:1,explanation:"Learning rate controls update step size. Too high = instability; too low = slow convergence. Often scheduled to change during training."},
+  {id:91,domain:"ai",difficulty:"hard",question:"What is tensor parallelism?",options:["Parallel tensors on one GPU","Splitting individual tensor operations across multiple GPUs","Parallel tensor storage","Running TensorFlow in parallel"],correct:1,explanation:"Tensor parallelism splits individual operations (like large matrix multiplications) across GPUs, enabling layers too large for one GPU."},
+  {id:92,domain:"ai",difficulty:"easy",question:"Batch vs real-time inference?",options:["Batch is faster","Batch processes many inputs offline; real-time handles individual requests immediately","They are identical","Real-time is always batch"],correct:1,explanation:"Batch = high throughput, offline processing. Real-time = low latency, interactive applications (chatbots, etc.)."},
+  {id:93,domain:"ai",difficulty:"medium",question:"What is NVIDIA NeMo?",options:["GPU cooling brand","Framework for building, training, and fine-tuning LLMs and speech AI","Network monitoring tool","Display technology"],correct:1,explanation:"NeMo provides tools for data curation, distributed training, and deployment of large language and multimodal models."},
+  {id:94,domain:"ai",difficulty:"hard",question:"What is FP32 vs FP16 vs BF16 vs INT8?",options:["All same precision","Different numerical formats with decreasing precision affecting speed and accuracy","Different GPU generations","Different network protocols"],correct:1,explanation:"FP32: standard 32-bit. FP16: 16-bit (smaller range). BF16: 16-bit (FP32 range, better for training). INT8: 8-bit integer (inference)."},
+  {id:95,domain:"ai",difficulty:"medium",question:"What is data augmentation?",options:["Increasing storage","Artificially increasing dataset size through transformations","Augmenting GPUs","Increasing bandwidth"],correct:1,explanation:"Data augmentation applies transformations (rotation, cropping, flipping) to create additional training examples, reducing overfitting."},
+  {id:96,domain:"ai",difficulty:"easy",question:"What is overfitting?",options:["GPU overheating","Model performs well on training data but poorly on new unseen data","Too much data used","GPU memory overflow"],correct:1,explanation:"Overfitting = memorizing training data noise rather than learning generalizable patterns. Prevented by regularization, dropout, augmentation."},
+  {id:97,domain:"ai",difficulty:"medium",question:"What is a validation set?",options:["Validates GPU hardware","Evaluates model during training for hyperparameter tuning, separate from test set","Validates network","Validates user credentials"],correct:1,explanation:"Validation set tunes hyperparameters and detects overfitting during training, preserving the test set for unbiased final evaluation."},
+  {id:98,domain:"ai",difficulty:"easy",question:"What is a pre-trained model?",options:["A model trained in advance on large data, usable directly or for fine-tuning","A model predicting training needs","A model before training","A prototype"],correct:0,explanation:"Pre-trained models capture general knowledge from large datasets. Can be used directly or fine-tuned for specific tasks with less data."},
+  {id:99,domain:"ai",difficulty:"hard",question:"What is inference latency vs throughput?",options:["Same thing","Latency = time per request; throughput = requests per second","Latency for training; throughput for inference","Networking terms"],correct:1,explanation:"Latency = time for one request (critical for real-time). Throughput = requests/second (critical for batch). Optimizing one often trades off the other."},
+  {id:100,domain:"ai",difficulty:"medium",question:"What is the softmax function?",options:["Softens GPU intensity","Converts a vector of numbers into a probability distribution","Reduces network complexity","Compresses model size"],correct:1,explanation:"Softmax converts raw scores (logits) into probabilities summing to 1. Used in classification output layers and attention mechanisms."},
+  {id:101,domain:"ai",difficulty:"hard",question:"What are tokens in large language models?",options:["API auth tokens","Sub-word units that text is broken into for model processing","GPU compute tokens","Network tokens"],correct:1,explanation:"LLMs process text as tokens (words, sub-words, or characters). Tokenization affects vocabulary size, context length, and compute."},
+  {id:102,domain:"ai",difficulty:"easy",question:"What is a convolutional neural network (CNN) best suited for?",options:["Text generation","Processing images and spatial data through learned filters","Audio only","Network routing"],correct:1,explanation:"CNNs apply learned convolutional filters to detect patterns in images — edges, textures, objects. The backbone of most computer vision systems."},
+  {id:103,domain:"ai",difficulty:"medium",question:"What is the purpose of dropout in neural networks?",options:["Dropping GPU connections","Randomly deactivating neurons during training to prevent overfitting","Dropping network packets","Removing data samples"],correct:1,explanation:"Dropout randomly sets a fraction of neuron outputs to zero during training, preventing co-adaptation and acting as regularization to reduce overfitting."},
+  {id:104,domain:"ai",difficulty:"hard",question:"What is the difference between autoregressive and autoencoder models?",options:["Same architecture","Autoregressive generates tokens sequentially (GPT); autoencoders learn compressed representations (BERT-style)","Autoregressive is older","Autoencoders are faster"],correct:1,explanation:"Autoregressive models generate output one token at a time (GPT). Autoencoders learn to encode input into a compact representation and reconstruct it. They serve different purposes."},
+  {id:105,domain:"ai",difficulty:"easy",question:"What is gradient descent?",options:["GPUs getting slower","The optimization algorithm that iteratively adjusts model weights to minimize the loss function","A networking protocol","A cooling technique"],correct:1,explanation:"Gradient descent computes the gradient of the loss and updates weights in the direction that reduces error. The fundamental optimization method in deep learning."},
+
+  // ====== AI OPERATIONS — 50 questions (22% weight) ======
+  {id:106,domain:"ops",difficulty:"easy",question:"What is NVIDIA DCGM?",options:["Data Center Graphics Manager","Data Center GPU Manager — monitoring and managing GPU clusters","Digital Content Module","Distributed Computing Manager"],correct:1,explanation:"DCGM provides GPU health monitoring, diagnostics, performance metrics, and integrates with Prometheus and Grafana."},
+  {id:107,domain:"ops",difficulty:"medium",question:"What is MIG (Multi-Instance GPU)?",options:["VM migration between GPUs","Partitioning a single GPU into multiple isolated instances","Multi-GPU install guide","GPU migration protocol"],correct:1,explanation:"MIG partitions one GPU (A100, H100) into up to 7 isolated instances, each with dedicated compute, memory, and cache."},
+  {id:108,domain:"ops",difficulty:"medium",question:"What is the NVIDIA GPU Operator?",options:["GPU operator person","Automates GPU resource management in Kubernetes clusters","GPU benchmark tool","Graphics driver"],correct:1,explanation:"GPU Operator automates deployment of all NVIDIA components (drivers, toolkit, device plugin, monitoring) in Kubernetes."},
+  {id:109,domain:"ops",difficulty:"easy",question:"What is nvidia-smi?",options:["Driver installer","CLI utility for monitoring and managing NVIDIA GPUs","Network config tool","Storage manager"],correct:1,explanation:"nvidia-smi shows GPU utilization, memory usage, temperature, power, driver version, CUDA version, and running processes."},
+  {id:110,domain:"ops",difficulty:"hard",question:"What is Slurm?",options:["GPU cooling system","Open-source cluster management and job scheduling system","Networking protocol","Storage format"],correct:1,explanation:"Slurm allocates resources, manages job queues, and schedules workloads across large computing clusters including GPU jobs."},
+  {id:111,domain:"ops",difficulty:"medium",question:"How does Kubernetes schedule GPU workloads?",options:["GPUs auto-assigned to all pods","Through NVIDIA device plugin exposing GPU resources to the scheduler","K8s doesn't support GPUs","Manual config files"],correct:1,explanation:"The NVIDIA device plugin registers GPUs with the Kubernetes scheduler. Pods request GPUs via nvidia.com/gpu resource limits."},
+  {id:112,domain:"ops",difficulty:"easy",question:"How do you check if a GPU is underutilized?",options:["CPU temperature","GPU utilization percentage","Disk space","Network bandwidth"],correct:1,explanation:"Low GPU utilization % indicates the workload is bottlenecked elsewhere (CPU, data loading, network I/O), wasting GPU resources."},
+  {id:113,domain:"ops",difficulty:"hard",question:"What do DCGM health checks detect?",options:["Gaming performance","Memory errors, thermal throttling, PCIe degradation, NVLink errors","Firmware version only","Network traffic"],correct:1,explanation:"DCGM diagnostics proactively detect hardware issues that could cause workload failures or performance degradation."},
+  {id:114,domain:"ops",difficulty:"medium",question:"What is the NVIDIA Container Toolkit?",options:["GUI container builder","Tools enabling GPU access inside Docker containers","Container storage","Network container manager"],correct:1,explanation:"Container Toolkit (formerly nvidia-docker) exposes NVIDIA GPUs to containerized applications seamlessly."},
+  {id:115,domain:"ops",difficulty:"easy",question:"What is ECC memory?",options:["Extra Compute Capacity","Error Correcting Code — detects and corrects memory errors","Enhanced Cache Controller","External Clock Calibration"],correct:1,explanation:"ECC detects/corrects single-bit errors and detects double-bit errors, ensuring accuracy in data center AI workloads."},
+  {id:116,domain:"ops",difficulty:"hard",question:"vGPU vs MIG for GPU virtualization?",options:["Same technology","vGPU = time-slicing; MIG = hardware-isolated partitions","MIG for gaming; vGPU for data centers","vGPU needs more GPUs"],correct:1,explanation:"vGPU time-slices GPU access. MIG creates hardware-isolated partitions with dedicated resources. MIG offers stronger isolation."},
+  {id:117,domain:"ops",difficulty:"medium",question:"What is GPU thermal throttling?",options:["Performance increase","Protective clock speed reduction when temperature exceeds limits","Network traffic management","Memory allocation"],correct:1,explanation:"Thermal throttling prevents hardware damage but indicates inadequate cooling. Persistent throttling reduces AI workload performance."},
+  {id:118,domain:"ops",difficulty:"medium",question:"Why use containers for AI workloads?",options:["Make GPUs faster","Reproducible environments with consistent dependencies and easy deployment","Replace GPUs","Reduce data needs"],correct:1,explanation:"Containers ensure reproducibility, simplify deployment, and enable efficient orchestration through Kubernetes."},
+  {id:119,domain:"ops",difficulty:"hard",question:"What are XID errors?",options:["User auth error","GPU error codes from NVIDIA driver indicating hardware/software issues","Network timeout","Storage format error"],correct:1,explanation:"XID errors signal GPU issues. XID 79 (GPU fallen off bus) is critical. Monitoring XIDs is essential for cluster health."},
+  {id:120,domain:"ops",difficulty:"medium",question:"What is Prometheus used for in GPU monitoring?",options:["Training AI","Collecting and storing time-series GPU metrics from DCGM exporter","Managing firmware","Allocating GPU memory"],correct:1,explanation:"Prometheus collects metrics from DCGM exporter, enables alerting, and integrates with Grafana for GPU monitoring dashboards."},
+  {id:121,domain:"ops",difficulty:"hard",question:"GPU Operator vs DCGM in Kubernetes?",options:["Same tool","Operator deploys GPU software stack; DCGM provides monitoring and health management","Operator for monitoring; DCGM for deployment","Neither works with K8s"],correct:1,explanation:"They're complementary: GPU Operator automates NVIDIA software deployment; DCGM provides health monitoring and metrics."},
+  {id:122,domain:"ops",difficulty:"easy",question:"What command shows NVIDIA driver version?",options:["gpu --version","nvidia-smi","cat /proc/gpu","lspci --nvidia"],correct:1,explanation:"nvidia-smi displays driver version, CUDA version, GPU model, memory, utilization, temperature, and processes."},
+  {id:123,domain:"ops",difficulty:"medium",question:"What is Grafana used for?",options:["Training models","Visualization and dashboarding of metrics from Prometheus","Driver installation","Network configuration"],correct:1,explanation:"Grafana creates visual dashboards for GPU utilization, memory, temperature, power, and error trends over time."},
+  {id:124,domain:"ops",difficulty:"easy",question:"What is the NVIDIA device plugin for Kubernetes?",options:["Installs GPU drivers","Exposes GPU resources to the Kubernetes scheduler for pod allocation","Creates K8s clusters","Monitors pod health"],correct:1,explanation:"The device plugin registers GPUs with the Kubernetes scheduler, enabling pods to request GPUs through resource specifications."},
+  {id:125,domain:"ops",difficulty:"hard",question:"What is GPU remapping?",options:["Reassigning PCIe addresses","Disabling faulty memory regions to keep GPU operational with reduced capacity","Changing display output","Mapping GPU to CPU memory"],correct:1,explanation:"Row remapping disables faulty memory, allowing continued operation with slightly less memory. GPU should be scheduled for eventual replacement."},
+  {id:126,domain:"ops",difficulty:"medium",question:"What is NVIDIA Fabric Manager?",options:["Data center fabric management","Software managing NVSwitch and NVLink interconnects in multi-GPU systems","Network cable management","GPU manufacturing"],correct:1,explanation:"Fabric Manager handles GPU topology, NVLink configuration, and error management for NVSwitch-based multi-GPU systems like DGX."},
+  {id:127,domain:"ops",difficulty:"easy",question:"What is a GPU driver?",options:["Person driving GPU shipments","Software enabling OS to communicate with GPU hardware","GPU cooling fan motor","Network routing protocol"],correct:1,explanation:"GPU drivers are essential software enabling OS/application communication with GPU hardware. Must be compatible with the CUDA toolkit version."},
+  {id:128,domain:"ops",difficulty:"hard",question:"What is GPU persistence mode?",options:["Saving GPU settings to disk","Keeping GPU driver loaded and initialized even with no running applications","Persisting GPU memory","Maintaining network connections"],correct:1,explanation:"Persistence mode eliminates driver load latency for new GPU applications — important for inference servers requiring fast response times."},
+  {id:129,domain:"ops",difficulty:"medium",question:"What is the DCGM exporter?",options:["GPU hardware exporter","Service exporting DCGM GPU metrics in Prometheus format","Data export utility","Firmware export tool"],correct:1,explanation:"DCGM exporter bridges NVIDIA GPU monitoring with the Kubernetes monitoring stack (Prometheus + Grafana)."},
+  {id:130,domain:"ops",difficulty:"medium",question:"What are GPU compute mode settings?",options:["Gaming vs compute switch","Controls which processes can access GPU: default, exclusive process, exclusive thread, prohibited","CPU vs GPU switch","Clock speed changer"],correct:1,explanation:"Compute modes control GPU access: Default (multiple processes), Exclusive Process (one process), Prohibited (no compute). Helps manage resource allocation."},
+  {id:131,domain:"ops",difficulty:"easy",question:"What does 'GPU memory utilization' measure?",options:["Memory speed","Percentage of GPU memory currently allocated by applications","Physical chip condition","Manufacturing quality"],correct:1,explanation:"GPU memory utilization shows fraction of total memory in use. High utilization may indicate need for more memory or model optimization."},
+  {id:132,domain:"ops",difficulty:"hard",question:"What is NVSM?",options:["NVIDIA store manager","Enterprise cluster monitoring with health, alerting, and management for GPU infrastructure","Social media tool","GPU testing framework"],correct:1,explanation:"NVSM provides enterprise-grade monitoring, predictive analytics, and alerting for large NVIDIA GPU clusters."},
+  {id:133,domain:"ops",difficulty:"medium",question:"GPU clock speed vs GPU utilization?",options:["Same thing","Clock speed = how fast GPU runs; utilization = percentage of time actively computing","Clock = memory; utilization = compute","Both user-set"],correct:1,explanation:"GPU can run at full clock speed but have low utilization if waiting for data. Both metrics matter for performance diagnosis."},
+  {id:134,domain:"ops",difficulty:"easy",question:"What is a container registry?",options:["Government container registration","Repository for storing and distributing container images","Physical warehouse","Container counting system"],correct:1,explanation:"Container registries (NGC, Docker Hub, ECR) store and distribute container images for deployment."},
+  {id:135,domain:"ops",difficulty:"hard",question:"GPU application clocks vs base clocks?",options:["Identical","Base clock = guaranteed minimum; application clock = actual operating frequency that can boost higher","App for gaming; base for AI","Base is faster"],correct:1,explanation:"Base clock is guaranteed minimum. Application/boost clocks are higher frequencies under workload when thermal/power allows. Setting app clocks ensures consistent AI performance."},
+  {id:136,domain:"ops",difficulty:"medium",question:"What is GPU power limit setting?",options:["Limits number of GPUs","Sets maximum power draw affecting performance and thermal behavior","Controls PSU voltage","Limits network power"],correct:1,explanation:"Power limits cap GPU power draw. Lowering reduces heat/power but may decrease performance. Used to balance efficiency in data centers."},
+  {id:137,domain:"ops",difficulty:"easy",question:"Why monitor logs in GPU operations?",options:["Tree logging operations","Detecting GPU errors, driver issues, and performance problems in system logs","User login tracking","Manufacturing logs"],correct:1,explanation:"Log monitoring (dmesg, syslog, driver logs) detects XID errors, thermal events, and problems before they cause failures."},
+  {id:138,domain:"ops",difficulty:"medium",question:"What are resource quotas in a GPU cluster?",options:["Internet bandwidth limits","Limits on GPU/CPU/memory per user or team for fair sharing","Server counting","Software license management"],correct:1,explanation:"Quotas prevent resource monopolization and ensure fair GPU sharing across teams in multi-tenant clusters."},
+  {id:139,domain:"ops",difficulty:"easy",question:"What is GPU firmware?",options:["GPU brand name","Low-level software embedded in GPU hardware for basic operations and management","GPU cooling system","GPU display protocol"],correct:1,explanation:"GPU firmware controls basic hardware operations. Updates fix bugs, patch security vulnerabilities, and improve stability across data center GPU fleets."},
+  {id:140,domain:"ops",difficulty:"hard",question:"What is the significance of PCIe link width and speed for GPUs?",options:["Only affects display","PCIe width (x16) and speed (Gen5) determine GPU-to-system bandwidth; degraded links bottleneck performance","Controls clock speed","Determines memory size"],correct:1,explanation:"Degraded PCIe links (lower width or speed) bottleneck data transfer between GPU and system, impacting performance. Monitoring PCIe health is critical."},
+  {id:141,domain:"ops",difficulty:"medium",question:"What is NVIDIA Base Command?",options:["Basic GPU command line","Enterprise platform for AI infrastructure management, job orchestration, and dataset management at scale","Basic operating system","Command prompt replacement"],correct:1,explanation:"Base Command provides job orchestration, dataset management, multi-node training coordination, and resource scheduling for large GPU clusters."},
+  {id:142,domain:"ops",difficulty:"medium",question:"What is node health checking in a GPU cluster?",options:["Employee health checks","Verifying compute nodes (hardware, drivers, GPUs, network) before scheduling jobs","Network health","Data health"],correct:1,explanation:"Node health checks verify all components are working. Unhealthy nodes are drained and excluded to prevent job failures."},
+  {id:143,domain:"ops",difficulty:"easy",question:"What is the purpose of GPU monitoring dashboards?",options:["Gaming leaderboards","Providing real-time visibility into GPU health, performance, and utilization across the cluster","Display configuration","Social media analytics"],correct:1,explanation:"Dashboards (typically Grafana) provide real-time and historical visibility into GPU metrics, enabling proactive management and troubleshooting."},
+  {id:144,domain:"ops",difficulty:"hard",question:"What is the purpose of GPU topology awareness in job scheduling?",options:["Physical rack layout","Understanding GPU interconnect topology to place related processes on GPUs with fastest communication paths","Geographic data center location","Network topology mapping"],correct:1,explanation:"Topology-aware scheduling places communicating processes on GPUs connected via NVLink (fastest) rather than PCIe or network, significantly improving distributed training performance."},
+
+  // ====== BONUS QUESTIONS (mixed domains) ======
+  {id:145,domain:"infra",difficulty:"medium",question:"What is the NVIDIA Grace Hopper Superchip?",options:["A GPU model name","A combined CPU+GPU module connected via NVLink C2C for AI and HPC workloads","A network switch","A storage controller"],correct:1,explanation:"Grace Hopper combines the Grace ARM CPU and Hopper GPU via high-bandwidth NVLink Chip-to-Chip interconnect, providing unified memory access for AI workloads."},
+  {id:146,domain:"ai",difficulty:"medium",question:"What is NVIDIA Inference Microservices (NIM)?",options:["A small GPU model","Pre-built, optimized inference containers that simplify deploying AI models as microservices","A network interface module","A memory management service"],correct:1,explanation:"NIMs are pre-built, optimized inference containers that package models with TensorRT optimization, enabling easy deployment of AI models as scalable microservices."},
+  {id:147,domain:"ops",difficulty:"medium",question:"What is the purpose of the NVIDIA GPU Operator's Node Feature Discovery?",options:["Discovering new GPU products","Automatically detecting and labeling GPU hardware capabilities on Kubernetes nodes","Finding network features","Discovering storage devices"],correct:1,explanation:"Node Feature Discovery automatically detects GPU hardware on cluster nodes and labels them, enabling the Kubernetes scheduler to make informed GPU placement decisions."},
+  {id:148,domain:"infra",difficulty:"hard",question:"What is the NVLink C2C interconnect?",options:["A consumer cable","Chip-to-Chip NVLink connecting CPU and GPU dies with ultra-high bandwidth and low latency","A network cable type","A cooling connector"],correct:1,explanation:"NVLink C2C connects CPU and GPU dies within the same module (Grace Hopper Superchip), providing much higher bandwidth than PCIe for CPU-GPU communication."},
+  {id:149,domain:"ai",difficulty:"easy",question:"What is the difference between classification and regression in ML?",options:["They are identical","Classification predicts categories; regression predicts continuous numerical values","Classification is unsupervised","Regression is for images only"],correct:1,explanation:"Classification assigns inputs to categories (spam/not spam, cat/dog). Regression predicts continuous values (price, temperature). Both are supervised learning tasks."},
+  {id:150,domain:"ops",difficulty:"easy",question:"What is the purpose of alerting in GPU monitoring?",options:["Sending marketing emails","Automatically notifying operators when GPU metrics exceed thresholds indicating problems","Alerting about new GPU releases","Social media notifications"],correct:1,explanation:"Alerting (via Prometheus AlertManager, PagerDuty, etc.) automatically notifies operations teams when GPU temperature, errors, or utilization breach thresholds, enabling rapid response."},
+
+  // Additional questions to reach 210
+  {id:151,domain:"infra",difficulty:"easy",question:"What is data center cooling?",options:["Cooling data before storage","Systems that remove heat generated by servers and GPUs to maintain safe operating temperatures","Cooling network cables","Reducing data transfer speed"],correct:1,explanation:"Data center cooling systems (CRAC/CRAH units, liquid cooling loops, hot/cold aisle containment) remove heat from high-power equipment. GPU clusters generate enormous heat requiring robust cooling."},
+  {id:152,domain:"ai",difficulty:"medium",question:"What is the purpose of a GPU-optimized container?",options:["A physical box for GPUs","A container image pre-configured with GPU drivers, CUDA toolkit, and optimized AI libraries","A GPU shipping container","A container for GPU documentation"],correct:1,explanation:"GPU-optimized containers (from NGC) come pre-configured with compatible drivers, CUDA, cuDNN, and AI frameworks, eliminating dependency hell and ensuring optimal performance."},
+  {id:153,domain:"ops",difficulty:"medium",question:"What is the difference between horizontal and vertical GPU scaling?",options:["Physical orientation of GPUs","Horizontal adds more GPU nodes; vertical adds more GPUs per node","Horizontal is cheaper","Vertical uses less power"],correct:1,explanation:"Horizontal scaling adds more compute nodes to the cluster. Vertical scaling adds more GPUs within a single node. The choice depends on workload communication patterns and interconnect bandwidth."},
+  {id:154,domain:"infra",difficulty:"medium",question:"What is the purpose of a storage area network (SAN) in AI infrastructure?",options:["Social networking for storage admins","A dedicated high-speed network providing block-level storage access to servers","A local storage drive","A backup tape system"],correct:1,explanation:"SANs provide high-speed, low-latency block storage access over a dedicated network, enabling GPU servers to access large datasets stored on shared storage arrays."},
+  {id:155,domain:"ai",difficulty:"hard",question:"What is the purpose of gradient accumulation in training?",options:["Accumulating GPU errors","Summing gradients across multiple mini-batches before updating weights, effectively simulating larger batch sizes","Collecting network metrics","Storing historical gradients"],correct:1,explanation:"Gradient accumulation processes multiple mini-batches and sums their gradients before a single weight update. This simulates larger batch sizes when GPU memory is too limited for large batches."},
+  {id:156,domain:"ops",difficulty:"hard",question:"What is the purpose of GPU virtualization in data centers?",options:["Running virtual reality on GPUs","Sharing GPU resources among multiple users or workloads through technologies like MIG or vGPU","Virtualizing GPU hardware design","Creating virtual GPU models"],correct:1,explanation:"GPU virtualization (MIG, vGPU) enables sharing expensive GPU resources among multiple users, workloads, or VMs — maximizing utilization and reducing costs in multi-tenant environments."},
+  {id:157,domain:"infra",difficulty:"easy",question:"What is a server rack in a data center?",options:["A cooking rack for servers","A standardized frame structure that holds multiple servers, switches, and equipment in a compact footprint","A display shelf","A cable management tool"],correct:1,explanation:"Server racks (typically 42U tall) provide standardized mounting for servers, switches, PDUs, and other equipment. Data centers contain rows of racks housing thousands of servers."},
+  {id:158,domain:"ai",difficulty:"easy",question:"What is deep learning?",options:["Learning very deeply about a topic","A subset of machine learning using neural networks with many layers to learn complex patterns","A deep database search technique","Advanced internet browsing"],correct:1,explanation:"Deep learning uses neural networks with many hidden layers (hence 'deep') to automatically learn hierarchical features from data. It powers modern AI breakthroughs in vision, language, and more."},
+  {id:159,domain:"ops",difficulty:"easy",question:"What is a job scheduler in a GPU cluster?",options:["A calendar application","Software that allocates cluster resources and manages the queue of AI training jobs","A meeting scheduler","A GPU clock scheduler"],correct:1,explanation:"Job schedulers (Slurm, Kubernetes, PBS) manage the queue of submitted jobs, allocate GPU/CPU/memory resources, and ensure fair and efficient cluster utilization."},
+  {id:160,domain:"ai",difficulty:"medium",question:"What is the purpose of model versioning?",options:["Naming GPU versions","Tracking and managing different iterations of AI models throughout their lifecycle","Software version control","Hardware version tracking"],correct:1,explanation:"Model versioning tracks different iterations of trained models, their hyperparameters, training data, and performance metrics — essential for reproducibility and rollback in production."},
+  {id:161,domain:"infra",difficulty:"hard",question:"What is the role of a network operating system (NOS) in AI data center switches?",options:["A desktop operating system","Software that manages switch hardware, routing, and programmability for network optimization","A GPU operating system","A storage operating system"],correct:1,explanation:"Network operating systems (like Cumulus Linux, SONiC, or NVIDIA DOCA) manage switch hardware, routing tables, and provide programmability for optimizing AI cluster network traffic."},
+  {id:162,domain:"ops",difficulty:"medium",question:"What is the purpose of GPU utilization tracking over time?",options:["Gaming statistics","Identifying usage patterns, underutilization, and capacity planning for GPU infrastructure","Tracking GPU age","Manufacturing quality tracking"],correct:1,explanation:"Historical GPU utilization data reveals patterns: underutilized GPUs indicate waste, consistently maxed GPUs signal need for expansion. Essential for capacity planning and cost optimization."},
+  {id:163,domain:"ai",difficulty:"hard",question:"What is the difference between model training and model serving?",options:["They are the same","Training creates the model by learning from data; serving deploys the trained model to handle production inference requests","Training is faster","Serving needs more GPUs"],correct:1,explanation:"Training is the offline process of learning from data (high compute, batch processing). Serving is the online process of handling production inference requests (low latency, high availability). They have different infrastructure requirements."},
+  {id:164,domain:"infra",difficulty:"medium",question:"What is the role of a load balancer in AI inference?",options:["Balancing physical weight of servers","Distributing incoming inference requests across multiple GPU servers for optimal utilization and low latency","Balancing power supply load","Balancing network cable lengths"],correct:1,explanation:"Load balancers distribute inference requests across multiple GPU servers, ensuring no single server is overwhelmed while others sit idle. This optimizes latency and throughput for production AI services."},
+  {id:165,domain:"ops",difficulty:"hard",question:"What is the purpose of NVIDIA DOCA (Data Center Infrastructure on a Chip Architecture)?",options:["A documentation tool","SDK for programming BlueField DPUs to accelerate networking, security, and storage in data centers","A container platform","A display adapter driver"],correct:1,explanation:"DOCA is the SDK for developing applications on BlueField DPUs, enabling programmable acceleration of networking, security, and storage operations independent of the host CPU."},
+  {id:166,domain:"ai",difficulty:"easy",question:"What is a model parameter (weight)?",options:["A GPU configuration setting","A numerical value in the model that is learned and adjusted during training","A hyperparameter","A user-configurable setting"],correct:1,explanation:"Model parameters (weights and biases) are the numerical values adjusted during training through gradient descent. A large language model can have billions of parameters."},
+  {id:167,domain:"infra",difficulty:"easy",question:"What is the function of a CPU in an AI server?",options:["It is not needed in AI servers","It handles data preprocessing, job orchestration, system management, and feeds data to GPUs","It does all the AI training","It only manages network connections"],correct:1,explanation:"While GPUs handle the heavy parallel computation, CPUs manage data preprocessing, orchestration, system operations, and feed data to GPUs. Both are essential in AI servers."},
+  {id:168,domain:"ops",difficulty:"medium",question:"What is a GPU driver rollback and when is it needed?",options:["Physically rolling back GPU hardware","Reverting to a previous driver version when a new driver causes compatibility issues or bugs","Rolling back GPU clock speeds","Network driver update"],correct:1,explanation:"Driver rollback reverts to a known-working driver version when a new driver introduces bugs, compatibility issues, or performance regressions. Essential for maintaining stable GPU operations."},
+  {id:169,domain:"ai",difficulty:"medium",question:"What is the purpose of NVIDIA cuDNN?",options:["A currency converter","GPU-accelerated library of primitives for deep neural networks (convolutions, pooling, normalization)","A container utility","A display driver"],correct:1,explanation:"cuDNN provides highly optimized implementations of common deep learning operations (convolutions, pooling, normalization, activation) that frameworks like PyTorch and TensorFlow use for GPU acceleration."},
+  {id:170,domain:"ops",difficulty:"easy",question:"What is the purpose of a GPU stress test?",options:["Testing user patience","Running intensive workloads to verify GPU stability, thermals, and performance under sustained load","Testing network stress","Testing storage capacity"],correct:1,explanation:"GPU stress tests (using tools like gpu-burn or DCGM diagnostics) verify that GPUs perform correctly under sustained heavy load, helping detect hardware issues before deploying production workloads."},
+
+  // ==================== CONTAINER OPERATIONS QUESTIONS ====================
+  {id:171,domain:"container-ops",difficulty:"easy",question:"What is the primary purpose of container orchestration?",options:["Running single containers","Automating deployment, scaling, and management of containerized applications","Building container images","Writing container code"],correct:1,explanation:"Container orchestration platforms like Kubernetes automate the deployment, scaling, networking, and lifecycle management of containerized applications across clusters of machines."},
+  {id:172,domain:"container-ops",difficulty:"easy",question:"What is a Kubernetes namespace used for?",options:["Network isolation","Logical partitioning of cluster resources and access control","Container storage","Service discovery"],correct:1,explanation:"Namespaces provide a scope for names, allowing multiple teams or projects to share a cluster while maintaining resource isolation and access control boundaries."},
+  {id:173,domain:"container-ops",difficulty:"medium",question:"What is a Kubernetes ConfigMap?",options:["A configuration file","An API object for storing non-confidential configuration data that can be consumed by pods","A secret storage mechanism","A network policy"],correct:1,explanation:"ConfigMaps store configuration data as key-value pairs that can be consumed by pods as environment variables, command-line arguments, or configuration files."},
+  {id:174,domain:"container-ops",difficulty:"medium",question:"What is the purpose of a Kubernetes Service?",options:["Running application code","Providing stable network endpoint to access a set of pods","Storing persistent data","Managing container images"],correct:1,explanation:"Services provide a stable IP address and DNS name to access a set of pods, enabling load balancing and service discovery within and outside the cluster."},
+  {id:175,domain:"container-ops",difficulty:"easy",question:"What is container registry scanning?",options:["Scanning for viruses","Automated vulnerability scanning of container images before deployment","Checking container performance","Monitoring container logs"],correct:1,explanation:"Container registry scanning automatically checks container images for security vulnerabilities, malware, and compliance issues before they are deployed to production."},
+  {id:176,domain:"container-ops",difficulty:"medium",question:"What is a Kubernetes Ingress?",options:["Container entry point","API object that manages external access to services in a cluster","Pod networking","Service mesh"],correct:1,explanation:"Ingress manages external access to services within a cluster, typically providing load balancing, SSL termination, and name-based virtual hosting."},
+  {id:177,domain:"container-ops",difficulty:"hard",question:"What is the purpose of Kubernetes RBAC (Role-Based Access Control)?",options:["Resource allocation","Controlling access to cluster resources based on user roles and permissions","Load balancing","Network security"],correct:1,explanation:"RBAC regulates access to cluster resources by defining roles with specific permissions and binding them to users, groups, or service accounts."},
+  {id:178,domain:"container-ops",difficulty:"medium",question:"What is container image promotion?",options:["Making containers faster","Moving validated container images through environments (dev → staging → prod)","Upgrading container versions","Container migration"],correct:1,explanation:"Image promotion involves moving container images through deployment pipelines, ensuring that only tested and approved versions reach production environments."},
+  {id:179,domain:"container-ops",difficulty:"easy",question:"What is the purpose of container health checks?",options:["Checking container weight","Monitoring container status and automatically restarting failed containers","Verifying container security","Testing container performance"],correct:1,explanation:"Health checks monitor container status through probes (liveness, readiness, startup) and automatically restart unhealthy containers or remove them from service endpoints."},
+  {id:180,domain:"container-ops",difficulty:"medium",question:"What is a Kubernetes Operator?",options:["A human operator","Software extensions that use custom resources to manage applications and their components","A CLI tool","A monitoring dashboard"],correct:1,explanation:"Operators are software extensions that encode operational knowledge for managing complex applications, using custom resources to automate deployment and lifecycle management."},
+  {id:181,domain:"container-ops",difficulty:"hard",question:"What is service mesh in container orchestration?",options:["A physical network","Infrastructure layer for handling service-to-service communication, providing features like load balancing, service discovery, and observability","Container storage network","Application monitoring"],correct:1,explanation:"Service mesh provides a dedicated infrastructure layer for handling service-to-service communication, offering traffic management, security, and observability features."},
+  {id:182,domain:"container-ops",difficulty:"medium",question:"What is the purpose of container resource limits?",options:["Limiting container size","Controlling CPU and memory usage to prevent resource exhaustion","Restricting network access","Managing storage quotas"],correct:1,explanation:"Resource limits prevent containers from consuming unlimited resources, ensuring fair resource allocation and preventing noisy neighbor problems in shared environments."},
+  {id:183,domain:"container-ops",difficulty:"easy",question:"What is container drift detection?",options:["GPS for containers","Monitoring containers for unauthorized changes from their baseline configuration","Container migration tracking","Network latency monitoring"],correct:1,explanation:"Drift detection identifies when running containers deviate from their intended configuration, helping maintain security and compliance in production environments."},
+  {id:184,domain:"container-ops",difficulty:"medium",question:"What is a Kubernetes NetworkPolicy?",options:["Internet policy","Specification of how pods are allowed to communicate with each other and other network endpoints","Container firewall","Load balancer configuration"],correct:1,explanation:"NetworkPolicies define rules for pod-to-pod and pod-to-external communication, providing network segmentation and security controls within the cluster."},
+  {id:185,domain:"container-ops",difficulty:"hard",question:"What is GitOps in container deployments?",options:["Git version control","Using Git as the single source of truth for declarative infrastructure and applications","Code review process","Branching strategy"],correct:1,explanation:"GitOps uses Git repositories as the source of truth for infrastructure and application definitions, with automated deployment pipelines that sync the desired state from Git to the cluster."},
+  {id:186,domain:"container-ops",difficulty:"medium",question:"What is container image signing?",options:["Digital signature","Cryptographically signing container images to verify authenticity and integrity","Image compression","Image optimization"],correct:1,explanation:"Image signing uses cryptographic signatures to verify that container images come from trusted sources and haven't been tampered with during distribution."},
+  {id:187,domain:"container-ops",difficulty:"easy",question:"What is the purpose of container logging aggregation?",options:["Combining multiple logs","Centralizing logs from multiple containers and services for analysis and monitoring","Log compression","Log encryption"],correct:1,explanation:"Log aggregation collects, processes, and centralizes logs from distributed containerized applications, enabling effective monitoring, troubleshooting, and compliance auditing."},
+  {id:188,domain:"container-ops",difficulty:"medium",question:"What is a Kubernetes StatefulSet?",options:["State management","Workload API object for managing stateful applications that require stable identity and storage","Stateless application","Batch processing"],correct:1,explanation:"StatefulSets manage applications that require stable network identities, persistent storage, and ordered deployment/scaling, unlike stateless Deployments."},
+  {id:189,domain:"container-ops",difficulty:"hard",question:"What is container runtime security?",options:["Fast execution","Protecting the container runtime environment from attacks and unauthorized access","Runtime performance","Runtime monitoring"],correct:1,explanation:"Runtime security involves protecting running containers from threats through features like seccomp, AppArmor, SELinux, and runtime monitoring for anomalous behavior."},
+  {id:190,domain:"container-ops",difficulty:"medium",question:"What is the purpose of Kubernetes probes?",options:["Medical examination","Mechanisms for checking container health and readiness for traffic","Performance testing","Security scanning"],correct:1,explanation:"Probes (liveness, readiness, startup) determine container health and readiness, enabling Kubernetes to make decisions about restarting containers or routing traffic."},
+  {id:191,domain:"container-ops",difficulty:"easy",question:"What is container image vulnerability scanning?",options:["Image quality check","Automated detection of security vulnerabilities in container images","Performance scanning","Compatibility testing"],correct:1,explanation:"Vulnerability scanning identifies known security issues in container images by comparing against vulnerability databases, helping prevent deployment of insecure software."},
+  {id:192,domain:"container-ops",difficulty:"medium",question:"What is a Kubernetes DaemonSet?",options:["Background service","Ensures that all (or some) nodes run a copy of a pod","System monitoring","Network service"],correct:1,explanation:"DaemonSets ensure that a pod runs on all (or selected) nodes in the cluster, commonly used for node-level services like monitoring agents or networking plugins."},
+  {id:193,domain:"container-ops",difficulty:"hard",question:"What is container supply chain security?",options:["Supply management","Securing the entire container lifecycle from development to deployment","Chain of custody","Supply logistics"],correct:1,explanation:"Supply chain security addresses security throughout the container lifecycle, including secure development, trusted base images, secure build pipelines, and runtime protection."},
+  {id:194,domain:"container-ops",difficulty:"medium",question:"What is the purpose of Kubernetes taints and tolerations?",options:["Data protection","Controlling pod scheduling on nodes with specific characteristics","Network isolation","Storage management"],correct:1,explanation:"Taints mark nodes as unsuitable for certain pods, while tolerations allow pods to be scheduled on tainted nodes, enabling sophisticated scheduling controls."},
+  {id:195,domain:"container-ops",difficulty:"easy",question:"What is container observability?",options:["Container visibility","Monitoring, logging, and tracing of containerized applications for performance and troubleshooting","Container appearance","Container configuration"],correct:1,explanation:"Observability provides insights into containerized applications through metrics, logs, and traces, enabling performance monitoring, troubleshooting, and capacity planning."}
+];
+
+// ======================= BADGE DEFINITIONS =======================
+const badgeDefinitions = [
+  {id:"first_answer",name:"First Step",icon:"🌱",desc:"Answer your first question",check:s=>s.totalAnswered>=1},
+  {id:"ten_correct",name:"Sharp Mind",icon:"🧠",desc:"Get 10 correct answers",check:s=>s.totalCorrect>=10},
+  {id:"first_exam",name:"Exam Warrior",icon:"⚔️",desc:"Complete your first full exam",check:s=>s.examsCompleted>=1},
+  {id:"pass_exam",name:"Certified Ready",icon:"🏅",desc:"Pass a full exam (70%+)",check:s=>s.bestScore>=70},
+  {id:"perfect_10",name:"Flawless 10",icon:"💎",desc:"Get 10 in a row correct",check:s=>s.maxStreak>=10},
+  {id:"fifty_q",name:"Half Century",icon:"🔥",desc:"Answer 50 questions",check:s=>s.totalAnswered>=50},
+  {id:"infra_master",name:"Linux Expert",icon:"🏗️",desc:"90%+ accuracy in Linux Fundamentals",check:s=>s.domainAccuracy.infra>=90&&s.domainAnswered.infra>=10},
+  {id:"ai_master",name:"RHEL Master",icon:"📚",desc:"90%+ accuracy in Red Hat Enterprise Linux",check:s=>s.domainAccuracy.ai>=90&&s.domainAnswered.ai>=10},
+  {id:"ops_master",name:"SLES Guru",icon:"🔧",desc:"90%+ accuracy in SUSE Linux Enterprise",check:s=>s.domainAccuracy.ops>=90&&s.domainAnswered.ops>=10},
+  {id:"hundred_q",name:"Centurion",icon:"🏆",desc:"Answer 100 questions",check:s=>s.totalAnswered>=100},
+  {id:"speed_demon",name:"Speed Demon",icon:"⚡",desc:"Complete exam with 15+ minutes remaining",check:s=>s.fastExam},
+  {id:"level_5",name:"Rising Star",icon:"⭐",desc:"Reach Level 5",check:s=>s.level>=5},
+];
+
+// ======================= STATE =======================
+let state = {
+  xp: 0, level: 1, streak: 0, maxStreak: 0,
+  totalAnswered: 0, totalCorrect: 0,
+  examsCompleted: 0, bestScore: 0,
+  fastExam: false,
+  domainAnswered: {infra:0, ai:0, ops:0},
+  domainCorrect: {infra:0, ai:0, ops:0},
+  domainAccuracy: {infra:0, ai:0, ops:0},
+  earnedBadges: [],
+};
+
+let examState = {
+  mode: null, // 'full', 'quick', 'domain'
+  questions: [],
+  currentIndex: 0,
+  answers: [],
+  revealed: [],
+  flagged: [],
+  timerInterval: null,
+  timeRemaining: 0,
+  domain: null,
+};
+
+// ======================= LEVEL SYSTEM =======================
+const levels = [
+  {level:1,title:"Novice",xp:0},
+  {level:2,title:"Learner",xp:500},
+  {level:3,title:"Practitioner",xp:1200},
+  {level:4,title:"Specialist",xp:2500},
+  {level:5,title:"Expert",xp:4000},
+  {level:6,title:"Master",xp:6000},
+  {level:7,title:"Grand Master",xp:9000},
+  {level:8,title:"AIIO Champion",xp:13000},
+  {level:9,title:"Infrastructure Legend",xp:18000},
+  {level:10,title:"NVIDIA Elite",xp:25000},
+];
+
+function getLevelInfo(xp) {
+  let current = levels[0];
+  let next = levels[1];
+  for (let i = levels.length - 1; i >= 0; i--) {
+    if (xp >= levels[i].xp) { current = levels[i]; next = levels[i+1] || {xp: levels[i].xp + 5000, title:"Beyond"}; break; }
+  }
+  return {level: current.level, title: current.title, currentXP: xp, nextXP: next.xp, progress: ((xp - current.xp) / (next.xp - current.xp)) * 100};
+}
+
+// ======================= UI UPDATES =======================
+function updateDashboard() {
+  const li = getLevelInfo(state.xp);
+  state.level = li.level;
+
+  document.getElementById('navXP').textContent = state.xp;
+  document.getElementById('navLevel').textContent = `Level ${li.level}`;
+  document.getElementById('streakCount').textContent = state.streak;
+  document.getElementById('currentLevel').textContent = li.level;
+  document.getElementById('levelTitle').textContent = li.title;
+  document.getElementById('currentXP').textContent = state.xp;
+  document.getElementById('nextLevelXP').textContent = li.nextXP;
+  document.getElementById('xpBarFill').style.width = `${Math.min(li.progress, 100)}%`;
+
+  document.getElementById('totalQuestions').textContent = state.totalAnswered;
+  document.getElementById('accuracy').textContent = state.totalAnswered > 0 ? Math.round((state.totalCorrect/state.totalAnswered)*100)+'%' : '0%';
+  document.getElementById('examsCompleted').textContent = state.examsCompleted;
+  document.getElementById('bestScore').textContent = state.bestScore > 0 ? state.bestScore+'%' : '—';
+
+  ['infra','ai','ops'].forEach(d => {
+    const answered = state.domainAnswered[d];
+    const correct = state.domainCorrect[d];
+    const acc = answered > 0 ? Math.round((correct/answered)*100) : 0;
+    state.domainAccuracy[d] = acc;
+    const total = d === 'infra' ? 62 : d === 'ai' ? 60 : 48;
+    document.getElementById(`${d}Progress`).style.width = `${Math.min((answered/total)*100, 100)}%`;
+    document.getElementById(`${d}Answered`).textContent = `${answered} answered`;
+    document.getElementById(`${d}Accuracy`).textContent = answered > 0 ? `${acc}% accuracy` : '—';
+  });
+
+  renderBadges();
+}
+
+function renderBadges() {
+  const grid = document.getElementById('badgesGrid');
+  grid.innerHTML = badgeDefinitions.map(b => {
+    const earned = state.earnedBadges.includes(b.id);
+    return `<div class="badge-item ${earned ? 'earned' : 'locked'}" title="${b.desc}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>`;
+  }).join('');
+}
+
+function checkBadges() {
+  badgeDefinitions.forEach(b => {
+    if (!state.earnedBadges.includes(b.id) && b.check(state)) {
+      state.earnedBadges.push(b.id);
+      showBadgePopup(b);
+    }
+  });
+}
+
+function showBadgePopup(badge) {
+  document.getElementById('badgePopupIcon').textContent = badge.icon;
+  document.getElementById('badgePopupTitle').textContent = badge.name + ' Unlocked!';
+  document.getElementById('badgePopupDesc').textContent = badge.desc;
+  document.getElementById('badgePopup').classList.add('show');
+}
+function closeBadgePopup() { document.getElementById('badgePopup').classList.remove('show'); }
+
+function showXPPopup(amount) {
+  const el = document.getElementById('xpPopup');
+  document.getElementById('xpPopupText').textContent = `+${amount} XP`;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0, 0);
+  if (pageId === 'pageDashboard') updateDashboard();
+}
+
+// ======================= EXAM LOGIC =======================
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function selectQuestions(mode, domain) {
+  let pool = [...questionBank];
+  if (domain) pool = pool.filter(q => q.domain === domain);
+  pool = shuffleArray(pool);
+
+  if (mode === 'full') {
+    // Weighted selection: 30% Linux, 25% RHEL, 25% SUSE, 20% AI+Containers
+    const linux = shuffleArray(questionBank.filter(q => q.domain === 'linux')).slice(0, 15);
+    const rhel = shuffleArray(questionBank.filter(q => q.domain === 'rhel')).slice(0, 12);
+    const suse = shuffleArray(questionBank.filter(q => q.domain === 'suse')).slice(0, 12);
+    const aiInfra = shuffleArray(questionBank.filter(q => q.domain === 'ai-infra')).slice(0, 5);
+    const aiKnowledge = shuffleArray(questionBank.filter(q => q.domain === 'ai-knowledge')).slice(0, 5);
+    const aiOps = shuffleArray(questionBank.filter(q => q.domain === 'ai-ops')).slice(0, 5);
+    const docker = shuffleArray(questionBank.filter(q => q.domain === 'docker')).slice(0, 5);
+    const kubernetes = shuffleArray(questionBank.filter(q => q.domain === 'kubernetes')).slice(0, 5);
+    const containerOps = shuffleArray(questionBank.filter(q => q.domain === 'container-ops')).slice(0, 5);
+    return shuffleArray([...linux, ...rhel, ...suse, ...aiInfra, ...aiKnowledge, ...aiOps, ...docker, ...kubernetes, ...containerOps]);
+  } else if (mode === 'quick') {
+    return pool.slice(0, 10);
+  } else {
+    return pool.slice(0, 15);
+  }
+}
+
+function startFullExam() {
+  examState.mode = 'full';
+  examState.questions = selectQuestions('full');
+  examState.currentIndex = 0;
+  examState.answers = new Array(examState.questions.length).fill(-1);
+  examState.revealed = new Array(examState.questions.length).fill(false);
+  examState.flagged = new Array(examState.questions.length).fill(false);
+  examState.timeRemaining = 60 * 60; // 60 min
+  document.getElementById('examTitle').textContent = 'Full Exam Simulation';
+  document.getElementById('examSubtitle').textContent = 'Enterprise Technologies • 50 Questions • 60 Minutes';
+  startTimer();
+  showPage('pageExam');
+  renderQuestion();
+  renderQuestionMap();
+}
+
+function startQuickPractice() {
+  examState.mode = 'quick';
+  examState.questions = selectQuestions('quick');
+  examState.currentIndex = 0;
+  examState.answers = new Array(examState.questions.length).fill(-1);
+  examState.revealed = new Array(examState.questions.length).fill(false);
+  examState.flagged = new Array(examState.questions.length).fill(false);
+  examState.timeRemaining = 0;
+  document.getElementById('examTitle').textContent = 'Quick Practice';
+  document.getElementById('examSubtitle').textContent = 'Mixed Domains • 10 Questions • No Timer';
+  document.getElementById('examTimer').textContent = '⏱ No Limit';
+  document.getElementById('examTimer').className = 'exam-timer';
+  showPage('pageExam');
+  renderQuestion();
+  renderQuestionMap();
+}
+
+function startDomainPractice(domain) {
+  examState.mode = 'domain';
+  examState.domain = domain;
+  examState.questions = selectQuestions('domain', domain);
+  examState.currentIndex = 0;
+  examState.answers = new Array(examState.questions.length).fill(-1);
+  examState.revealed = new Array(examState.questions.length).fill(false);
+  examState.flagged = new Array(examState.questions.length).fill(false);
+  examState.timeRemaining = 0;
+  const names = {
+    'linux-fundamentals':'Linux Fundamentals',
+    'rhel':'Red Hat Enterprise Linux',
+    'suse':'SUSE Linux Enterprise',
+    'ai-infra':'AI Infrastructure',
+    'ai-knowledge':'AI Knowledge',
+    'ai-ops':'AI Operations',
+    'docker':'Docker',
+    'kubernetes':'Kubernetes',
+    'container-ops':'Container Operations'
+  };
+  document.getElementById('examTitle').textContent = names[domain] + ' Practice';
+  document.getElementById('examSubtitle').textContent = '15 Questions • No Timer • Learn Mode';
+  document.getElementById('examTimer').textContent = '⏱ No Limit';
+  document.getElementById('examTimer').className = 'exam-timer';
+  showPage('pageExam');
+  renderQuestion();
+  renderQuestionMap();
+}
+
+function startTimer() {
+  if (examState.timerInterval) clearInterval(examState.timerInterval);
+  examState.timerInterval = setInterval(() => {
+    examState.timeRemaining--;
+    const min = Math.floor(examState.timeRemaining / 60);
+    const sec = examState.timeRemaining % 60;
+    const timerEl = document.getElementById('examTimer');
+    timerEl.textContent = `⏱ ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+
+    if (examState.timeRemaining <= 300) timerEl.className = 'exam-timer danger';
+    else if (examState.timeRemaining <= 900) timerEl.className = 'exam-timer warning';
+    else timerEl.className = 'exam-timer';
+
+    if (examState.timeRemaining <= 0) { clearInterval(examState.timerInterval); endExam(); }
+  }, 1000);
+}
+
+function renderQuestion() {
+  const q = examState.questions[examState.currentIndex];
+  const i = examState.currentIndex;
+  const answered = examState.answers[i] !== -1;
+  const revealed = examState.revealed[i];
+  const letters = ['A','B','C','D'];
+  const domainTags = {
+    'linux-fundamentals':'tag-linux',
+    'rhel':'tag-rhel',
+    'suse':'tag-suse',
+    'ai-infra':'tag-ai-infra',
+    'ai-knowledge':'tag-ai-knowledge',
+    'ai-ops':'tag-ai-ops',
+    'docker':'tag-docker',
+    'kubernetes':'tag-kubernetes',
+    'container-ops':'tag-container-ops'
+  };
+  const domainNames = {
+    'linux-fundamentals':'Linux Fundamentals',
+    'rhel':'Red Hat Enterprise Linux',
+    'suse':'SUSE Linux Enterprise',
+    'ai-infra':'AI Infrastructure',
+    'ai-knowledge':'AI Knowledge',
+    'ai-ops':'AI Operations',
+    'docker':'Docker',
+    'kubernetes':'Kubernetes',
+    'container-ops':'Container Operations'
+  };
+  const diffTags = {easy:'diff-easy', medium:'diff-medium', hard:'diff-hard'};
+
+  let html = `<div class="question-card">
+    <div class="question-meta">
+      <span class="question-tag ${domainTags[q.domain]}">${domainNames[q.domain]}</span>
+      <span class="question-tag ${diffTags[q.difficulty]}">${q.difficulty}</span>
+    </div>
+    <div class="question-number">Question ${i + 1} of ${examState.questions.length}</div>
+    <div class="question-text">${q.question}</div>
+    <div class="options-list">`;
+
+  q.options.forEach((opt, oi) => {
+    let cls = 'option';
+    if (revealed && oi === q.correct) cls += ' correct';
+    else if (revealed && examState.answers[i] === oi && oi !== q.correct) cls += ' incorrect';
+    else if (!revealed && examState.answers[i] === oi) cls += ' selected';
+
+    html += `<div class="${cls}" onclick="selectOption(${oi})" ${revealed ? 'style="pointer-events:none"' : ''}>
+      <div class="option-letter">${letters[oi]}</div>
+      <div>${opt}</div>
+    </div>`;
+  });
+
+  html += `</div>`;
+
+  if (revealed) {
+    html += `<div class="explanation-box"><strong>Explanation:</strong> ${q.explanation}</div>`;
+  }
+
+  html += `</div>`;
+  document.getElementById('questionContainer').innerHTML = html;
+
+  // Update progress
+  document.getElementById('examProgressText').textContent = `${i + 1} / ${examState.questions.length}`;
+  document.getElementById('examProgressFill').style.width = `${((i + 1) / examState.questions.length) * 100}%`;
+
+  // Nav buttons
+  document.getElementById('prevBtn').disabled = i === 0;
+  const isLast = i === examState.questions.length - 1;
+  document.getElementById('nextBtn').textContent = isLast ? (examState.mode === 'full' ? 'Finish Exam' : 'See Results') : 'Next →';
+
+  renderQuestionMap();
+}
+
+function renderQuestionMap() {
+  const map = document.getElementById('questionMap');
+  map.innerHTML = examState.questions.map((q, i) => {
+    let cls = 'q-dot';
+    if (i === examState.currentIndex) cls += ' current';
+    if (examState.revealed[i]) {
+      cls += examState.answers[i] === q.correct ? ' correct-dot' : ' incorrect-dot';
+    } else if (examState.answers[i] !== -1) {
+      cls += ' answered';
+    }
+    if (examState.flagged[i]) cls += ' flagged';
+    return `<div class="${cls}" onclick="jumpToQuestion(${i})">${i + 1}</div>`;
+  }).join('');
+}
+
+function selectOption(oi) {
+  const i = examState.currentIndex;
+  if (examState.revealed[i]) return;
+  examState.answers[i] = oi;
+
+  if (examState.mode !== 'full') {
+    // Immediate feedback in practice modes
+    examState.revealed[i] = true;
+    const q = examState.questions[i];
+    const correct = oi === q.correct;
+    processAnswer(q, correct);
+  }
+
+  renderQuestion();
+}
+
+function processAnswer(q, correct) {
+  state.totalAnswered++;
+  state.domainAnswered[q.domain]++;
+
+  if (correct) {
+    state.totalCorrect++;
+    state.domainCorrect[q.domain]++;
+    state.streak++;
+    if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+
+    const xpGain = q.difficulty === 'easy' ? 10 : q.difficulty === 'medium' ? 20 : 35;
+    const streakBonus = state.streak >= 5 ? 10 : 0;
+    const total = xpGain + streakBonus;
+    state.xp += total;
+    showXPPopup(total);
+  } else {
+    state.streak = 0;
+  }
+
+  checkBadges();
+  updateDashboard();
+}
+
+function nextQuestion() {
+  const i = examState.currentIndex;
+
+  // In full exam mode, if not revealed, just move on (no immediate feedback)
+  if (examState.mode === 'full' && !examState.revealed[i] && examState.answers[i] !== -1) {
+    // Don't reveal in full exam mode
+  }
+
+  if (i === examState.questions.length - 1) {
+    endExam();
+  } else {
+    examState.currentIndex++;
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (examState.currentIndex > 0) {
+    examState.currentIndex--;
+    renderQuestion();
+  }
+}
+
+function jumpToQuestion(i) {
+  examState.currentIndex = i;
+  renderQuestion();
+}
+
+function flagQuestion() {
+  examState.flagged[examState.currentIndex] = !examState.flagged[examState.currentIndex];
+  renderQuestionMap();
+}
+
+function endExam() {
+  if (examState.timerInterval) clearInterval(examState.timerInterval);
+
+  // In full exam mode, reveal all and process
+  if (examState.mode === 'full') {
+    examState.questions.forEach((q, i) => {
+      if (!examState.revealed[i]) {
+        examState.revealed[i] = true;
+        if (examState.answers[i] !== -1) {
+          processAnswer(q, examState.answers[i] === q.correct);
+        } else {
+          state.totalAnswered++;
+          state.domainAnswered[q.domain]++;
+          state.streak = 0;
+        }
+      }
+    });
+  }
+
+  // Calculate results
+  let totalCorrect = 0;
+  let domainResults = {infra:{correct:0,total:0}, ai:{correct:0,total:0}, ops:{correct:0,total:0}};
+  examState.questions.forEach((q, i) => {
+    domainResults[q.domain].total++;
+    if (examState.answers[i] === q.correct) { totalCorrect++; domainResults[q.domain].correct++; }
+  });
+
+  const score = Math.round((totalCorrect / examState.questions.length) * 100);
+  const passed = score >= 70;
+
+  if (examState.mode === 'full') {
+    state.examsCompleted++;
+    if (score > state.bestScore) state.bestScore = score;
+    if (examState.timeRemaining > 900) state.fastExam = true;
+    state.xp += passed ? 200 : 50;
+  }
+
+  checkBadges();
+
+  // Render results
+  const scoreEl = document.getElementById('resultsScore');
+  scoreEl.textContent = score + '%';
+  scoreEl.className = `results-score ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('resultsVerdict').textContent = passed ? '🎉 PASSED — You\'re exam ready!' : '📖 Keep studying — you\'re getting closer!';
+  document.getElementById('resultsDetail').textContent = `${totalCorrect} of ${examState.questions.length} correct • ${examState.mode === 'full' ? 'Full Exam Simulation' : 'Practice Mode'}`;
+
+  const domainNames = {
+    'linux-fundamentals':'Linux Fundamentals',
+    'rhel':'Red Hat Enterprise Linux',
+    'suse':'SUSE Linux Enterprise',
+    'ai-infra':'AI Infrastructure',
+    'ai-knowledge':'AI Knowledge',
+    'ai-ops':'AI Operations',
+    'docker':'Docker',
+    'kubernetes':'Kubernetes',
+    'container-ops':'Container Operations'
+  };
+  const domainColors = {
+    'linux-fundamentals':'var(--linux-orange)',
+    'rhel':'#ff6b35',
+    'suse':'#4a90e2',
+    'ai-infra':'#76b900',
+    'ai-knowledge':'#9b59b6',
+    'ai-ops':'#e74c3c',
+    'docker':'#2496ed',
+    'kubernetes':'#326ce5',
+    'container-ops':'#f39c12'
+  };
+  document.getElementById('resultsDomains').innerHTML = Object.entries(domainResults).map(([d, r]) => {
+    const pct = r.total > 0 ? Math.round((r.correct / r.total) * 100) : 0;
+    return `<div class="result-domain-card">
+      <div class="result-domain-score" style="color:${domainColors[d]}">${pct}%</div>
+      <div class="result-domain-name">${domainNames[d]} (${r.correct}/${r.total})</div>
+      <div class="result-domain-bar"><div class="result-domain-fill" style="width:${pct}%;background:${domainColors[d]}"></div></div>
+    </div>`;
+  }).join('');
+
+  updateDashboard();
+  // Update feedback link with domain and score context
+  updateFeedbackLink(examState.domain || null, score);
+  showPage('pageResults');
+}
+
+function reviewExam() {
+  examState.currentIndex = 0;
+  // All should be revealed already
+  document.getElementById('examTitle').textContent = 'Review Mode';
+  document.getElementById('examSubtitle').textContent = 'Reviewing your answers';
+  document.getElementById('examTimer').textContent = '📝 Review';
+  document.getElementById('examTimer').className = 'exam-timer';
+  showPage('pageExam');
+  renderQuestion();
+}
+
+// ======================= ACCESS CONTROL =======================
+// Valid access keys — add new keys here for each batch of customers
+const VALID_KEYS = ['AIIO2026', 'NVMASTER', 'GPUREADY', 'AIINFRA26'];
+
+// Token that Razorpay appends OR you can share with customers
+const VALID_TOKENS = ['paid', 'access', 'rzp_success'];
+
+function checkAccess() {
+  const gate = document.getElementById('accessGate');
+  const params = new URLSearchParams(window.location.search);
+
+  // Check 1: Razorpay payment link redirect — sends razorpay_payment_link_status=paid
+  const rzpStatus = params.get('razorpay_payment_link_status');
+  const rzpPaymentId = params.get('razorpay_payment_id');
+  if (rzpStatus === 'paid' && rzpPaymentId) {
+    grantAccess(true);
+    return;
+  }
+
+  // Check 2: Manual token in URL (access keys / direct success link)
+  const token = params.get('key') || params.get('status') || params.get('paid');
+  if (token && (VALID_TOKENS.includes(token) || VALID_KEYS.includes(token.toUpperCase()))) {
+    grantAccess(true);
+    return;
+  }
+
+  // Check 3: Coming from Razorpay, rzp.io short link, or our success.html page
+  const ref = document.referrer;
+  if (ref.includes('razorpay.com') || ref.includes('rzp.io') || ref.endsWith('success.html')) {
+    grantAccess(true);
+    return;
+  }
+
+  // Check 4: Previously unlocked in this browser
+  try {
+    if (localStorage.getItem('aiio_access') === 'granted') {
+      grantAccess(false);
+      return;
+    }
+  } catch(e) {}
+
+  // No valid access — show gate
+  gate.style.display = 'flex';
+}
+
+function grantAccess(showWelcome) {
+  document.getElementById('accessGate').style.display = 'none';
+  try { localStorage.setItem('aiio_access', 'granted'); } catch(e) {}
+  if (showWelcome) {
+    const welcomed = sessionStorage.getItem('aiio_welcomed');
+    if (!welcomed) {
+      document.getElementById('welcomeScreen').style.display = 'flex';
+    } else {
+      document.getElementById('welcomeScreen').style.display = 'none';
+    }
+  } else {
+    document.getElementById('welcomeScreen').style.display = 'none';
+  }
+}
+
+function validateKey() {
+  const input = document.getElementById('accessKeyInput').value.trim().toUpperCase();
+  if (VALID_KEYS.includes(input)) {
+    grantAccess(true);
+  } else {
+    document.getElementById('keyError').style.display = 'block';
+    document.getElementById('accessKeyInput').style.borderColor = 'var(--danger)';
+    setTimeout(() => {
+      document.getElementById('keyError').style.display = 'none';
+      document.getElementById('accessKeyInput').style.borderColor = 'var(--border)';
+    }, 3000);
+  }
+}
+
+function dismissWelcome() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  try { sessionStorage.setItem('aiio_welcomed', '1'); } catch(e) {}
+}
+
+// ======================= INIT =======================
+updateDashboard();
+checkAccess();
+
+// ======================= URL PARAM LAUNCH =======================
+// Allows courses.html and course-detail.html to deep-link into specific modes
+function checkUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const domain = params.get('domain');
+  const mode = params.get('mode');
+
+  const validDomains = ['linux-fundamentals','rhel','suse','ai-infra','ai-knowledge','ai-ops','docker','kubernetes','container-ops'];
+
+  if (domain && validDomains.includes(domain)) {
+    setTimeout(function() { startDomainPractice(domain); }, 200);
+  } else if (mode === 'full') {
+    setTimeout(function() { startFullExam(); }, 200);
+  } else if (mode === 'quick') {
+    setTimeout(function() { startQuickPractice(); }, 200);
+  }
+}
+
+// Update the feedback button URL on the results page with current domain/score
+function updateFeedbackLink(domain, score) {
+  var btn = document.getElementById('feedbackResultsBtn');
+  if (!btn) return;
+  var url = 'feedback.html';
+  var parts = [];
+  if (domain) parts.push('course=' + encodeURIComponent(domain));
+  if (score !== undefined && score !== null) parts.push('score=' + score);
+  if (parts.length) url += '?' + parts.join('&');
+  btn.href = url;
+}
+
+// Run URL param check after access is confirmed (slight delay for grantAccess to complete)
+setTimeout(checkUrlParams, 300);
+</script>
+</body>
+</html>

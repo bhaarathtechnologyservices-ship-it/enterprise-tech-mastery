@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave Feedback — Enterprise Tech Mastery</title>
+<meta name="description" content="Share your learning experience and help other enterprise technology professionals.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nvidia-green: #76B900;
+  --nvidia-green-dark: #4A7C00;
+  --nvidia-green-glow: rgba(118,185,0,0.25);
+  --nvidia-dark: #0a0a0f;
+  --nvidia-darker: #050507;
+  --nvidia-card: #1a1a26;
+  --nvidia-border: #2a2a3a;
+  --nvidia-text: #f0f0f5;
+  --nvidia-text2: #8888a0;
+  --nvidia-text3: #555570;
+  --danger: #ff4757;
+  --success: #10b981;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--nvidia-dark);color:var(--nvidia-text);min-height:100vh;overflow-x:hidden}
+a{color:var(--nvidia-green);text-decoration:none}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--nvidia-border);padding:16px 0}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;color:var(--nvidia-text)}
+.nav-logo-box{width:34px;height:34px;background:var(--nvidia-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.75rem;color:#000;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:24px;font-size:0.9rem;font-weight:500;color:var(--nvidia-text2)}
+.nav-links a{color:var(--nvidia-text2);transition:color 0.2s}
+.nav-links a:hover{color:var(--nvidia-green)}
+.nav-cta{padding:10px 24px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.nav-cta:hover{box-shadow:0 4px 20px var(--nvidia-green-glow);transform:translateY(-1px)}
+
+/* HERO */
+.hero{max-width:700px;margin:0 auto;padding:60px 24px 40px;text-align:center}
+.hero-badge{display:inline-block;padding:6px 16px;background:rgba(118,185,0,0.1);border:1px solid rgba(118,185,0,0.3);border-radius:20px;font-size:0.8rem;font-weight:600;color:var(--nvidia-green);margin-bottom:20px;letter-spacing:0.05em}
+.hero h1{font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;line-height:1.15;margin-bottom:14px}
+.hero p{font-size:1rem;color:var(--nvidia-text2);line-height:1.7}
+
+/* FORM SECTION */
+.form-section{max-width:680px;margin:0 auto;padding:0 24px 80px}
+.form-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:20px;padding:40px}
+.form-group{margin-bottom:24px}
+.form-group label{display:block;font-weight:600;font-size:0.9rem;margin-bottom:8px;color:var(--nvidia-text)}
+.form-group label .hint{font-weight:400;color:var(--nvidia-text2)}
+.form-input{width:100%;padding:13px 16px;background:var(--nvidia-darker);border:1px solid var(--nvidia-border);border-radius:12px;color:var(--nvidia-text);font-family:'Outfit',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--nvidia-green)}
+.form-input::placeholder{color:var(--nvidia-text3)}
+.form-select{width:100%;padding:13px 16px;background:var(--nvidia-darker);border:1px solid var(--nvidia-border);border-radius:12px;color:var(--nvidia-text);font-family:'Outfit',sans-serif;font-size:0.95rem;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;transition:border-color 0.2s}
+.form-select:focus{border-color:var(--nvidia-green)}
+.form-textarea{width:100%;min-height:130px;padding:13px 16px;background:var(--nvidia-darker);border:1px solid var(--nvidia-border);border-radius:12px;color:var(--nvidia-text);font-family:'Outfit',sans-serif;font-size:0.95rem;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.2s}
+.form-textarea:focus{border-color:var(--nvidia-green)}
+.form-textarea::placeholder{color:var(--nvidia-text3)}
+.char-count{font-size:0.78rem;color:var(--nvidia-text3);margin-top:5px;text-align:right}
+
+/* STAR RATING */
+.star-rating{display:flex;gap:6px;margin-top:4px}
+.star{font-size:2.2rem;color:var(--nvidia-text3);cursor:pointer;transition:color 0.15s,transform 0.1s;line-height:1;user-select:none}
+.star:hover,.star.active{color:var(--nvidia-green)}
+.star:hover{transform:scale(1.15)}
+.star-label{font-size:0.85rem;color:var(--nvidia-text2);margin-top:6px;min-height:20px}
+
+/* SCORE INLINE */
+.score-row{display:flex;align-items:center;gap:12px}
+.score-input{width:100px;padding:13px 16px;background:var(--nvidia-darker);border:1px solid var(--nvidia-border);border-radius:12px;color:var(--nvidia-text);font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;text-align:center;outline:none;transition:border-color 0.2s}
+.score-input:focus{border-color:var(--nvidia-green)}
+
+/* CHECKBOX */
+.check-row{display:flex;align-items:flex-start;gap:12px;padding:16px;background:rgba(118,185,0,0.05);border:1px solid rgba(118,185,0,0.15);border-radius:12px}
+.check-row input[type=checkbox]{accent-color:var(--nvidia-green);width:18px;height:18px;flex-shrink:0;margin-top:2px;cursor:pointer}
+.check-row label{font-size:0.88rem;color:var(--nvidia-text2);line-height:1.5;cursor:pointer}
+
+/* SUBMIT BUTTON */
+.submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:8px}
+.submit-btn:hover{box-shadow:0 8px 30px var(--nvidia-green-glow);transform:translateY(-2px)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ERROR */
+.form-error{background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.3);border-radius:10px;padding:12px 16px;font-size:0.88rem;color:#ff4757;margin-top:12px;display:none}
+
+/* SUCCESS STATE */
+.success-state{display:none;text-align:center;padding:60px 40px}
+.success-icon{font-size:4rem;margin-bottom:20px;animation:pop 0.5s ease}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success-state h2{font-size:1.8rem;font-weight:800;margin-bottom:12px}
+.success-state p{color:var(--nvidia-text2);line-height:1.7;max-width:420px;margin:0 auto 32px}
+.success-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-outline{padding:10px 24px;border-radius:10px;border:1px solid var(--nvidia-border);background:var(--nvidia-card);color:var(--nvidia-text);font-family:'Outfit',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--nvidia-green);color:var(--nvidia-green)}
+
+/* FOOTER */
+footer{max-width:1100px;margin:0 auto;padding:32px 24px;border-top:1px solid var(--nvidia-border);text-align:center;color:var(--nvidia-text3);font-size:0.82rem}
+
+@media(max-width:600px){
+  .hero h1{font-size:1.8rem}
+  .form-card{padding:24px}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-box">ET</div>Enterprise Tech Mastery</a>
+    <div class="nav-links">
+      <a href="courses.html">Courses</a>
+      <a href="simulator.html">Practice Quiz</a>
+      <a href="index.html#testimonials">Testimonials</a>
+    </div>
+    <a href="courses.html" class="nav-cta">Browse Courses</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge" id="courseBadge">SHARE YOUR EXPERIENCE</div>
+  <h1>Your Feedback Matters</h1>
+  <p>Tell us about your learning journey. Your honest review helps other enterprise professionals and appears as a testimonial on our homepage.</p>
+</section>
+
+<!-- FORM -->
+<div class="form-section">
+  <div class="form-card" id="feedbackForm">
+
+    <!-- Course Select -->
+    <div class="form-group">
+      <label>Course Completed</label>
+      <select class="form-select" id="feedbackCourse">
+        <option value="">— Select a course —</option>
+        <optgroup label="Linux Enterprise">
+          <option value="linux-fundamentals">Linux Fundamentals</option>
+          <option value="rhel">Red Hat Enterprise Linux (RHEL)</option>
+          <option value="suse">SUSE Linux Enterprise</option>
+        </optgroup>
+        <optgroup label="NVIDIA AI Infrastructure">
+          <option value="ai-infra">AI Infrastructure</option>
+          <option value="ai-knowledge">AI Knowledge</option>
+          <option value="ai-ops">AI Operations</option>
+        </optgroup>
+        <optgroup label="Containers & Orchestration">
+          <option value="docker">Docker</option>
+          <option value="kubernetes">Kubernetes</option>
+          <option value="container-ops">Container Operations</option>
+        </optgroup>
+        <optgroup label="Other">
+          <option value="general">General / Overall Platform</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- Star Rating -->
+    <div class="form-group">
+      <label>Your Rating</label>
+      <div class="star-rating" id="starRating">
+        <span class="star" data-val="1" title="Poor">★</span>
+        <span class="star" data-val="2" title="Fair">★</span>
+        <span class="star" data-val="3" title="Good">★</span>
+        <span class="star" data-val="4" title="Very Good">★</span>
+        <span class="star" data-val="5" title="Excellent">★</span>
+      </div>
+      <div class="star-label" id="starLabel">Click to rate</div>
+    </div>
+
+    <!-- Review Text -->
+    <div class="form-group">
+      <label>Your Review <span class="hint">(min 20 characters)</span></label>
+      <textarea class="form-textarea" id="feedbackText"
+        placeholder="Share what you learned, how the course helped you, any tips for others preparing for certification..."
+        oninput="updateCharCount()"></textarea>
+      <div class="char-count" id="charCount">0 characters</div>
+    </div>
+
+    <!-- Author -->
+    <div class="form-group">
+      <label>Your Name / Title <span class="hint">(as you want to appear)</span></label>
+      <input type="text" class="form-input" id="feedbackAuthor"
+        placeholder="e.g., DevOps Lead, Bengaluru or Senior SysAdmin, Mumbai">
+    </div>
+
+    <!-- Score (optional) -->
+    <div class="form-group">
+      <label>Quiz Score <span class="hint">(optional)</span></label>
+      <div class="score-row">
+        <input type="number" class="score-input" id="feedbackScore" min="0" max="100" placeholder="85">
+        <span style="color:var(--nvidia-text2);font-size:0.95rem">% on the practice quiz</span>
+      </div>
+    </div>
+
+    <!-- Public Checkbox -->
+    <div class="form-group">
+      <div class="check-row">
+        <input type="checkbox" id="feedbackPublic" checked>
+        <label for="feedbackPublic">Allow this review to appear as a testimonial on the homepage and course pages for other learners to see.</label>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitFeedback()">Submit Feedback</button>
+    <div class="form-error" id="formError"></div>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="success-state" id="successState">
+    <div class="success-icon">🎉</div>
+    <h2>Thank You!</h2>
+    <p>Your feedback has been submitted. If you allowed it to be public, it will appear on the homepage and course page as a testimonial for other learners.</p>
+    <div class="success-actions">
+      <a href="courses.html" class="nav-cta">Explore More Courses</a>
+      <a href="index.html#testimonials" class="btn-outline">See Testimonials</a>
+      <a href="simulator.html" class="btn-outline">Practice Quiz</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Enterprise Tech Mastery. All rights reserved.</p>
+  <p style="margin-top:8px">Not affiliated with Red Hat, SUSE, NVIDIA, Docker, or Kubernetes. For learning and certification preparation purposes only.</p>
+</footer>
+
+<script src="testimonials.js"></script>
+<script>
+var selectedRating = 0;
+
+var STAR_LABELS = ['', 'Poor — needs improvement', 'Fair — somewhat helpful', 'Good — solid content', 'Very Good — highly recommended', 'Excellent — must take!'];
+
+// Pre-fill from URL params
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var course = params.get('course');
+  var score = params.get('score');
+  if (course) {
+    var sel = document.getElementById('feedbackCourse');
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === course) { sel.selectedIndex = i; break; }
+    }
+    var label = TestimonialsManager.getCourseLabel(course);
+    document.getElementById('courseBadge').textContent = label.toUpperCase() + ' — LEAVE FEEDBACK';
+  }
+  if (score) {
+    var s = parseInt(score);
+    if (s >= 0 && s <= 100) document.getElementById('feedbackScore').value = s;
+  }
+})();
+
+// Star rating interaction
+document.querySelectorAll('.star').forEach(function(star) {
+  star.addEventListener('mouseenter', function() {
+    var val = parseInt(this.dataset.val);
+    highlightStars(val, false);
+  });
+  star.addEventListener('mouseleave', function() {
+    highlightStars(selectedRating, true);
+  });
+  star.addEventListener('click', function() {
+    selectedRating = parseInt(this.dataset.val);
+    highlightStars(selectedRating, true);
+    document.getElementById('starLabel').textContent = STAR_LABELS[selectedRating];
+  });
+});
+
+function highlightStars(val, setActive) {
+  document.querySelectorAll('.star').forEach(function(s, i) {
+    if (setActive) {
+      s.classList.toggle('active', i < val);
+    } else {
+      s.style.color = i < val ? 'var(--nvidia-green)' : 'var(--nvidia-text3)';
+    }
+  });
+  if (!setActive) return;
+  document.querySelectorAll('.star').forEach(function(s, i) {
+    s.style.color = '';
+  });
+}
+
+function updateCharCount() {
+  var len = document.getElementById('feedbackText').value.trim().length;
+  var el = document.getElementById('charCount');
+  el.textContent = len + ' characters';
+  el.style.color = len < 20 ? 'var(--danger)' : 'var(--nvidia-text3)';
+}
+
+function showError(msg) {
+  var el = document.getElementById('formError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+  setTimeout(function() { el.style.display = 'none'; }, 5000);
+}
+
+function submitFeedback() {
+  var course = document.getElementById('feedbackCourse').value;
+  var text = document.getElementById('feedbackText').value.trim();
+  var author = document.getElementById('feedbackAuthor').value.trim();
+  var scoreVal = document.getElementById('feedbackScore').value;
+  var score = scoreVal !== '' ? parseInt(scoreVal) : null;
+  var isPublic = document.getElementById('feedbackPublic').checked;
+
+  // Validation
+  if (!course) { showError('Please select the course you completed.'); return; }
+  if (selectedRating === 0) { showError('Please select a star rating (1–5 stars).'); return; }
+  if (text.length < 20) { showError('Your review must be at least 20 characters. Tell us more about your experience!'); return; }
+  if (!author) { showError('Please enter your name or professional title so others know who this is from.'); return; }
+  if (score !== null && (isNaN(score) || score < 0 || score > 100)) { showError('Please enter a valid quiz score between 0 and 100.'); return; }
+
+  // Prevent double submit
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  var obj = {
+    id: 't_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+    course: course,
+    courseLabel: TestimonialsManager.getCourseLabel(course),
+    rating: selectedRating,
+    text: text,
+    author: author,
+    score: score,
+    public: isPublic,
+    timestamp: Date.now(),
+    featured: false
+  };
+
+  var saved = TestimonialsManager.add(obj);
+
+  document.getElementById('feedbackForm').style.display = 'none';
+  document.getElementById('successState').style.display = 'block';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Detail — Enterprise Tech Mastery</title>
+<meta name="description" content="Enterprise technology course learning objectives, syllabus, and practice quiz.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nvidia-green: #76B900;
+  --nvidia-green-dark: #4A7C00;
+  --nvidia-green-glow: rgba(118,185,0,0.25);
+  --nvidia-dark: #0a0a0f;
+  --nvidia-darker: #050507;
+  --nvidia-card: #1a1a26;
+  --nvidia-border: #2a2a3a;
+  --nvidia-text: #f0f0f5;
+  --nvidia-text2: #8888a0;
+  --nvidia-text3: #555570;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--nvidia-dark);color:var(--nvidia-text);overflow-x:hidden}
+a{color:var(--nvidia-green);text-decoration:none}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--nvidia-border);padding:16px 0}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;color:var(--nvidia-text)}
+.nav-logo-box{width:34px;height:34px;background:var(--nvidia-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.75rem;color:#000;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:24px;font-size:0.9rem;font-weight:500}
+.nav-links a{color:var(--nvidia-text2);transition:color 0.2s}
+.nav-links a:hover{color:var(--nvidia-green)}
+.nav-cta{padding:10px 24px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.nav-cta:hover{box-shadow:0 4px 20px var(--nvidia-green-glow);transform:translateY(-1px)}
+
+/* BREADCRUMB */
+.breadcrumb{max-width:1100px;margin:0 auto;padding:20px 24px 0;font-size:0.82rem;color:var(--nvidia-text3)}
+.breadcrumb a{color:var(--nvidia-text3);transition:color 0.2s}
+.breadcrumb a:hover{color:var(--nvidia-green)}
+.breadcrumb span{margin:0 8px}
+
+/* COURSE HERO */
+.course-hero{max-width:1100px;margin:0 auto;padding:32px 24px 40px}
+.course-hero-inner{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:20px;padding:48px;position:relative;overflow:hidden}
+.course-hero-inner::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:var(--track-color, var(--nvidia-green))}
+.course-hero-top{display:flex;align-items:flex-start;gap:24px;margin-bottom:24px}
+.course-big-icon{font-size:4rem;line-height:1;flex-shrink:0}
+.course-meta-top{flex:1}
+.course-track-tag{display:inline-block;padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:1px solid;margin-bottom:12px}
+.course-hero h1{font-size:2.2rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:10px;line-height:1.15}
+.course-hero p{font-size:0.98rem;color:var(--nvidia-text2);line-height:1.7;max-width:700px;margin-bottom:24px}
+.course-cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{padding:14px 32px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:12px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{box-shadow:0 8px 30px var(--nvidia-green-glow);transform:translateY(-2px)}
+.btn-outline{padding:14px 32px;background:transparent;border:1px solid var(--nvidia-border);border-radius:12px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--nvidia-text2);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:var(--nvidia-green);color:var(--nvidia-green)}
+
+/* STATS STRIP */
+.course-stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--nvidia-border);border-radius:14px;overflow:hidden;margin-top:28px}
+.cs-item{background:var(--nvidia-darker);padding:18px;text-align:center}
+.cs-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:800;color:var(--nvidia-green)}
+.cs-lbl{font-size:0.75rem;color:var(--nvidia-text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.07em}
+
+/* SECTIONS */
+.section{max-width:1100px;margin:0 auto;padding:0 24px 60px}
+.section-label{font-size:0.78rem;font-weight:700;color:var(--nvidia-green);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px}
+.section h2{font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px}
+.section p.sub{font-size:0.95rem;color:var(--nvidia-text2);max-width:600px;line-height:1.7;margin-bottom:32px}
+
+/* SYLLABUS GRID */
+.syllabus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.syllabus-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:14px;padding:24px;transition:all 0.3s}
+.syllabus-card:hover{border-color:var(--nvidia-green);transform:translateY(-3px)}
+.syllabus-num{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--nvidia-green);font-weight:700;margin-bottom:8px;opacity:0.8}
+.syllabus-card h4{font-size:0.95rem;font-weight:700;margin-bottom:6px}
+.syllabus-card p{font-size:0.82rem;color:var(--nvidia-text2);line-height:1.6}
+
+/* OBJECTIVES */
+.objectives-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.obj-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:10px;font-size:0.88rem;line-height:1.5}
+.obj-check{color:var(--nvidia-green);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* PRACTICE CTA */
+.practice-cta{background:linear-gradient(135deg,rgba(118,185,0,0.08),rgba(118,185,0,0.03));border:1px solid rgba(118,185,0,0.2);border-radius:20px;padding:48px;text-align:center}
+.practice-cta h2{font-size:1.8rem;font-weight:800;margin-bottom:12px}
+.practice-cta p{color:var(--nvidia-text2);line-height:1.7;max-width:500px;margin:0 auto 28px}
+.quiz-btn{padding:18px 48px;background:linear-gradient(135deg,var(--nvidia-green),var(--nvidia-green-dark));color:#000;border:none;border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+.quiz-btn:hover{box-shadow:0 10px 40px var(--nvidia-green-glow);transform:translateY(-2px)}
+
+/* TESTIMONIALS */
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.proof-card{background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:14px;padding:24px}
+.proof-stars{color:var(--nvidia-green);font-size:1rem;margin-bottom:10px}
+.proof-text{font-size:0.85rem;color:var(--nvidia-text2);line-height:1.6;margin-bottom:14px;font-style:italic}
+.proof-author{font-size:0.78rem;font-weight:600}
+.no-testimonials{text-align:center;padding:40px;color:var(--nvidia-text2);font-size:0.9rem;background:var(--nvidia-card);border:1px solid var(--nvidia-border);border-radius:14px}
+
+/* FOOTER */
+footer{max-width:1100px;margin:0 auto;padding:40px 24px;border-top:1px solid var(--nvidia-border);text-align:center;color:var(--nvidia-text3);font-size:0.82rem}
+
+@media(max-width:900px){.syllabus-grid{grid-template-columns:repeat(2,1fr)}.objectives-list{grid-template-columns:1fr}.proof-grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .course-stats-strip{grid-template-columns:repeat(2,1fr)}
+  .syllabus-grid{grid-template-columns:1fr}
+  .course-hero h1{font-size:1.7rem}
+  .course-hero-inner{padding:28px 20px}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-box">ET</div>Enterprise Tech Mastery</a>
+    <div class="nav-links">
+      <a href="courses.html">Courses</a>
+      <a href="simulator.html">Practice Quiz</a>
+      <a href="index.html#testimonials">Testimonials</a>
+      <a href="feedback.html">Leave Feedback</a>
+    </div>
+    <a href="courses.html" class="nav-cta">All Courses</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="index.html">Home</a><span>›</span>
+  <a href="courses.html">Courses</a><span>›</span>
+  <span id="breadcrumbCourse">Course</span>
+</div>
+
+<!-- COURSE HERO (populated by JS) -->
+<div class="course-hero">
+  <div class="course-hero-inner" id="courseHeroInner">
+    <div class="course-hero-top">
+      <div class="course-big-icon" id="courseIcon">📚</div>
+      <div class="course-meta-top">
+        <div class="course-track-tag" id="courseTrackTag">Track</div>
+        <h1 id="courseName">Loading...</h1>
+        <p id="courseDesc">Loading course content...</p>
+        <div class="course-cta-row">
+          <a href="#" id="quizBtn" class="btn-primary" onclick="startQuiz(event)">🎯 Start Practice Quiz</a>
+          <a href="courses.html" class="btn-outline">← Back to Courses</a>
+        </div>
+      </div>
+    </div>
+    <div class="course-stats-strip" id="courseStatsStrip">
+      <div class="cs-item"><div class="cs-val" id="statQuestions">—</div><div class="cs-lbl">Questions</div></div>
+      <div class="cs-item"><div class="cs-val" id="statDifficulty">—</div><div class="cs-lbl">Difficulty</div></div>
+      <div class="cs-item"><div class="cs-val" id="statTopics">—</div><div class="cs-lbl">Topics</div></div>
+      <div class="cs-item"><div class="cs-val" id="statTime">—</div><div class="cs-lbl">Est. Time</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SYLLABUS -->
+<section class="section">
+  <div class="section-label">Curriculum</div>
+  <h2>Course Syllabus</h2>
+  <p class="sub" id="syllabusIntro">Master these key topics to ace your certification exam.</p>
+  <div class="syllabus-grid" id="syllabusGrid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- LEARNING OBJECTIVES -->
+<section class="section">
+  <div class="section-label">Learning Outcomes</div>
+  <h2>What You Will Learn</h2>
+  <p class="sub">By the end of this course, you will be able to:</p>
+  <div class="objectives-list" id="objectivesList">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- PRACTICE CTA -->
+<section class="section">
+  <div class="practice-cta">
+    <div style="font-size:3rem;margin-bottom:16px" id="practiceIcon">🎯</div>
+    <h2>Test Your Knowledge</h2>
+    <p id="practiceDesc">Practice questions covering all topics in this course with detailed explanations for every answer.</p>
+    <a href="#" id="quizBtnMain" class="quiz-btn" onclick="startQuiz(event)">🚀 Start Practice Quiz</a>
+  </div>
+</section>
+
+<!-- COURSE TESTIMONIALS -->
+<section class="section" id="courseTestimonialsSection">
+  <div class="section-label">Learner Feedback</div>
+  <h2>What Others Say</h2>
+  <p class="sub">Feedback from professionals who completed this course.</p>
+  <div class="proof-grid" id="courseTestimonialsGrid">
+    <!-- Populated by JS -->
+  </div>
+  <div style="text-align:center;margin-top:24px">
+    <a href="#" id="leaveFeedbackBtn" class="nav-cta" style="display:inline-block">Leave Your Feedback →</a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Enterprise Tech Mastery. All rights reserved.</p>
+  <p style="margin-top:8px">Not affiliated with Red Hat, SUSE, NVIDIA, Docker, or Kubernetes. For learning purposes only.</p>
+</footer>
+
+<script src="testimonials.js"></script>
+<script>
+var COURSE_DATA = {
+  'linux-fundamentals': {
+    name: 'Linux Fundamentals',
+    icon: '🐧',
+    track: 'Linux Enterprise',
+    trackColor: '#76B900',
+    trackBg: 'rgba(118,185,0,0.1)',
+    desc: 'Build a solid foundation in Linux system administration. Master file system navigation, permissions, process management, networking, package management, and shell scripting — essential skills for every enterprise technologist.',
+    questions: 30,
+    difficulty: 'Beg → Adv',
+    topics: 6,
+    time: '2–3 hrs',
+    domain: 'linux-fundamentals',
+    syllabusIntro: 'Six comprehensive modules covering everything from basic navigation to advanced system administration.',
+    syllabus: [
+      { title: 'File System Navigation', desc: 'Root hierarchy, /etc, /var, /usr, /home, absolute vs relative paths, ls, cd, find, locate.' },
+      { title: 'Permissions & Ownership', desc: 'chmod, chown, chgrp, SUID/SGID bits, sticky bit, ACLs, umask.' },
+      { title: 'Process Management', desc: 'ps, top, htop, kill, nice, renice, jobs, bg, fg, crontab, at, systemd timers.' },
+      { title: 'Networking Basics', desc: 'ifconfig, ip, ssh, scp, rsync, netstat, ss, curl, wget, DNS resolution, /etc/hosts.' },
+      { title: 'Shell Scripting', desc: 'Variables, conditionals, loops, functions, arrays, I/O redirection, pipes, here documents.' },
+      { title: 'Package & System Admin', desc: 'tar, gzip, zip, find, grep, awk, sed, user management, log analysis, system monitoring.' }
+    ],
+    objectives: [
+      'Navigate the Linux file system hierarchy with confidence',
+      'Manage file permissions, ownership, and ACLs effectively',
+      'Monitor and control running processes and system resources',
+      'Configure and troubleshoot basic network connectivity',
+      'Write practical shell scripts to automate repetitive tasks',
+      'Manage users, groups, and their system access',
+      'Analyze system logs to diagnose issues',
+      'Install, update, and remove software packages'
+    ]
+  },
+  'rhel': {
+    name: 'Red Hat Enterprise Linux',
+    icon: '🎩',
+    track: 'Linux Enterprise',
+    trackColor: '#ff6b35',
+    trackBg: 'rgba(255,107,53,0.1)',
+    desc: 'Master Red Hat Enterprise Linux administration. From package management with yum/dnf to SELinux security policies, systemd service management, and firewall configuration — prepare for the RHCSA and beyond.',
+    questions: 25,
+    difficulty: 'Intermediate',
+    topics: 6,
+    time: '1.5–2 hrs',
+    domain: 'rhel',
+    syllabusIntro: 'Six focused modules covering the core domains of RHEL system administration.',
+    syllabus: [
+      { title: 'Package Management', desc: 'yum, dnf, rpm, subscription-manager, repositories, package groups, module streams.' },
+      { title: 'systemd Services', desc: 'systemctl, service units, targets, timers, journald, boot process, runlevels.' },
+      { title: 'SELinux Security', desc: 'Enforcing/permissive modes, contexts, booleans, audit2allow, restorecon, semanage.' },
+      { title: 'Firewall Configuration', desc: 'firewalld, zones, services, ports, rich rules, nftables basics, NetworkManager.' },
+      { title: 'Storage Management', desc: 'LVM, physical volumes, volume groups, logical volumes, XFS, ext4, /etc/fstab, autofs.' },
+      { title: 'User & Security Policy', desc: 'PAM, sudoers, password policies, account expiry, LDAP client, Kerberos basics.' }
+    ],
+    objectives: [
+      'Manage software packages using yum/dnf and subscription-manager',
+      'Configure and troubleshoot systemd services and targets',
+      'Implement and maintain SELinux security policies',
+      'Configure firewalld zones, services, and port rules',
+      'Create and manage LVM volumes and file systems',
+      'Implement user and group security policies',
+      'Configure network interfaces with NetworkManager',
+      'Automate tasks using systemd timers and cron'
+    ]
+  },
+  'suse': {
+    name: 'SUSE Linux Enterprise',
+    icon: '🦎',
+    track: 'Linux Enterprise',
+    trackColor: '#4a90e2',
+    trackBg: 'rgba(74,144,226,0.1)',
+    desc: 'Master SUSE Linux Enterprise Server administration. Learn zypper package management, YaST configuration, AppArmor security, Btrfs file system, and SUSE-specific enterprise features for production deployments.',
+    questions: 25,
+    difficulty: 'Intermediate',
+    topics: 6,
+    time: '1.5–2 hrs',
+    domain: 'suse',
+    syllabusIntro: 'Six modules covering SUSE-specific administration tools and enterprise features.',
+    syllabus: [
+      { title: 'Zypper Package Manager', desc: 'zypper install/remove/update, repositories, patterns, locks, vendor change handling.' },
+      { title: 'YaST Configuration', desc: 'YaST modules, ncurses/GUI modes, network configuration, user management, software.' },
+      { title: 'AppArmor Security', desc: 'Profiles, enforce/complain modes, aa-genprof, aa-logprof, abstractions, tunables.' },
+      { title: 'Btrfs File System', desc: 'Subvolumes, snapshots, snapper, rollback, quotas, RAID modes, balance operations.' },
+      { title: 'SUSE High Availability', desc: 'Pacemaker, DRBD, SBD, corosync, cluster resources, fencing, maintenance mode.' },
+      { title: 'SUSEConnect & Modules', desc: 'Subscription management, modules, extensions, SCC, SUMA basics, system registration.' }
+    ],
+    objectives: [
+      'Manage packages, patterns, and repositories with zypper',
+      'Use YaST to configure system settings and services',
+      'Create and manage AppArmor security profiles',
+      'Administer Btrfs snapshots and rollbacks with snapper',
+      'Configure and troubleshoot SUSE High Availability clusters',
+      'Manage SUSE subscriptions and module extensions',
+      'Deploy and configure SUSE-specific networking features',
+      'Monitor system health with SUSE enterprise tools'
+    ]
+  },
+  'ai-infra': {
+    name: 'AI Infrastructure',
+    icon: '🖥️',
+    track: 'NVIDIA AI Infrastructure',
+    trackColor: '#76B900',
+    trackBg: 'rgba(118,185,0,0.1)',
+    desc: 'Understand GPU hardware architecture and AI data center infrastructure. Master DGX systems, NVLink, NVSwitch, high-speed networking, parallel file systems, and AI cluster deployment for enterprise-scale AI workloads.',
+    questions: 25,
+    difficulty: 'Intermediate',
+    topics: 6,
+    time: '1.5–2 hrs',
+    domain: 'ai-infra',
+    syllabusIntro: 'Six modules covering the hardware and infrastructure foundations of enterprise AI.',
+    syllabus: [
+      { title: 'GPU Architecture', desc: 'SM architecture, CUDA cores, Tensor Cores, HBM memory, PCIe bandwidth, GPU generations.' },
+      { title: 'DGX & HGX Systems', desc: 'DGX A100/H100, HGX baseboard, compute nodes, GPU interconnects, BMC management.' },
+      { title: 'NVLink & NVSwitch', desc: 'NVLink bandwidth, NVSwitch fabric, all-to-all communication, multi-GPU topology.' },
+      { title: 'Data Center Networking', desc: 'InfiniBand, RDMA, RoCEv2, HDR/NDR speeds, fat-tree topology, spine-leaf, GPUDirect.' },
+      { title: 'Parallel File Systems', desc: 'Lustre, GPFS/Spectrum Scale, BeeGFS, NFS performance tuning, object storage.' },
+      { title: 'AI Cluster Deployment', desc: 'Node provisioning, BIOS/UEFI tuning, NUMA topology, cluster health checks, benchmarking.' }
+    ],
+    objectives: [
+      'Explain GPU architecture including SM, Tensor Cores, and memory hierarchy',
+      'Configure and manage DGX and HGX systems',
+      'Understand NVLink and NVSwitch interconnect topologies',
+      'Design and troubleshoot high-speed AI networking',
+      'Deploy and tune parallel file systems for AI workloads',
+      'Provision and validate AI compute clusters',
+      'Apply NUMA and CPU affinity optimizations',
+      'Benchmark GPU performance with standard tools'
+    ]
+  },
+  'ai-knowledge': {
+    name: 'AI Knowledge',
+    icon: '🧪',
+    track: 'NVIDIA AI Infrastructure',
+    trackColor: '#9b59b6',
+    trackBg: 'rgba(155,89,182,0.1)',
+    desc: 'Master machine learning and deep learning fundamentals. From CUDA programming to TensorRT optimization, learn to build, train, and deploy AI models using NVIDIA frameworks and tools for production environments.',
+    questions: 25,
+    difficulty: 'Mixed',
+    topics: 6,
+    time: '2–3 hrs',
+    domain: 'ai-knowledge',
+    syllabusIntro: 'Six modules spanning foundational ML theory to advanced NVIDIA AI development tools.',
+    syllabus: [
+      { title: 'ML/DL Fundamentals', desc: 'Neural networks, backpropagation, optimizers, loss functions, regularization, evaluation.' },
+      { title: 'CUDA Programming', desc: 'Kernels, threads, blocks, grids, shared memory, warp execution, CUDA streams, profiling.' },
+      { title: 'NVIDIA Frameworks', desc: 'cuDNN, cuBLAS, NCCL, cuDF, RAPIDS ecosystem, Triton Inference Server.' },
+      { title: 'TensorRT & Optimization', desc: 'Graph optimization, layer fusion, precision calibration (FP32/FP16/INT8), deployment.' },
+      { title: 'Training at Scale', desc: 'Data parallelism, model parallelism, gradient accumulation, mixed precision, PyTorch DDP.' },
+      { title: 'AI Model Lifecycle', desc: 'Dataset preparation, experiment tracking, MLflow, model registry, versioning, A/B testing.' }
+    ],
+    objectives: [
+      'Explain core ML/DL concepts and training dynamics',
+      'Write basic CUDA kernels and understand GPU execution model',
+      'Use NVIDIA CUDA libraries including cuDNN, cuBLAS, and NCCL',
+      'Optimize models for inference using TensorRT',
+      'Implement distributed training strategies',
+      'Track experiments and manage model versions',
+      'Deploy inference pipelines with Triton Inference Server',
+      'Profile and debug GPU-based AI workloads'
+    ]
+  },
+  'ai-ops': {
+    name: 'AI Operations',
+    icon: '⚙️',
+    track: 'NVIDIA AI Infrastructure',
+    trackColor: '#e74c3c',
+    trackBg: 'rgba(231,76,60,0.1)',
+    desc: 'Operate and manage GPU infrastructure at scale. Master DCGM monitoring, Kubernetes GPU scheduling, MIG partitioning, Slurm job scheduling, and container orchestration specifically for AI workloads in production.',
+    questions: 25,
+    difficulty: 'Advanced',
+    topics: 6,
+    time: '1.5–2 hrs',
+    domain: 'ai-ops',
+    syllabusIntro: 'Six advanced modules covering the operational aspects of enterprise GPU infrastructure.',
+    syllabus: [
+      { title: 'DCGM Monitoring', desc: 'DCGM metrics, health checks, NvLink monitoring, field groups, dmon, EUD validation.' },
+      { title: 'Kubernetes GPU Scheduling', desc: 'NVIDIA device plugin, GPU requests/limits, node selectors, pod affinity, time-slicing.' },
+      { title: 'MIG — Multi-Instance GPU', desc: 'MIG profiles, GPU instances, compute instances, mig-parted, Kubernetes MIG support.' },
+      { title: 'Slurm Job Scheduler', desc: 'Partitions, QOS, GRES, job arrays, resource constraints, srun, sbatch, squeue.' },
+      { title: 'Container AI Workflows', desc: 'NVIDIA Container Toolkit, NGC catalog, Docker + GPU, resource isolation, security.' },
+      { title: 'Observability & Alerting', desc: 'Prometheus metrics, Grafana dashboards, GPU exporter, alertmanager, capacity planning.' }
+    ],
+    objectives: [
+      'Monitor GPU health and performance with DCGM',
+      'Schedule GPU workloads on Kubernetes using the NVIDIA device plugin',
+      'Configure Multi-Instance GPU (MIG) partitions',
+      'Manage job scheduling with Slurm and GPU resource allocation',
+      'Deploy containerized AI workloads with GPU access',
+      'Build observability pipelines with Prometheus and Grafana',
+      'Implement GPU resource policies and quotas',
+      'Troubleshoot GPU-related issues in production clusters'
+    ]
+  },
+  'docker': {
+    name: 'Docker',
+    icon: '🐳',
+    track: 'Containers & Orchestration',
+    trackColor: '#2496ed',
+    trackBg: 'rgba(36,150,237,0.1)',
+    desc: 'Master Docker from fundamentals to production-ready deployments. Learn container lifecycle, Dockerfile best practices, networking, volumes, Docker Compose for multi-service apps, and container security.',
+    questions: 25,
+    difficulty: 'Beg → Int',
+    topics: 6,
+    time: '1.5–2 hrs',
+    domain: 'docker',
+    syllabusIntro: 'Six modules taking you from Docker basics to production-grade container operations.',
+    syllabus: [
+      { title: 'Container Fundamentals', desc: 'Namespaces, cgroups, container vs VM, Docker architecture, daemon, containerd.' },
+      { title: 'Images & Dockerfiles', desc: 'Layered filesystem, COPY/ADD/RUN/CMD/ENTRYPOINT, multi-stage builds, .dockerignore.' },
+      { title: 'Networking', desc: 'Bridge, host, overlay, macvlan networks, DNS resolution, port mapping, network inspect.' },
+      { title: 'Volumes & Storage', desc: 'Named volumes, bind mounts, tmpfs, volume drivers, data persistence strategies.' },
+      { title: 'Docker Compose', desc: 'YAML syntax, services, networks, volumes, health checks, depends_on, profiles, secrets.' },
+      { title: 'Security & Registry', desc: 'Rootless containers, capabilities, seccomp, AppArmor, image scanning, private registry.' }
+    ],
+    objectives: [
+      'Explain how containers use kernel namespaces and cgroups',
+      'Build optimized images using multi-stage Dockerfiles',
+      'Configure container networking for different use cases',
+      'Manage persistent data with Docker volumes and bind mounts',
+      'Deploy multi-service applications with Docker Compose',
+      'Apply container security best practices',
+      'Push and pull images from public and private registries',
+      'Debug container issues using Docker CLI and logs'
+    ]
+  },
+  'kubernetes': {
+    name: 'Kubernetes',
+    icon: '☸️',
+    track: 'Containers & Orchestration',
+    trackColor: '#326ce5',
+    trackBg: 'rgba(50,108,229,0.1)',
+    desc: 'Master Kubernetes for container orchestration at scale. From architecture fundamentals to production operations: pods, deployments, services, ingress, RBAC, persistent storage, and cluster management.',
+    questions: 25,
+    difficulty: 'Intermediate',
+    topics: 6,
+    time: '2–2.5 hrs',
+    domain: 'kubernetes',
+    syllabusIntro: 'Six comprehensive modules covering the full Kubernetes operational lifecycle.',
+    syllabus: [
+      { title: 'K8s Architecture', desc: 'Control plane components, etcd, API server, scheduler, controller manager, kubelet, kube-proxy.' },
+      { title: 'Workloads', desc: 'Pods, Deployments, ReplicaSets, StatefulSets, DaemonSets, Jobs, CronJobs, init containers.' },
+      { title: 'Networking & Services', desc: 'ClusterIP, NodePort, LoadBalancer, Ingress, NetworkPolicy, CoreDNS, CNI plugins.' },
+      { title: 'Configuration & Secrets', desc: 'ConfigMaps, Secrets, environment variables, volume mounts, Helm values, kustomize.' },
+      { title: 'Storage', desc: 'PersistentVolumes, PVCs, StorageClasses, dynamic provisioning, CSI drivers, volume snapshots.' },
+      { title: 'Security & RBAC', desc: 'ServiceAccounts, Roles, ClusterRoles, RoleBindings, PodSecurity, admission controllers.' }
+    ],
+    objectives: [
+      'Describe the Kubernetes control plane and node architecture',
+      'Deploy and manage workloads using Deployments and StatefulSets',
+      'Expose applications using Services and Ingress resources',
+      'Configure application settings with ConfigMaps and Secrets',
+      'Provision persistent storage using PVCs and StorageClasses',
+      'Implement RBAC policies for cluster security',
+      'Troubleshoot pod scheduling and networking issues',
+      'Use kubectl effectively for cluster operations'
+    ]
+  },
+  'container-ops': {
+    name: 'Container Operations',
+    icon: '🔧',
+    track: 'Containers & Orchestration',
+    trackColor: '#f39c12',
+    trackBg: 'rgba(243,156,18,0.1)',
+    desc: 'Operate containerized infrastructure in production. Master CI/CD pipeline design, container monitoring and logging, security scanning, autoscaling strategies, service mesh concepts, and enterprise container governance.',
+    questions: 25,
+    difficulty: 'Advanced',
+    topics: 6,
+    time: '1.5–2 hrs',
+    domain: 'container-ops',
+    syllabusIntro: 'Six advanced operational modules for enterprise-grade container platform management.',
+    syllabus: [
+      { title: 'CI/CD Pipelines', desc: 'GitOps, ArgoCD, Flux, Tekton, Jenkins X, image build pipelines, GitLab/GitHub Actions.' },
+      { title: 'Monitoring & Logging', desc: 'Prometheus, Grafana, Loki, Fluent Bit, EFK/ELK stack, distributed tracing with Jaeger.' },
+      { title: 'Container Security', desc: 'Image scanning (Trivy, Snyk), OPA/Gatekeeper, Falco runtime security, supply chain.' },
+      { title: 'Scaling Strategies', desc: 'HPA, VPA, KEDA, cluster-autoscaler, topology spread, pod disruption budgets.' },
+      { title: 'Service Mesh', desc: 'Istio architecture, Envoy proxy, traffic management, mTLS, observability, Linkerd basics.' },
+      { title: 'Enterprise Governance', desc: 'Multi-tenancy, namespace policies, resource quotas, cost allocation, platform teams.' }
+    ],
+    objectives: [
+      'Design and implement GitOps-based CI/CD pipelines',
+      'Set up monitoring and logging for container workloads',
+      'Implement container security scanning and runtime protection',
+      'Configure autoscaling with HPA, VPA, and KEDA',
+      'Understand service mesh concepts and Istio basics',
+      'Apply enterprise governance policies for multi-tenant clusters',
+      'Manage container platform costs and resource allocation',
+      'Perform rolling updates, canary deployments, and rollbacks'
+    ]
+  }
+};
+
+var currentCourse = null;
+
+function init() {
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('course');
+  var data = COURSE_DATA[slug];
+
+  if (!data) {
+    // Unknown course — redirect to catalog
+    location.href = 'courses.html';
+    return;
+  }
+
+  currentCourse = slug;
+  document.title = data.name + ' — Enterprise Tech Mastery';
+
+  // Breadcrumb
+  document.getElementById('breadcrumbCourse').textContent = data.name;
+
+  // Hero track color
+  document.getElementById('courseHeroInner').style.setProperty('--track-color', data.trackColor);
+  document.getElementById('courseIcon').textContent = data.icon;
+
+  // Track tag
+  var tag = document.getElementById('courseTrackTag');
+  tag.textContent = data.track.toUpperCase();
+  tag.style.color = data.trackColor;
+  tag.style.borderColor = data.trackColor;
+  tag.style.background = data.trackBg;
+
+  document.getElementById('courseName').textContent = data.name;
+  document.getElementById('courseDesc').textContent = data.desc;
+
+  // Stats strip
+  document.getElementById('statQuestions').textContent = data.questions;
+  document.getElementById('statDifficulty').textContent = data.difficulty;
+  document.getElementById('statTopics').textContent = data.topics;
+  document.getElementById('statTime').textContent = data.time;
+
+  // Quiz button URLs
+  var quizUrl = 'simulator.html?domain=' + data.domain;
+  document.getElementById('quizBtn').href = quizUrl;
+  document.getElementById('quizBtnMain').href = quizUrl;
+
+  // Syllabus intro
+  document.getElementById('syllabusIntro').textContent = data.syllabusIntro;
+
+  // Syllabus cards
+  var syllabusHtml = '';
+  data.syllabus.forEach(function(item, i) {
+    syllabusHtml += '<div class="syllabus-card">' +
+      '<div class="syllabus-num">Module ' + String(i + 1).padStart(2, '0') + '</div>' +
+      '<h4>' + item.title + '</h4>' +
+      '<p>' + item.desc + '</p>' +
+      '</div>';
+  });
+  document.getElementById('syllabusGrid').innerHTML = syllabusHtml;
+
+  // Objectives
+  var objHtml = '';
+  data.objectives.forEach(function(obj) {
+    objHtml += '<div class="obj-item"><span class="obj-check">✓</span><span>' + obj + '</span></div>';
+  });
+  document.getElementById('objectivesList').innerHTML = objHtml;
+
+  // Practice section
+  document.getElementById('practiceIcon').textContent = data.icon;
+  document.getElementById('practiceDesc').textContent =
+    data.questions + ' questions covering all topics in ' + data.name + ' with detailed explanations for every answer.';
+
+  // Feedback link
+  document.getElementById('leaveFeedbackBtn').href = 'feedback.html?course=' + slug;
+
+  // Load course testimonials
+  loadCourseTestimonials(slug);
+}
+
+function loadCourseTestimonials(slug) {
+  var grid = document.getElementById('courseTestimonialsGrid');
+  var testimonials = TestimonialsManager.getByCourse(slug, 6);
+
+  if (testimonials.length === 0) {
+    grid.innerHTML = '<div class="no-testimonials" style="grid-column:1/-1">' +
+      'No feedback yet for this course. <a href="feedback.html?course=' + slug + '">Be the first to leave a review!</a>' +
+      '</div>';
+    return;
+  }
+
+  grid.innerHTML = testimonials.map(function(t) {
+    return TestimonialsManager.renderCard(t);
+  }).join('');
+}
+
+function startQuiz(event) {
+  event.preventDefault();
+  try { localStorage.setItem('aiio_access', 'granted'); } catch(e) {}
+  var href = event.currentTarget.getAttribute('href');
+  location.href = href;
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
