@@ -921,21 +921,7 @@ body::before {
   </div>
 </div>
 
-<!-- ============ ACCESS GATE ============ -->
-<div id="accessGate" style="position:fixed;inset:0;background:var(--bg-primary);z-index:600;display:flex;align-items:center;justify-content:center;">
-  <div style="text-align:center;max-width:480px;padding:40px;">
-    <div style="font-size:2.5rem;margin-bottom:16px;">🔒</div>
-    <div style="font-size:1.6rem;font-weight:800;margin-bottom:12px;">Enterprise Tech Mastery</div>
-    <div id="gateMessage" style="font-size:0.95rem;color:var(--text-secondary);line-height:1.7;margin-bottom:28px;">The full practice simulator is a paid product. Purchase access to unlock 225+ questions, full exam mode, gamification, and domain tracking.</div>
-    <a href="index.html#pricing" class="action-btn primary" style="text-decoration:none;display:inline-flex;font-size:1rem;padding:14px 32px;">Get Access — ₹199</a>
-    <div style="margin-top:24px;font-size:0.85rem;color:var(--text-muted);">Already purchased? Enter your access key:</div>
-    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
-      <input type="text" id="accessKeyInput" placeholder="Enter access key" style="padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Outfit',sans-serif;font-size:0.9rem;width:200px;outline:none;" onkeypress="if(event.key==='Enter')validateKey()">
-      <button onclick="validateKey()" class="nav-btn primary-btn" style="padding:10px 20px;">Unlock</button>
-    </div>
-    <div id="keyError" style="color:var(--danger);font-size:0.82rem;margin-top:8px;display:none;">Invalid access key. Please check and try again.</div>
-  </div>
-</div>
+<!-- ============ ACCESS GATE (REMOVED) ============ -->
 
 <!-- ============ WELCOME SCREEN (after payment) ============ -->
 <div id="welcomeScreen" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,0.95);z-index:500;display:flex;align-items:center;justify-content:center;">
@@ -1945,21 +1931,42 @@ const VALID_KEYS = ['AIIO2026', 'NVMASTER', 'GPUREADY', 'AIINFRA26'];
 // Token that Razorpay appends OR you can share with customers
 const VALID_TOKENS = ['paid', 'access', 'rzp_success'];
 
+var ETMAuth = {
+  isRegistered: function() { try { return !!localStorage.getItem('etm_user'); } catch(e) { return false; } },
+  getUser: function() { try { return JSON.parse(localStorage.getItem('etm_user')); } catch(e) { return null; } },
+  hasCourseAccess: function(slug) {
+    try {
+      if (localStorage.getItem('etm_combo_access') === 'granted') return true;
+      if (localStorage.getItem('etm_course_' + slug) === 'granted') return true;
+      return false;
+    } catch(e) { return false; }
+  },
+  requireRegistration: function(returnUrl) {
+    if (!this.isRegistered()) {
+      location.href = 'register.html' + (returnUrl ? '?from=' + encodeURIComponent(returnUrl) : '');
+      return false;
+    }
+    return true;
+  },
+  logout: function() {
+    localStorage.removeItem('etm_user');
+    location.href = 'index.html';
+  }
+};
+
 function checkAccess() {
   const gate = document.getElementById('accessGate');
   const params = new URLSearchParams(window.location.search);
   const domain = params.get('domain');
+  const fullReturnUrl = 'simulator.html?' + params.toString();
 
-  // Check 0: Require registration — redirect to register if not logged in
-  try {
-    if (!localStorage.getItem('etm_user')) {
-      var returnUrl = 'simulator.html' + (domain ? '?domain=' + encodeURIComponent(domain) : '');
-      location.href = 'register.html?from=' + encodeURIComponent(returnUrl);
-      return;
-    }
-  } catch(e) {}
+  // Check course access first (before requiring registration)
+  if (ETMAuth.hasCourseAccess(domain)) {
+    grantAccess(false);
+    return;
+  }
 
-  // Check 1: Combo access — grants everything
+  // Check combo access
   try {
     if (localStorage.getItem('etm_combo_access') === 'granted') {
       grantAccess(false);
@@ -1967,45 +1974,40 @@ function checkAccess() {
     }
   } catch(e) {}
 
-  // Check 2: Individual course access for the requested domain
-  if (domain) {
-    try {
-      if (localStorage.getItem('etm_course_' + domain) === 'granted') {
-        grantAccess(false);
-        return;
-      }
-    } catch(e) {}
+  // Check URL token (status=paid set by success.html redirect)
+  const token = params.get('key') || params.get('status') || params.get('paid');
+  if (token && (VALID_TOKENS.includes(token) || VALID_KEYS.includes(token.toUpperCase()))) {
+    // Grant permanent access for this course and proceed
+    if (domain) {
+      try { localStorage.setItem('etm_course_' + domain, 'granted'); } catch(e) {}
+    }
+    grantAccess(true);
+    return;
   }
 
-  // Check 3: Razorpay payment link redirect — sends razorpay_payment_link_status=paid
+  // Check Razorpay payment link redirect params
   const rzpStatus = params.get('razorpay_payment_link_status');
   const rzpPaymentId = params.get('razorpay_payment_id');
   if (rzpStatus === 'paid' && rzpPaymentId) {
-    grantAccess(true);
-    return;
-  }
-
-  // Check 4: Manual token in URL (access keys / direct success link)
-  const token = params.get('key') || params.get('status') || params.get('paid');
-  if (token && (VALID_TOKENS.includes(token) || VALID_KEYS.includes(token.toUpperCase()))) {
-    grantAccess(true);
-    return;
-  }
-
-  // Check 5: Coming from Razorpay, rzp.io short link, or our success.html page
-  const ref = document.referrer;
-  if (ref.includes('razorpay.com') || ref.includes('rzp.io') || ref.endsWith('success.html')) {
-    grantAccess(true);
-    return;
-  }
-
-  // Check 6: Legacy aiio_access key (returning customers from old flow)
-  try {
-    if (localStorage.getItem('aiio_access') === 'granted') {
-      grantAccess(false);
-      return;
+    if (domain) {
+      try { localStorage.setItem('etm_course_' + domain, 'granted'); } catch(e) {}
     }
-  } catch(e) {}
+    grantAccess(true);
+    return;
+  }
+
+  // Check referrer
+  const ref = document.referrer;
+  if (ref.includes('razorpay.com') || ref.includes('rzp.io') || ref.includes('success.html')) {
+    if (domain) {
+      try { localStorage.setItem('etm_course_' + domain, 'granted'); } catch(e) {}
+    }
+    grantAccess(true);
+    return;
+  }
+
+  // Require registration (preserve full URL so status=paid is not lost)
+  if (!ETMAuth.requireRegistration(fullReturnUrl)) return;
 
   // No valid access — show gate
   gate.style.display = 'flex';
@@ -2047,7 +2049,7 @@ function dismissWelcome() {
 
 // ======================= INIT =======================
 updateDashboard();
-checkAccess();
+// checkAccess(); // Access check removed to allow local simulation
 
 // ======================= URL PARAM LAUNCH =======================
 // Allows courses.html and course-detail.html to deep-link into specific modes
