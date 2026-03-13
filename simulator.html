@@ -1147,9 +1147,9 @@ body::before {
     <div class="results-domains" id="resultsDomains"></div>
 
     <div style="text-align:center;margin-bottom:40px;">
-      <button class="action-btn primary" onclick="showPage('pageDashboard')" style="display:inline-flex;">
+      <a id="resultsBackBtn" href="#" onclick="showPage('pageDashboard');return false;" class="action-btn primary" style="display:inline-flex;text-decoration:none;">
         <span class="btn-icon">🏠</span> Back to Dashboard
-      </button>
+      </a>
       <button class="action-btn" onclick="reviewExam()" style="display:inline-flex;margin-left:12px;">
         <span class="btn-icon">📝</span> Review Answers
       </button>
@@ -1569,9 +1569,23 @@ function shuffleArray(arr) {
   return a;
 }
 
+// Maps URL slug → question bank domain name
+const DOMAIN_SLUG_MAP = {
+  'linux-fundamentals': 'linux',
+  'rhel': 'rhel',
+  'suse': 'suse',
+  'ai-infra': 'infra',
+  'ai-knowledge': 'ai',
+  'ai-ops': 'ops',
+  'docker': 'docker',
+  'kubernetes': 'kubernetes',
+  'container-ops': 'container-ops'
+};
+
 function selectQuestions(mode, domain) {
+  const bankDomain = DOMAIN_SLUG_MAP[domain] || domain;
   let pool = [...questionBank];
-  if (domain) pool = pool.filter(q => q.domain === domain);
+  if (domain) pool = pool.filter(q => q.domain === bankDomain);
   pool = shuffleArray(pool);
 
   if (mode === 'full') {
@@ -1850,10 +1864,11 @@ function endExam() {
     });
   }
 
-  // Calculate results
+  // Calculate results — build dynamically from actual questions
   let totalCorrect = 0;
-  let domainResults = {infra:{correct:0,total:0}, ai:{correct:0,total:0}, ops:{correct:0,total:0}};
+  let domainResults = {};
   examState.questions.forEach((q, i) => {
+    if (!domainResults[q.domain]) domainResults[q.domain] = {correct:0, total:0};
     domainResults[q.domain].total++;
     if (examState.answers[i] === q.correct) { totalCorrect++; domainResults[q.domain].correct++; }
   });
@@ -1877,39 +1892,55 @@ function endExam() {
   document.getElementById('resultsVerdict').textContent = passed ? '🎉 PASSED — You\'re exam ready!' : '📖 Keep studying — you\'re getting closer!';
   document.getElementById('resultsDetail').textContent = `${totalCorrect} of ${examState.questions.length} correct • ${examState.mode === 'full' ? 'Full Exam Simulation' : 'Practice Mode'}`;
 
+  // Maps question bank domain → display name
   const domainNames = {
-    'linux-fundamentals':'Linux Fundamentals',
+    'linux':'Linux Fundamentals',
     'rhel':'Red Hat Enterprise Linux',
     'suse':'SUSE Linux Enterprise',
-    'ai-infra':'AI Infrastructure',
-    'ai-knowledge':'AI Knowledge',
-    'ai-ops':'AI Operations',
+    'infra':'AI Infrastructure',
+    'ai':'AI Knowledge',
+    'ops':'AI Operations',
     'docker':'Docker',
     'kubernetes':'Kubernetes',
     'container-ops':'Container Operations'
   };
   const domainColors = {
-    'linux-fundamentals':'var(--linux-orange)',
+    'linux':'var(--linux-orange)',
     'rhel':'#ff6b35',
     'suse':'#4a90e2',
-    'ai-infra':'#76b900',
-    'ai-knowledge':'#9b59b6',
-    'ai-ops':'#e74c3c',
+    'infra':'#76b900',
+    'ai':'#9b59b6',
+    'ops':'#e74c3c',
     'docker':'#2496ed',
     'kubernetes':'#326ce5',
     'container-ops':'#f39c12'
   };
   document.getElementById('resultsDomains').innerHTML = Object.entries(domainResults).map(([d, r]) => {
     const pct = r.total > 0 ? Math.round((r.correct / r.total) * 100) : 0;
+    const name = domainNames[d] || d;
+    const color = domainColors[d] || 'var(--linux-orange)';
     return `<div class="result-domain-card">
-      <div class="result-domain-score" style="color:${domainColors[d]}">${pct}%</div>
-      <div class="result-domain-name">${domainNames[d]} (${r.correct}/${r.total})</div>
-      <div class="result-domain-bar"><div class="result-domain-fill" style="width:${pct}%;background:${domainColors[d]}"></div></div>
+      <div class="result-domain-score" style="color:${color}">${pct}%</div>
+      <div class="result-domain-name">${name} (${r.correct}/${r.total})</div>
+      <div class="result-domain-bar"><div class="result-domain-fill" style="width:${pct}%;background:${color}"></div></div>
     </div>`;
   }).join('');
 
+  // Update Back button — go to course-detail if came from a specific course
+  var backBtn = document.getElementById('resultsBackBtn');
+  if (backBtn) {
+    if (examState.domain) {
+      backBtn.href = 'course-detail.html?course=' + examState.domain;
+      backBtn.onclick = null;
+      backBtn.textContent = '← Back to Course';
+    } else {
+      backBtn.href = '#';
+      backBtn.onclick = function(){ showPage('pageDashboard'); return false; };
+      backBtn.textContent = '🏠 Back to Dashboard';
+    }
+  }
+
   updateDashboard();
-  // Update feedback link with domain and score context
   updateFeedbackLink(examState.domain || null, score);
   showPage('pageResults');
 }
@@ -2050,25 +2081,24 @@ function dismissWelcome() {
 
 // ======================= INIT =======================
 updateDashboard();
-// checkAccess(); // Access check removed to allow local simulation
 
 // ======================= URL PARAM LAUNCH =======================
-// Allows courses.html and course-detail.html to deep-link into specific modes
-function checkUrlParams() {
+(function() {
   const params = new URLSearchParams(window.location.search);
   const domain = params.get('domain');
   const mode = params.get('mode');
-
   const validDomains = ['linux-fundamentals','rhel','suse','ai-infra','ai-knowledge','ai-ops','docker','kubernetes','container-ops'];
 
   if (domain && validDomains.includes(domain)) {
-    setTimeout(function() { startDomainPractice(domain); }, 200);
+    // Hide dashboard — user only has access to their purchased course
+    document.getElementById('pageDashboard').style.display = 'none';
+    startDomainPractice(domain);
   } else if (mode === 'full') {
-    setTimeout(function() { startFullExam(); }, 200);
+    startFullExam();
   } else if (mode === 'quick') {
-    setTimeout(function() { startQuickPractice(); }, 200);
+    startQuickPractice();
   }
-}
+})();
 
 // Update the feedback button URL on the results page with current domain/score
 function updateFeedbackLink(domain, score) {
@@ -2081,9 +2111,6 @@ function updateFeedbackLink(domain, score) {
   if (parts.length) url += '?' + parts.join('&');
   btn.href = url;
 }
-
-// Run URL param check after access is confirmed (slight delay for grantAccess to complete)
-setTimeout(checkUrlParams, 300);
 </script>
 </body>
 </html>
