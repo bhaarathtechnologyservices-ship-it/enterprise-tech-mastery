@@ -898,6 +898,97 @@ body::before {
   .question-map { grid-template-columns: repeat(5, 1fr); }
   .question-card { padding: 24px; }
 }
+
+/* ===== COURSE PAGE (single-course mode) ===== */
+.course-page-hero {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 52px 0 40px;
+}
+.course-page-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
+  background: var(--linux-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  flex-shrink: 0;
+  box-shadow: 0 10px 40px rgba(255,102,0,0.35);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.course-page-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--linux-orange);
+  margin-bottom: 6px;
+  transition: color 0.3s;
+}
+.course-page-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.course-page-desc {
+  font-size: 0.97rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 520px;
+}
+.cp-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.cp-btn {
+  padding: 22px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+.cp-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  border-color: var(--linux-orange);
+}
+.cp-btn > span { font-size: 2rem; flex-shrink: 0; }
+.cp-btn-primary {
+  background: linear-gradient(135deg, var(--linux-orange), var(--linux-orange-dark));
+  color: #000;
+  border: none;
+}
+.cp-btn-primary:hover {
+  box-shadow: 0 12px 40px var(--linux-orange-glow);
+}
+.cp-btn-sub {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+.cp-btn-primary .cp-btn-sub { color: rgba(0,0,0,0.55); }
+@media (max-width: 600px) {
+  .course-page-hero { flex-direction: column; align-items: flex-start; padding: 32px 0 28px; }
+  .cp-actions { grid-template-columns: 1fr; }
+  .course-page-title { font-size: 1.6rem; }
+}
 </style>
 </head>
 <body>
@@ -1102,6 +1193,71 @@ body::before {
     <div class="footer">
       <p>AIIO Exam Mastery — Not affiliated with NVIDIA Corporation. For exam preparation purposes only.</p>
       <p style="margin-top:8px;">Not affiliated with NVIDIA Corporation. For exam preparation purposes only.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COURSE PAGE (single-course mode) ============ -->
+<div class="page" id="pageCourse">
+  <div class="container">
+    <div class="course-page-hero fade-in">
+      <div class="course-page-icon" id="cpIcon">🐧</div>
+      <div>
+        <div class="course-page-badge" id="cpCourseName">Linux Fundamentals</div>
+        <div class="course-page-title">Practice Quiz</div>
+        <div class="course-page-desc" id="cpDesc">Master the fundamentals with targeted practice questions.</div>
+      </div>
+    </div>
+
+    <div class="stats-row fade-in-delay-1">
+      <div class="stat-card">
+        <div class="stat-value" id="cpAnswered">0</div>
+        <div class="stat-label">Answered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="cpAccuracy">0%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="cpBestScore">—</div>
+        <div class="stat-label">Best Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="cpStreakVal">0</div>
+        <div class="stat-label">Streak 🔥</div>
+      </div>
+    </div>
+
+    <div class="xp-progress-section fade-in-delay-2" style="margin-bottom:32px">
+      <div class="xp-progress-header">
+        <div class="xp-progress-title">Level <span id="cpLevel">1</span> — <span id="cpLevelTitle">Novice</span></div>
+        <div class="xp-progress-detail"><span id="cpXP">0</span> / <span id="cpNextXP">500</span> XP</div>
+      </div>
+      <div class="xp-bar-bg"><div class="xp-bar-fill" id="cpXPBar" style="width:0%"></div></div>
+    </div>
+
+    <div class="cp-actions fade-in-delay-2">
+      <button class="cp-btn cp-btn-primary" id="cpStartBtn">
+        <span>🎯</span>
+        <div>
+          <div>Start Practice</div>
+          <div class="cp-btn-sub">15 questions • No timer • Instant feedback</div>
+        </div>
+      </button>
+      <button class="cp-btn" id="cpQuickBtn">
+        <span>⚡</span>
+        <div>
+          <div>Quick Practice</div>
+          <div class="cp-btn-sub">5 questions • Fast review session</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="section-title fade-in-delay-3">Achievements</div>
+    <div class="badges-grid" id="cpBadgesGrid"></div>
+
+    <div class="footer">
+      <p>Enterprise Tech Mastery — Gamified learning for tech professionals</p>
     </div>
   </div>
 </div>
@@ -1663,28 +1819,19 @@ function startQuickPractice() {
   renderQuestionMap();
 }
 
-function startDomainPractice(domain) {
+function startDomainPractice(domain, count) {
+  count = count || 15;
   examState.mode = 'domain';
   examState.domain = domain;
-  examState.questions = selectQuestions('domain', domain);
+  examState.questions = selectQuestions('domain', domain).slice(0, count);
   examState.currentIndex = 0;
   examState.answers = new Array(examState.questions.length).fill(-1);
   examState.revealed = new Array(examState.questions.length).fill(false);
   examState.flagged = new Array(examState.questions.length).fill(false);
   examState.timeRemaining = 0;
-  const names = {
-    'linux-fundamentals':'Linux Fundamentals',
-    'rhel':'Red Hat Enterprise Linux',
-    'suse':'SUSE Linux Enterprise',
-    'ai-infra':'AI Infrastructure',
-    'ai-knowledge':'AI Knowledge',
-    'ai-ops':'AI Operations',
-    'docker':'Docker',
-    'kubernetes':'Kubernetes',
-    'container-ops':'Container Operations'
-  };
-  document.getElementById('examTitle').textContent = names[domain] + ' Practice';
-  document.getElementById('examSubtitle').textContent = '15 Questions • No Timer • Learn Mode';
+  const info = COURSE_INFO[domain] || { name: domain };
+  document.getElementById('examTitle').textContent = info.name + ' Practice';
+  document.getElementById('examSubtitle').textContent = count + ' Questions • No Timer • Learn Mode';
   document.getElementById('examTimer').textContent = '⏱ No Limit';
   document.getElementById('examTimer').className = 'exam-timer';
   showPage('pageExam');
@@ -1833,6 +1980,7 @@ function processAnswer(q, correct) {
 
   checkBadges();
   updateDashboard();
+  if (currentDomain) updateCoursePageStats();
 }
 
 function nextQuestion() {
@@ -1949,17 +2097,17 @@ function endExam() {
     </div>`;
   }).join('');
 
-  // Update Back button — go to course-detail if came from a specific course
+  // Update Back button
   var backBtn = document.getElementById('resultsBackBtn');
   if (backBtn) {
     if (examState.domain) {
-      backBtn.href = 'course-detail.html?course=' + examState.domain;
-      backBtn.onclick = null;
-      backBtn.textContent = '← Back to Course';
+      backBtn.href = '#';
+      backBtn.onclick = function(){ showCoursePage(examState.domain); return false; };
+      backBtn.innerHTML = '<span class="btn-icon">←</span> Back to Course';
     } else {
       backBtn.href = '#';
       backBtn.onclick = function(){ showPage('pageDashboard'); return false; };
-      backBtn.textContent = '🏠 Back to Dashboard';
+      backBtn.innerHTML = '<span class="btn-icon">🏠</span> Back to Dashboard';
     }
   }
 
@@ -2102,6 +2250,70 @@ function dismissWelcome() {
   try { sessionStorage.setItem('aiio_welcomed', '1'); } catch(e) {}
 }
 
+// ======================= COURSE PAGE =======================
+let currentDomain = null;
+
+const COURSE_INFO = {
+  'linux-fundamentals': { icon:'🐧', name:'Linux Fundamentals', desc:'File system, permissions, processes, networking, shell scripting', color:'#FF6600' },
+  'rhel':               { icon:'🎩', name:'Red Hat Enterprise Linux', desc:'RHEL administration, yum/dnf, systemd, SELinux, firewall', color:'#ff6b35' },
+  'suse':               { icon:'🦎', name:'SUSE Linux Enterprise', desc:'SLES administration, zypper, YaST, AppArmor, Btrfs', color:'#4a90e2' },
+  'ai-infra':           { icon:'🖥️', name:'AI Infrastructure', desc:'GPU architecture, DGX systems, NVLink, NVSwitch, networking', color:'#76b900' },
+  'ai-knowledge':       { icon:'🧠', name:'AI Knowledge', desc:'ML/DL fundamentals, CUDA, TensorRT, model optimization', color:'#9b59b6' },
+  'ai-ops':             { icon:'⚙️', name:'AI Operations', desc:'DCGM monitoring, Kubernetes GPU, containers, MIG, Slurm', color:'#e74c3c' },
+  'docker':             { icon:'🐳', name:'Docker', desc:'Container fundamentals, Dockerfiles, images, volumes, networking', color:'#2496ed' },
+  'kubernetes':         { icon:'☸️', name:'Kubernetes', desc:'Pods, services, deployments, networking, storage, security', color:'#326ce5' },
+  'container-ops':      { icon:'🔧', name:'Container Operations', desc:'CI/CD, monitoring, security, orchestration, service mesh', color:'#f39c12' },
+};
+
+function showCoursePage(domain) {
+  currentDomain = domain;
+  const info = COURSE_INFO[domain] || { icon:'📚', name:domain, desc:'Practice questions', color:'var(--linux-orange)' };
+
+  const iconEl = document.getElementById('cpIcon');
+  iconEl.textContent = info.icon;
+  iconEl.style.background = info.color;
+  iconEl.style.boxShadow = '0 10px 40px ' + info.color + '50';
+
+  const nameEl = document.getElementById('cpCourseName');
+  nameEl.textContent = info.name;
+  nameEl.style.color = info.color;
+
+  document.getElementById('cpDesc').textContent = info.desc;
+
+  document.getElementById('cpStartBtn').onclick = function() { startDomainPractice(domain, 15); };
+  document.getElementById('cpQuickBtn').onclick = function() { startDomainPractice(domain, 5); };
+
+  updateCoursePageStats();
+  showPage('pageCourse');
+}
+
+function updateCoursePageStats() {
+  const li = getLevelInfo(state.xp);
+  document.getElementById('cpLevel').textContent = li.level;
+  document.getElementById('cpLevelTitle').textContent = li.title;
+  document.getElementById('cpXP').textContent = state.xp;
+  document.getElementById('cpNextXP').textContent = li.nextXP;
+  document.getElementById('cpXPBar').style.width = Math.min(li.progress, 100) + '%';
+  document.getElementById('cpAnswered').textContent = state.totalAnswered;
+  document.getElementById('cpAccuracy').textContent = state.totalAnswered > 0 ? Math.round((state.totalCorrect / state.totalAnswered) * 100) + '%' : '0%';
+  document.getElementById('cpBestScore').textContent = state.bestScore > 0 ? state.bestScore + '%' : '—';
+  document.getElementById('cpStreakVal').textContent = state.streak;
+  document.getElementById('navXP').textContent = state.xp;
+  document.getElementById('navLevel').textContent = 'Level ' + li.level;
+  document.getElementById('streakCount').textContent = state.streak;
+
+  const grid = document.getElementById('cpBadgesGrid');
+  if (grid) {
+    grid.innerHTML = badgeDefinitions.map(b => {
+      const earned = state.earnedBadges.includes(b.id);
+      return `<div class="badge-item ${earned ? 'earned' : 'locked'}" title="${b.desc}">
+        <div class="badge-icon">${b.icon}</div>
+        <div class="badge-name">${b.name}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
 // ======================= INIT =======================
 updateDashboard();
 
@@ -2113,9 +2325,7 @@ updateDashboard();
   const validDomains = ['linux-fundamentals','rhel','suse','ai-infra','ai-knowledge','ai-ops','docker','kubernetes','container-ops'];
 
   if (domain && validDomains.includes(domain)) {
-    // Hide dashboard — user only has access to their purchased course
-    document.getElementById('pageDashboard').style.display = 'none';
-    startDomainPractice(domain);
+    showCoursePage(domain);
   } else if (mode === 'full') {
     startFullExam();
   } else if (mode === 'quick') {
