@@ -1,52 +1,565 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Simulator</title>
-    <style>
-        /* Add your CSS here */
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Tech Mastery — Practice Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --linux-orange: #FF6600;
+  --linux-orange-dark: #CC5200;
+  --linux-orange-glow: rgba(255, 102, 0, 0.3);
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a26;
+  --bg-card-hover: #222233;
+  --text-primary: #f0f0f5;
+  --text-secondary: #8888a0;
+  --text-muted: #555570;
+  --border: #2a2a3a;
+  --danger: #ff4757;
+  --warning: #ffa502;
+  --info: #3b82f6;
+  --success: #10b981;
+  --gold: #f59e0b;
+  --silver: #94a3b8;
+  --bronze: #cd7c2f;
+  --nvidia-green: #76B900;
+  --xp-bar: linear-gradient(90deg, #FF6600, #ff8533);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--linux-orange); border-radius: 3px; }
+
+/* ANIMATIONS */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.fade-in { animation: fadeInUp 0.6s ease forwards; }
+.fade-in-delay-1 { animation: fadeInUp 0.6s ease 0.1s forwards; opacity: 0; }
+
+/* LAYOUT */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+
+.top-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--linux-orange);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.8rem;
+  color: #000;
+}
+
+.nav-xp {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.xp-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.level-badge {
+  background: linear-gradient(135deg, var(--linux-orange), var(--linux-orange-dark));
+  color: #000;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+/* PAGE SECTIONS */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ACCESS BANNER */
+.access-banner {
+  background: linear-gradient(135deg, rgba(118, 185, 0, 0.15), rgba(118, 185, 0, 0.08));
+  border: 1px solid rgba(118, 185, 0, 0.3);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideDown 0.5s ease;
+}
+
+.access-banner-icon {
+  font-size: 1.5rem;
+}
+
+.access-banner-text {
+  font-size: 0.95rem;
+  color: var(--nvidia-green);
+  font-weight: 600;
+}
+
+/* HERO / DASHBOARD */
+.hero {
+  padding: 60px 0 40px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -200px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--linux-orange-glow), transparent 70%);
+  pointer-events: none;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.hero-title span { color: var(--linux-orange); }
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* TRACK CARDS */
+.tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.track-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  opacity: 1;
+  max-height: 1000px;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.track-card.hidden {
+  display: none;
+}
+
+.track-card:hover {
+  border-color: var(--linux-orange);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.track-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.track-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--linux-orange), var(--linux-orange-dark));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.track-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.track-domains {
+  display: grid;
+  gap: 12px;
+}
+
+.domain-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.domain-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+
+.domain-card.domain-linux-fundamentals::after { background: var(--linux-orange); }
+.domain-card.domain-rhel::after { background: #ff6b35; }
+.domain-card.domain-suse::after { background: #4a90e2; }
+.domain-card.domain-ai-infra::after { background: #76b900; }
+.domain-card.domain-ai-knowledge::after { background: #9b59b6; }
+.domain-card.domain-ai-ops::after { background: #e74c3c; }
+.domain-card.domain-docker::after { background: #2496ed; }
+.domain-card.domain-kubernetes::after { background: #326ce5; }
+.domain-card.domain-container-ops::after { background: #f39c12; }
+
+.domain-card:hover {
+  border-color: var(--linux-orange);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.domain-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.domain-topics {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.domain-progress-bar {
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.domain-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+  background: var(--linux-orange);
+}
+
+.domain-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* FOOTER */
+.footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-title { font-size: 1.8rem; }
+  .tracks-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-    <div id="access-banner" style="display:none;"></div>
-    <div id="tracks">
-        <div class="track" data-domain="Linux" data-paid="false">Linux Track</div>
-        <div class="track" data-domain="Cloud" data-paid="true">Cloud Track</div>
-        <div class="track" data-domain="AI" data-paid="true">AI Track</div>
-        <div class="track" data-domain="Containers" data-paid="false">Containers Track</div>
-        <div class="track" data-domain="NVIDIA" data-paid="true">NVIDIA Track</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">ET</div>
+      <span>Enterprise Tech Mastery</span>
     </div>
-    <script>
-        function getURLParameter(name) {
-            name = name.replace(/[
-]/g, '');
-            return decodeURIComponent((new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.href) || [null, ''])[1].replace(/\+/g, '%20')) || null;
-        }
+    <div class="nav-xp">
+      <div class="xp-display">
+        <span>⚡</span>
+        <span id="navXP">0</span> XP
+      </div>
+      <div class="level-badge" id="navLevel">Level 1</div>
+    </div>
+  </div>
+</div>
 
-        function filterTracks() {
-            var domain = getURLParameter('domain');
-            var paidStatus = getURLParameter('paid'); // should be 'true' or 'false'
-            var tracks = document.querySelectorAll('.track');
-            var accessBanner = document.getElementById('access-banner');
-            var isPaid = paidStatus === 'true';
+<!-- DASHBOARD PAGE -->
+<div class="page active" id="pageDashboard">
+  <div class="container">
+    <!-- ACCESS BANNER -->
+    <div id="accessBanner" class="access-banner" style="display:none;">
+      <div class="access-banner-icon">✓</div>
+      <div class="access-banner-text" id="accessBannerText">Loading...</div>
+    </div>
 
-            tracks.forEach(function(track) {
-                var trackDomain = track.getAttribute('data-domain');
-                var trackPaid = track.getAttribute('data-paid') === 'true';
+    <div class="hero">
+      <div class="hero-title fade-in">Master <span>Enterprise Tech</span><br>Skills</div>
+      <div class="hero-sub fade-in-delay-1">Practice with 225+ questions across 9 domains. Track your progress, earn XP, and master Linux, AI Infrastructure, and Container Orchestration.</div>
+    </div>
 
-                if ((domain && trackDomain !== domain) || (isPaid && !trackPaid) || (!isPaid && trackPaid)) {
-                    track.style.display = 'none';
-                } else {
-                    track.style.display = 'block';
-                }
-            });
+    <!-- TECHNOLOGY TRACKS -->
+    <div class="section-title" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.02em;">Technology Tracks</div>
+    <div class="tracks-grid">
+      
+      <!-- LINUX TRACK -->
+      <div class="track-card" id="trackLinux" data-track="linux">
+        <div class="track-header">
+          <div class="track-icon">🐧</div>
+          <div class="track-title">Linux Enterprise</div>
+        </div>
+        <div class="track-domains">
+          <div class="domain-card domain-linux-fundamentals" onclick="startDomainPractice('linux-fundamentals')">
+            <div class="domain-name">Linux Fundamentals</div>
+            <div class="domain-topics">File system, permissions, processes, networking, shell scripting</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="linux-fundamentalsProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="linux-fundamentalsAnswered">0 answered</span><span id="linux-fundamentalsAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-rhel" onclick="startDomainPractice('rhel')">
+            <div class="domain-name">Red Hat Enterprise Linux</div>
+            <div class="domain-topics">RHEL administration, yum/dnf, systemd, SELinux, firewall</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="rhelProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="rhelAnswered">0 answered</span><span id="rhelAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-suse" onclick="startDomainPractice('suse')">
+            <div class="domain-name">SUSE Linux Enterprise</div>
+            <div class="domain-topics">SLES administration, zypper, YaST, AppArmor, Btrfs</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="suseProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="suseAnswered">0 answered</span><span id="suseAccuracy">—</span></div>
+          </div>
+        </div>
+      </div>
 
-            // Display access banner if relevant
-            if (isPaid) {
-                accessBanner.innerText = 'You have access to paid tracks.';
-                accessBanner.style.display = 'block';
-            }
-        }
+      <!-- NVIDIA AI INFRASTRUCTURE TRACK -->
+      <div class="track-card" id="trackAI" data-track="ai">
+        <div class="track-header">
+          <div class="track-icon">🖥️</div>
+          <div class="track-title">NVIDIA AI Infrastructure</div>
+        </div>
+        <div class="track-domains">
+          <div class="domain-card domain-ai-infra" onclick="startDomainPractice('ai-infra')">
+            <div class="domain-name">AI Infrastructure</div>
+            <div class="domain-topics">GPU architecture, DGX systems, NVLink, data center networking</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="ai-infraProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="ai-infraAnswered">0 answered</span><span id="ai-infraAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-ai-knowledge" onclick="startDomainPractice('ai-knowledge')">
+            <div class="domain-name">AI Knowledge</div>
+            <div class="domain-topics">ML/DL fundamentals, CUDA programming, TensorRT, model optimization</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="ai-knowledgeProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="ai-knowledgeAnswered">0 answered</span><span id="ai-knowledgeAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-ai-ops" onclick="startDomainPractice('ai-ops')">
+            <div class="domain-name">AI Operations</div>
+            <div class="domain-topics">DCGM monitoring, Kubernetes GPU, MIG partitioning, Slurm scheduling</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="ai-opsProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="ai-opsAnswered">0 answered</span><span id="ai-opsAccuracy">—</span></div>
+          </div>
+        </div>
+      </div>
 
-        filterTracks();
-    </script>
+      <!-- CONTAINERS & ORCHESTRATION TRACK -->
+      <div class="track-card" id="trackContainers" data-track="containers">
+        <div class="track-header">
+          <div class="track-icon">🐳</div>
+          <div class="track-title">Containers & Orchestration</div>
+        </div>
+        <div class="track-domains">
+          <div class="domain-card domain-docker" onclick="startDomainPractice('docker')">
+            <div class="domain-name">Docker</div>
+            <div class="domain-topics">Container fundamentals, Dockerfiles, networking, volumes, Compose</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="dockerProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="dockerAnswered">0 answered</span><span id="dockerAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-kubernetes" onclick="startDomainPractice('kubernetes')">
+            <div class="domain-name">Kubernetes</div>
+            <div class="domain-topics">K8s architecture, pods, deployments, services, RBAC, storage</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="kubernetesProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="kubernetesAnswered">0 answered</span><span id="kubernetesAccuracy">—</span></div>
+          </div>
+          <div class="domain-card domain-container-ops" onclick="startDomainPractice('container-ops')">
+            <div class="domain-name">Container Operations</div>
+            <div class="domain-topics">CI/CD, monitoring, security scanning, autoscaling, service mesh</div>
+            <div class="domain-progress-bar"><div class="domain-progress-fill" id="container-opsProgress" style="width: 0%"></div></div>
+            <div class="domain-stats"><span id="container-opsAnswered">0 answered</span><span id="container-opsAccuracy">—</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>&copy; 2026 Enterprise Tech Mastery. All rights reserved.</p>
+</div>
+
+<script>
+// ===== DOMAIN FILTERING & ACCESS CONTROL =====
+
+// Map domains to their tracks
+const domainToTrack = {
+  'linux-fundamentals': 'linux',
+  'rhel': 'linux',
+  'suse': 'linux',
+  'ai-infra': 'ai',
+  'ai-knowledge': 'ai',
+  'ai-ops': 'ai',
+  'docker': 'containers',
+  'kubernetes': 'containers',
+  'container-ops': 'containers'
+};
+
+// Domain metadata
+const domainMetadata = {
+  'linux-fundamentals': { name: 'Linux Fundamentals', icon: '🐧' },
+  'rhel': { name: 'Red Hat Enterprise Linux', icon: '🎩' },
+  'suse': { name: 'SUSE Linux Enterprise', icon: '🦎' },
+  'ai-infra': { name: 'AI Infrastructure', icon: '🖥️' },
+  'ai-knowledge': { name: 'AI Knowledge', icon: '🧪' },
+  'ai-ops': { name: 'AI Operations', icon: '⚙️' },
+  'docker': { name: 'Docker', icon: '🐳' },
+  'kubernetes': { name: 'Kubernetes', icon: '☸️' },
+  'container-ops': { name: 'Container Operations', icon: '🔧' }
+};
+
+function getURLParameter(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+function initializeDomainFilter() {
+  const domain = getURLParameter('domain');
+  const status = getURLParameter('status'); // 'paid' or empty
+  const isPaid = status === 'paid';
+
+  if (!domain || !isPaid) {
+    // Show all tracks if no domain filter or not paid
+    return;
+  }
+
+  // Get the track for this domain
+  const userTrack = domainToTrack[domain];
+  
+  if (!userTrack) {
+    console.warn('Unknown domain:', domain);
+    return;
+  }
+
+  // Hide other tracks
+  const allTracks = document.querySelectorAll('.track-card');
+  allTracks.forEach(track => {
+    const trackId = track.getAttribute('data-track');
+    if (trackId !== userTrack) {
+      track.classList.add('hidden');
+    }
+  });
+
+  // Show access banner
+  const banner = document.getElementById('accessBanner');
+  const bannerText = document.getElementById('accessBannerText');
+  const meta = domainMetadata[domain];
+  
+  if (banner && bannerText) {
+    bannerText.textContent = `✓ ${meta.name} — Unlocked`;
+    banner.style.display = 'flex';
+  }
+}
+
+function startDomainPractice(domain) {
+  // Navigate to practice mode for this domain
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status'); // preserve 'paid' status if present
+  const url = `simulator.html?domain=${domain}&status=${status || ''}`;
+  window.location.href = url.replace('&&', '&').replace('?&', '?');
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeDomainFilter);
+
+// Log current filtering state
+console.log('Domain Filtering System Active');
+console.log('URL Params:', {
+  domain: getURLParameter('domain'),
+  status: getURLParameter('status')
+});
+</script>
+
 </body>
 </html>
