@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Catalog — Enterprise Tech Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --linux-orange: #FF6600;
+  --bg-primary: #0a0a0f;
+  --bg-card: #1a1a26;
+  --text-primary: #f0f0f5;
+  --text-secondary: #8888a0;
+  --border: #2a2a3a;
+  --nvidia-green: #76B900;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--linux-orange); border-radius: 3px; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+
+.top-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--linux-orange);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.8rem;
+  color: #000;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--linux-orange);
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+/* COMBO CARD */
+.combo-section {
+  background: linear-gradient(135deg, var(--nvidia-green), #5a8c00);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 60px;
+  color: #000;
+}
+
+.combo-section h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.combo-section p {
+  font-size: 1rem;
+  margin-bottom: 24px;
+  color: rgba(0,0,0,0.8);
+}
+
+.combo-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin: 20px 0;
+}
+
+.combo-original {
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.combo-original s {
+  opacity: 0.7;
+}
+
+.combo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 40px;
+  background: #fff;
+  color: var(--nvidia-green);
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-family: 'Outfit', sans-serif;
+}
+
+.combo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+/* SECTION */
+.section {
+  margin-bottom: 60px;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  color: var(--linux-orange);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.section h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 40px;
+}
+
+/* COURSES GRID */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.course-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--linux-orange);
+}
+
+.course-card:hover {
+  border-color: var(--linux-orange);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.course-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.course-icon {
+  font-size: 2rem;
+}
+
+.course-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255,102,0,0.15);
+  color: var(--linux-orange);
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.course-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.course-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex-grow: 1;
+  margin-bottom: 16px;
+}
+
+.course-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.course-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--linux-orange);
+}
+
+.course-btn {
+  padding: 8px 16px;
+  background: var(--linux-orange);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.course-btn:hover {
+  background: var(--linux-orange-dark);
+  transform: translateY(-2px);
+}
+
+/* FOOTER */
+.footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  margin-top: 60px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .courses-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .courses-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.8rem; }
+  .combo-section { padding: 24px; }
+  .combo-section h2 { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">ET</div>
+      <span>Enterprise Tech Mastery</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <h1>All Courses</h1>
+    <p>Choose individual courses (₹199 each) or get the All Access Combo for ₹399 (save ₹1,390)</p>
+  </div>
+</div>
+
+<!-- COMBO OFFER -->
+<div class="container">
+  <div class="combo-section">
+    <h2>🚀 ALL ACCESS COMBO</h2>
+    <p>Get unlimited access to all 9 courses, 225+ practice questions, and full exam simulator</p>
+    <div class="combo-price">₹399</div>
+    <div class="combo-original"><s>₹1,791</s> — Save ₹1,392</div>
+    <a href="https://rzp.io/rzp/JhMTXSmm" class="combo-btn">🎯 Get All Access Now</a>
+  </div>
+</div>
+
+<!-- COURSES -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Technology Tracks</div>
+    <h2>Individual Courses</h2>
+    <div class="courses-grid" id="coursesGrid">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>&copy; 2026 Enterprise Tech Mastery. All rights reserved.</p>
+  <p style="margin-top: 8px;">Not affiliated with Red Hat, SUSE, NVIDIA, Docker, or Kubernetes.</p>
+</div>
+
+<script>
+const COURSES = [
+  {
+    id: 'linux-fundamentals',
+    name: 'Linux Fundamentals',
+    icon: '🐧',
+    desc: 'File system, permissions, processes, networking, shell scripting',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/prI4nWE'
+  },
+  {
+    id: 'rhel',
+    name: 'Red Hat Enterprise Linux',
+    icon: '🎩',
+    desc: 'RHEL admin, yum/dnf, systemd, SELinux, firewall',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/lmRLezXj'
+  },
+  {
+    id: 'suse',
+    name: 'SUSE Linux Enterprise',
+    icon: '🦎',
+    desc: 'SLES, zypper, YaST, AppArmor, Btrfs',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/PmzAKqJ'
+  },
+  {
+    id: 'ai-infra',
+    name: 'AI Infrastructure',
+    icon: '🖥️',
+    desc: 'GPU architecture, DGX systems, NVLink, data center networking',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/SU1bk8RY'
+  },
+  {
+    id: 'ai-knowledge',
+    name: 'AI Knowledge',
+    icon: '🧪',
+    desc: 'ML/DL fundamentals, CUDA, TensorRT, model optimization',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/5f4KKdPs'
+  },
+  {
+    id: 'ai-ops',
+    name: 'AI Operations',
+    icon: '⚙️',
+    desc: 'DCGM monitoring, Kubernetes GPU, MIG, Slurm scheduling',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/zHonM67w'
+  },
+  {
+    id: 'docker',
+    name: 'Docker',
+    icon: '🐳',
+    desc: 'Container fundamentals, Dockerfiles, networking, Compose',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/PgA275pV'
+  },
+  {
+    id: 'kubernetes',
+    name: 'Kubernetes',
+    icon: '☸️',
+    desc: 'K8s architecture, pods, deployments, services, RBAC',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/Kt1vZLw'
+  },
+  {
+    id: 'container-ops',
+    name: 'Container Operations',
+    icon: '🔧',
+    desc: 'CI/CD, monitoring, security, autoscaling, service mesh',
+    price: '₹199',
+    link: 'https://rzp.io/rzp/aKPAlCcb'
+  }
+];
+
+function renderCourses() {
+  const grid = document.getElementById('coursesGrid');
+  grid.innerHTML = COURSES.map(course => `
+    <div class="course-card">
+      <div class="course-card-top">
+        <div class="course-icon">${course.icon}</div>
+        <div class="course-tag">${course.price}</div>
+      </div>
+      <div class="course-name">${course.name}</div>
+      <div class="course-desc">${course.desc}</div>
+      <div class="course-footer">
+        <div class="course-price">${course.price}</div>
+        <a href="${course.link}" class="course-btn">Buy →</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', renderC
