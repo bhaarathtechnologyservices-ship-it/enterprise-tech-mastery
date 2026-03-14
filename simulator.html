@@ -991,7 +991,7 @@ body::before {
     <div class="section-title">Technology Tracks</div>
     <div class="tracks-grid">
       <!-- Linux Track -->
-      <div class="track-card">
+      <div class="track-card" id="trackLinux">
         <div class="track-header">
           <div class="track-icon">🐧</div>
           <div class="track-title">Linux Enterprise</div>
@@ -1020,7 +1020,7 @@ body::before {
       </div>
 
       <!-- AIIO Track -->
-      <div class="track-card">
+      <div class="track-card" id="trackAIIO">
         <div class="track-header">
           <div class="track-icon">🧠</div>
           <div class="track-title">NVIDIA AIIO</div>
@@ -1049,7 +1049,7 @@ body::before {
       </div>
 
       <!-- Containers & Orchestration Track -->
-      <div class="track-card">
+      <div class="track-card" id="trackContainers">
         <div class="track-header">
           <div class="track-icon">🐳</div>
           <div class="track-title">Containers & Orchestration</div>
@@ -1518,6 +1518,29 @@ function updateDashboard() {
   });
 
   renderBadges();
+
+  // Filter tracks/domains to only show what user has purchased
+  try {
+    const hasCombo = localStorage.getItem('etm_combo_access') === 'granted';
+    if (!hasCombo) {
+      const allDomains = ['linux-fundamentals','rhel','suse','ai-infra','ai-knowledge','ai-ops','docker','kubernetes','container-ops'];
+      const purchased = allDomains.filter(d => localStorage.getItem('etm_course_' + d) === 'granted');
+      if (purchased.length > 0) {
+        // Show/hide individual domain cards
+        allDomains.forEach(d => {
+          const card = document.querySelector(`.domain-card.domain-${d}`);
+          if (card) card.style.display = purchased.includes(d) ? '' : 'none';
+        });
+        // Show/hide entire track groups
+        const linuxDomains = ['linux-fundamentals','rhel','suse'];
+        const aiioDomains = ['ai-infra','ai-knowledge','ai-ops'];
+        const containerDomains = ['docker','kubernetes','container-ops'];
+        document.getElementById('trackLinux').style.display = linuxDomains.some(d => purchased.includes(d)) ? '' : 'none';
+        document.getElementById('trackAIIO').style.display = aiioDomains.some(d => purchased.includes(d)) ? '' : 'none';
+        document.getElementById('trackContainers').style.display = containerDomains.some(d => purchased.includes(d)) ? '' : 'none';
+      }
+    }
+  } catch(e) {}
 }
 
 function renderBadges() {
